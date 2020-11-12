@@ -1,10 +1,6 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatCardModule} from '@angular/material/card';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ErrorService} from '@core/services/error/error.service';
 import {AuthService} from '@core/services/auth/auth.service';
@@ -21,11 +17,7 @@ describe('UserComponent', () => {
 			imports: [
 				RouterTestingModule,
 				FormsModule,
-				ReactiveFormsModule,
-				MatCardModule,
-				MatFormFieldModule,
-				MatInputModule,
-				BrowserAnimationsModule
+				ReactiveFormsModule
 			],
 			declarations: [UserComponent],
 			providers: [

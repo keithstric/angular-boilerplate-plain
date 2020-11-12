@@ -1,12 +1,11 @@
-@import 'src/scss/variables';
-
 @mixin font-size($size) {
 	font-size: $size;
 	font-size: ($size / 16px) * 1rem; // convert to rem if browser supports it
 }
 
-@mixin box-shadow( $hOffset: 10px, $vOffset: 10px, $blurPx: 0, $spreadPx: 0px, $colorVal: #000000 ) {
+@mixin box-shadow( $hOffset: 10px, $vOffset: 10px, $blurPx: 0, $spreadPx: 0, $colorVal: #000000 ) {
 	box-shadow: $hOffset $vOffset $blurPx $spreadPx $colorVal;
+	transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
 }
 
 @mixin border-radius($size) {

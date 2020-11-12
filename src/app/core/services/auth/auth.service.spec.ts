@@ -1,6 +1,5 @@
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {TestBed} from '@angular/core/testing';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ErrorService} from '@core/services/error/error.service';
 import {HttpService} from '@core/services/http/http.service';
@@ -16,7 +15,6 @@ describe('AuthService', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
-				MatSnackBarModule,
 				RouterTestingModule
 			],
 			providers: [

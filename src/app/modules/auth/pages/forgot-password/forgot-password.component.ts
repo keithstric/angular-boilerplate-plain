@@ -6,7 +6,7 @@ import {AuthService} from '@core/services/auth/auth.service';
 @Component({
 	selector: 'app-forgot-password',
 	templateUrl: './forgot-password.component.html',
-	styleUrls: ['./forgot-password.component.scss']
+	styleUrls: ['../auth-shared-styles.scss']
 })
 export class ForgotPasswordComponent implements OnInit, OnDestroy {
 	forgotPwForm: FormGroup;

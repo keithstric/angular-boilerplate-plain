@@ -1,6 +1,6 @@
 @import 'theme';
 
 /* Variables for the theme colors */
-$primary: mat-color($app-primary);
-$accent: mat-color($app-accent);
-$warn: mat-color($app-warn);
+$primary: $app-primary;
+$accent: $app-accent;
+$warn: $app-warn;

@@ -1,8 +1,5 @@
 import {Injectable} from '@angular/core';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {MatSnackBar, MatSnackBarConfig, MatSnackBarDismiss, MatSnackBarRef} from '@angular/material/snack-bar';
 import {SwPush} from '@angular/service-worker';
-import {ConfirmDialogComponent} from '@shared/components/confirm-dialog/confirm-dialog.component';
 import {ConfirmDialogData} from '@shared/interfaces/confirm-dialog-data.interface';
 
 enum NotificationPermissions {
@@ -15,16 +12,9 @@ enum NotificationPermissions {
 	providedIn: 'root'
 })
 export class UiService {
-	snackbarRef: MatSnackBarRef<any>;
-	snackbarConfig: MatSnackBarConfig = {
-		horizontalPosition: 'center',
-		verticalPosition: 'bottom'
-	};
 
 	constructor(
-		private _snackbar: MatSnackBar,
-		private swPush: SwPush,
-		private _dialog: MatDialog
+		private swPush: SwPush
 	) { }
 
 	/**
@@ -35,7 +25,7 @@ export class UiService {
 	 * @param actionFn {Function}
 	 */
 	notifyUserShowSnackbar(msg: string, duration?: number, action?: string, actionFn?: (...args) => void): void {
-		duration = duration ? duration : 3000;
+		/*duration = duration ? duration : 3000;
 		action = action || 'dismiss';
 		this.snackbarRef = this._snackbar.open(msg, action, {...this.snackbarConfig, duration});
 		const dismissSub = this.snackbarRef.afterDismissed()
@@ -48,7 +38,7 @@ export class UiService {
 					actionFn();
 				}
 				actionSub.unsubscribe();
-			});
+			});*/
 	}
 
 	/**
@@ -97,7 +87,7 @@ export class UiService {
 	 * @param {ConfirmDialogData} dialogData
 	 * @returns {MatDialogRef<ConfirmDialogComponent, ConfirmDialogData>}
 	 */
-	notifyUserShowConfirmDialog(dialogData: ConfirmDialogData): MatDialogRef<ConfirmDialogComponent, ConfirmDialogData> {
-		return this._dialog.open(ConfirmDialogComponent, {data: dialogData});
+	notifyUserShowConfirmDialog(dialogData: ConfirmDialogData) {
+		// return this._dialog.open(ConfirmDialogComponent, {data: dialogData});
 	}
 }

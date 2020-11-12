@@ -1,1 +1,15 @@
-@import '../../../../../node_modules/@angular/material/theming';
+@import 'src/scss/mixins';
+
+.card-container {
+
+	&.with-border {
+		border: 1px solid #afafaf;
+		background-color: white;
+		padding: 15px;
+		@include border-radius(10px);
+	}
+
+	&.raised {
+		@include box-shadow(0, 10px, 15px, 0, rgba(0,0,0,0.25));
+	}
+}

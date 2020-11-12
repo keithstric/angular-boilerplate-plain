@@ -1,3 +1,4 @@
 <div class="avatar-container" (click)="avatarClick($event)">
-  <img [src]="user?.avatar" class="avatar" [alt]="initials || ''">
+  <img *ngIf="user" [src]="user?.avatar" class="avatar" [alt]="initials || ''">
+	<i *ngIf="!user" class="material-icons">perm_identity</i>
 </div>

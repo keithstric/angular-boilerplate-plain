@@ -1,12 +1,21 @@
-@import '../../../../scss/variables';
+@import 'src/scss/variables';
 
-.spacer {
-  flex: 1 1 auto;
-}
+.site-header-container {
+	background-color: $primary;
+	color: white;
+	align-items: center;
+	height: 64px;
+	padding: 0 10px;
 
-.userIcon {
-  &:hover {
-    color: $accent;
-    cursor: pointer;
-  }
+	.title {
+		font-size: 1.5rem;
+		font-weight: 500;
+	}
+
+	.userIcon {
+		&:hover {
+			color: $accent;
+			cursor: pointer;
+		}
+	}
 }

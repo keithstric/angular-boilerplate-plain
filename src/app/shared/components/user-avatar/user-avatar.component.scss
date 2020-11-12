@@ -7,16 +7,28 @@
   &.small {
     height: 48px;
     width: 48px;
+
+		.material-icons {
+			font-size: 32px;
+		}
   }
 
   &.medium {
     height: 64px;
     width: 64px;
+
+		.material-icons {
+			font-size: 52px;
+		}
   }
 
   &.large {
     height: 120px;
     width: 120px;
+
+		.material-icons {
+			font-size: 108px;
+		}
   }
 
   &:hover {
@@ -27,6 +39,9 @@
 .avatar-container {
   height: 100%;
   width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
   .avatar {
     margin: 0;

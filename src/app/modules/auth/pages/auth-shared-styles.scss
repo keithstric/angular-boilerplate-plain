@@ -7,23 +7,38 @@
 
 .page-container {
 
-  .loginCard {
-    width: 400px;
-  }
+	app-card {
+		width: 400px;
 
-  mat-card-title, mat-card-subtitle {
-    text-align: center;
-  }
+		&::ng-deep {
 
-  mat-card-subtitle {
-    color: $warn;
-  }
+			.header {
+				text-align: center;
 
-  mat-card-footer {
-    margin: initial;
+				h1, h2, h3, h4, h5, h6 {
+					margin: 0 0 10px 0;
+				}
 
-    a {
-      margin-right: 10px;
-    }
-  }
+				.card-subtitle {
+					opacity: 0.7;
+					color: $warn;
+				}
+			}
+
+			.actions {
+				margin-bottom: 10px;
+
+				button:first-child {
+					margin-right: 10px;
+				}
+			}
+
+			.footer {
+
+				a:first-child {
+					margin-right: 10px;
+				}
+			}
+		}
+	}
 }

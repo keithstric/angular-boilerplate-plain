@@ -9,7 +9,7 @@ import {PROJECT_NAME} from 'src/environments/environment';
 @Component({
 	selector: 'app-change-password',
 	templateUrl: './change-password.component.html',
-	styleUrls: ['./change-password.component.scss']
+	styleUrls: ['../auth-shared-styles.scss']
 })
 export class ChangePasswordComponent implements OnInit, OnDestroy {
 	changePwForm: FormGroup;

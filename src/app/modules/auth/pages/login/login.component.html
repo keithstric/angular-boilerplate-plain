@@ -1,28 +1,28 @@
 <div class="page-container flex flex-content-center">
-  <mat-card class="loginCard">
-    <mat-card-title>{{projectName}} Login</mat-card-title>
-    <mat-card-subtitle>{{errorMsg}}</mat-card-subtitle>
-    <mat-card-content>
-      <form #loginForm class="loginForm flex-column" [formGroup]="loginData">
-        <mat-form-field appearance="standard">
-          <mat-label>Email Address</mat-label>
-          <input matInput placeholder="youremail@knowhere.com" type="email" [formControl]="email" name="email" (keypress)="onKeypress($event)">
-          <mat-error *ngIf="email.invalid">{{getFieldErrorMessage('email')}}</mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="standard">
-          <mat-label>Password</mat-label>
-          <input matInput placeholder="Password" type="password" [formControl]="password" name="password" (keypress)="onKeypress($event)">
-          <mat-error *ngIf="password.invalid">{{getFieldErrorMessage('password')}}</mat-error>
-        </mat-form-field>
-      </form>
-    </mat-card-content>
-    <mat-card-actions class="flex-row flex-content-end">
-      <button mat-raised-button (click)="loginForm.reset()">Reset</button>
-      <button mat-raised-button color="primary" (click)="loginClick()">Login</button>
-    </mat-card-actions>
-    <mat-card-footer class="flex-row flex-content-center">
-      <a routerLink="/auth/register" title="Register">Register</a>
-      <a routerLink="/auth/forgot" title="Forgotten Password">Forgotten Password</a>
-    </mat-card-footer>
-  </mat-card>
+	<app-card>
+		<div class="header flex-column" header>
+			<h2 class="title">{{projectName}}</h2>
+			<h3 class="card-subtitle">{{errorMsg}}</h3>
+		</div>
+		<div class="content" content>
+			<form #loginForm class="loginForm flex-column" [formGroup]="loginData">
+				<div class="form-field flex-column">
+					<label class="label" for="emailInput">Email Address</label>
+					<input id="emailInput" class="input" placeholder="youremail@knowhere.com" type="email" [formControl]="email" name="email" (keypress)="onKeypress($event)">
+				</div>
+				<div class="form-field flex-column">
+					<label class="label" for="passwordInput">Password</label>
+					<input id="passwordInput" class="input" placeholder="Password" type="password" [formControl]="password" name="password" (keypress)="onKeypress($event)">
+				</div>
+			</form>
+		</div>
+		<div class="actions flex-row flex-content-end" actions>
+			<button (click)="loginForm.reset()">Reset</button>
+			<button (click)="loginClick()">Login</button>
+		</div>
+		<div class="footer flex-row flex-content-center" footer>
+			<a routerLink="/auth/register" title="Register">Register</a>
+			<a routerLink="/auth/forgot" title="Forgotten Password">Forgotten Password</a>
+		</div>
+	</app-card>
 </div>

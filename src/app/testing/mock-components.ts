@@ -1,6 +1,4 @@
 import {Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {ConfirmDialogComponent} from '@shared/components/confirm-dialog/confirm-dialog.component';
 import {ConfirmDialogData} from '@shared/interfaces/confirm-dialog-data.interface';
 import {PageBreadcrumbHeaderComponent} from '@layout/components/page-breadcrumb-header/page-breadcrumb-header.component';
 import {BreadcrumbService} from '@layout/services/breadcrumb/breadcrumb.service';
@@ -42,8 +40,8 @@ export class MockPageNotFoundComponent {
 		template: `<div class="flex-row page-header">
 			<app-breadcrumbs></app-breadcrumbs>
 			<span class="spacer"></span>
-			<button *ngIf="showAddButton" mat-button (click)="clickAddButton()" type="button">
-				<mat-icon>add</mat-icon>
+			<button *ngIf="showAddButton" (click)="clickAddButton()" type="button">
+				<!--<mat-icon>add</mat-icon>-->
 			</button>
 		</div>`
 })
@@ -74,7 +72,7 @@ export class MockStorybookPageBreadcrumbHeaderComponent extends PageBreadcrumbHe
  * This component is for the confirm-dialog.stories.ts storybook story to
  * open the confirm-dialog when loaded
  */
-@Component({
+/*@Component({
 	selector: 'app-mock-open-dialog',
 	template: `<ng-template #exampleTemplate>
 		This is from a template (#exampleTemplate) inside MockStorybookOpenDialogComponent
@@ -94,7 +92,7 @@ export class MockStorybookOpenDialogComponent implements OnInit {
 		}
 		this.dialog.open(ConfirmDialogComponent, {data: this.data});
 	}
-}
+}*/
 
 /**
  * This component is for the confirm-dialog.stories.ts storybook story to display

@@ -1,14 +1,6 @@
-<mat-card>
-  <mat-card-title>
-    {{ cardTitle }}
-  </mat-card-title>
-  <mat-card-subtitle>
-    {{ cardSubTitle }}
-  </mat-card-subtitle>
-  <mat-card-content>
-    <ng-content select="[content]"></ng-content>
-  </mat-card-content>
-  <mat-card-actions align="end">
-    <ng-content select="[actions]"></ng-content>
-  </mat-card-actions>
-</mat-card>
+<div class="card-container flex-column" [class.with-border]="withBorder" [class.raised]="raised">
+	<ng-content select="[header]"></ng-content>
+	<ng-content select="[content]"></ng-content>
+	<ng-content select="[actions]"></ng-content>
+	<ng-content select="[footer]"></ng-content>
+</div>

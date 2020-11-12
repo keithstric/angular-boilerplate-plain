@@ -1,32 +1,31 @@
 <div class="page-container flex flex-content-center">
-  <mat-card class="loginCard">
-    <mat-card-title>{{projectName}} User</mat-card-title>
-    <mat-card-subtitle>{{errorMsg}}</mat-card-subtitle>
-    <mat-card-content>
-      <form #loginForm class="loginForm flex-column" [formGroup]="userData">
-        <mat-form-field appearance="standard">
-          <mat-label>First Name</mat-label>
-          <input matInput placeholder="First Name" type="email" [formControl]="first_name" name="first_name">
-          <mat-error *ngIf="email.invalid">{{getFieldErrorMessage('first_name')}}</mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="standard">
-          <mat-label>Last Name</mat-label>
-          <input matInput placeholder="Last Name" type="email" [formControl]="last_name" name="last_name">
-          <mat-error *ngIf="email.invalid">{{getFieldErrorMessage('last_name')}}</mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="standard">
-          <mat-label>Email Address</mat-label>
-          <input matInput placeholder="youremail@knowhere.com" type="email" [formControl]="email" name="email">
-          <mat-error *ngIf="email.invalid">{{getFieldErrorMessage('email')}}</mat-error>
-        </mat-form-field>
-      </form>
-    </mat-card-content>
-    <mat-card-actions class="flex-row flex-content-end">
-      <button mat-raised-button (click)="reset()">Reset</button>
-      <button mat-raised-button color="primary" (click)="update()" [disabled]="updateIsDisabled">Update</button>
-    </mat-card-actions>
-    <mat-card-footer class="flex-row flex-content-center">
-      <a routerLink="/auth/changepw" title="Reset Password">Reset Password</a>
-    </mat-card-footer>
-  </mat-card>
+	<app-card>
+		<div class="header flex-column" header>
+			<h2 class="title">{{projectName}}</h2>
+			<h3 class="card-subtitle">{{errorMsg}}</h3>
+		</div>
+		<div class="content" content>
+			<form #loginForm class="loginForm flex-column" [formGroup]="userData">
+				<div class="form-field flex-column">
+					<label class="label" for="firstName">First Name</label>
+					<input id="firstName" class="input" placeholder="First Name" type="email" [formControl]="first_name" name="first_name">
+				</div>
+				<div class="form-field flex-column">
+					<label class="label" for="lastName">Last Name</label>
+					<input id="lastName" class="input" placeholder="Last Name" type="email" [formControl]="last_name" name="last_name">
+				</div>
+				<div class="form-field flex-column">
+					<label class="label" for="emailAddress">Email Address</label>
+					<input id="emailAddress" class="input" placeholder="youremail@knowhere.com" type="email" [formControl]="email" name="email">
+				</div>
+			</form>
+		</div>
+		<div class="actions flex-row flex-content-end" actions>
+			<button (click)="reset()">Reset</button>
+			<button (click)="update()" [disabled]="updateIsDisabled">Update</button>
+		</div>
+		<div class="footer flex-row flex-content-center" footer>
+			<a routerLink="/auth/changepw" title="Reset Password">Reset Password</a>
+		</div>
+	</app-card>
 </div>

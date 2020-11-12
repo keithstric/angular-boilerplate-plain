@@ -1,7 +1,6 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ErrorService} from '@core/services/error/error.service';
 import {AuthService} from '@core/services/auth/auth.service';
@@ -19,8 +18,7 @@ describe('LoginComponent', () => {
 			imports: [
 				FormsModule,
 				ReactiveFormsModule,
-				RouterTestingModule,
-				MatSnackBarModule
+				RouterTestingModule
 			],
 			declarations: [LoginComponent],
 			providers: [

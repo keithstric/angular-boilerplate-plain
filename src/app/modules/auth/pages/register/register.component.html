@@ -1,5 +1,39 @@
 <div class="page-container flex flex-content-center">
-  <mat-card class="loginCard">
+	<app-card>
+		<div class="header flex-column" header>
+			<h2 class="title">{{projectName}}</h2>
+			<h3 class="card-subtitle">{{errorMsg}}</h3>
+		</div>
+		<div class="content" content>
+			<form #loginForm class="loginForm flex-column" [formGroup]="registrationData">
+				<div class="form-field flex-column">
+					<label class="label" for="firstName">First Name</label>
+					<input id="firstName" class="input" placeholder="First Name" type="text" [formControl]="first_name" name="first_name">
+				</div>
+				<div class="form-field flex-column">
+					<label class="label" for="lastName">Last Name</label>
+					<input id="lastName" class="input" placeholder="Last Name" type="text" [formControl]="last_name" name="last_name">
+				</div>
+				<div class="form-field flex-column">
+					<label class="label" for="emailInput">Email Address</label>
+					<input id="emailInput" class="input" placeholder="youremail@knowhere.com" type="email" [formControl]="email" name="email">
+				</div>
+				<div class="form-field flex-column">
+					<label class="label" for="passwordInput">Password</label>
+					<input id="passwordInput" class="input" placeholder="Password" type="password" [formControl]="password" name="password">
+				</div>
+				<div class="form-field flex-column">
+					<label class="label" for="verifyPassword">Verify Password</label>
+					<input id="verifyPassword" class="input" placeholder="Password Again" type="password" [formControl]="verify_password" name="verify_password">
+				</div>
+			</form>
+		</div>
+		<div class="actions flex-row flex-content-end" actions>
+			<button (click)="loginForm.reset()">Reset</button>
+			<button color="primary" (click)="register()">Register</button>
+		</div>
+	</app-card>
+  <!--<mat-card class="loginCard">
     <mat-card-title>{{projectName}} Registration</mat-card-title>
     <mat-card-subtitle>{{errorMsg}}</mat-card-subtitle>
     <mat-card-content>
@@ -35,5 +69,5 @@
       <button mat-raised-button (click)="loginForm.reset()">Reset</button>
       <button mat-raised-button color="primary" (click)="register()">Register</button>
     </mat-card-actions>
-  </mat-card>
+  </mat-card>-->
 </div>

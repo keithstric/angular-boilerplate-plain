@@ -1,6 +1,4 @@
 import {TestBed} from '@angular/core/testing';
-import {MatDialogModule} from '@angular/material/dialog';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {ServiceWorkerModule, SwPush} from '@angular/service-worker';
 import {environment} from 'src/environments/environment';
 
@@ -12,8 +10,6 @@ describe('UiService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				MatSnackBarModule,
-				MatDialogModule,
 				ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production})
 			],
 			providers: [

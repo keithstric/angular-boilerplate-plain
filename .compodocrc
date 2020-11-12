@@ -1,0 +1,8 @@
+{
+	"tsconfig": "./tsconfig.compodoc.json",
+	"name": "angular-boilerplate",
+	"assetsFolder": "src/assets",
+	"theme": "vagrant",
+	"hideGenerator": true,
+	"open": true
+}

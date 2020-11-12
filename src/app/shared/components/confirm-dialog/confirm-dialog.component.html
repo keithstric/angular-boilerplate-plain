@@ -1,0 +1,49 @@
+<!-- Header -->
+<h1
+	*ngIf="!data.titleHtml"
+	mat-dialog-title>
+	{{data.title || 'Confirm Action'}}
+</h1>
+<!-- Styles for HTML Title are in src/scss/theme.scss -->
+<div
+	*ngIf="data.titleHtml"
+	class="dialogTitle"
+	[innerHTML]="data.titleHtml"
+	mat-dialog-title>
+</div>
+
+<!-- Content -->
+<mat-dialog-content>
+	<!-- messageText -->
+  <span *ngIf="data.message" class="dialogMessage">
+		{{data.message || 'Are you sure you want to perform that action?'}}
+	</span>
+	<!-- messageHtml -->
+	<div
+		*ngIf="data.messageHtml"
+		class="dialogMessage"
+		[innerHTML]="data.messageHtml">
+	</div>
+	<!-- messageTemplate -->
+	<ng-container *ngTemplateOutlet="data.messageTemplate"></ng-container>
+	<!-- messageComponent -->
+	<ng-container *ngComponentOutlet="data.messageComponent"></ng-container>
+</mat-dialog-content>
+
+<!-- Actions -->
+<mat-dialog-actions align="end">
+	<button
+		id="cancelBtn"
+		mat-raised-button
+		*ngIf="!(data && data.noCancelButton === true)"
+		(click)="onActionClick(false)">
+		{{data.cancelButtonText || 'Cancel'}}
+	</button>
+  <button
+		id="confirmBtn"
+		mat-raised-button
+		(click)="onActionClick(true)"
+		color="accent">
+		{{data.confirmButtonText || 'Confirm'}}
+	</button>
+</mat-dialog-actions>

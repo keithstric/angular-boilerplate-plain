@@ -1,0 +1,29 @@
+/**
+ * Using shared styles since all of the auth forms are basically laid out the spame and should have
+ * the same styles.
+ */
+
+@import 'src/scss/variables';
+
+.page-container {
+
+  .loginCard {
+    width: 400px;
+  }
+
+  mat-card-title, mat-card-subtitle {
+    text-align: center;
+  }
+
+  mat-card-subtitle {
+    color: $warn;
+  }
+
+  mat-card-footer {
+    margin: initial;
+
+    a {
+      margin-right: 10px;
+    }
+  }
+}

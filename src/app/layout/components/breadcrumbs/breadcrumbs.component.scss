@@ -1,0 +1,111 @@
+@import 'src/scss/variables';
+@import 'src/scss/mixins';
+
+:host {
+  width: 50%;
+}
+
+ul.breadcrumbs-list {
+  @include font-size(18px);
+  list-style-type: none;
+  overflow: hidden;
+  padding: 0;
+
+  li {
+    float: left;
+
+    a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 0 10px 65px;
+      background: brown;
+      background: hsla(34,85%,35%,1);
+      position: relative;
+      display: block;
+      float: left;
+
+      &:hover {
+        background: hsla(34,85%,25%,1);
+
+        &::after {
+          border-left-color: hsla(34,85%,25%,1) !important;
+        }
+      }
+
+      &::after {
+        content: " ";
+        display: block;
+        width: 0;
+        height: 0;
+        border-top: 50px solid transparent;
+        border-bottom: 50px solid transparent;
+        border-left: 30px solid hsla(34, 85%,35%,1);
+        position: absolute;
+        top: 50%;
+        margin-top: -50px;
+        left: 100%;
+        z-index: 2;
+      }
+
+      &::before {
+        content: " ";
+        display: block;
+        width: 0;
+        height: 0;
+        border-top: 50px solid transparent;
+        border-bottom: 50px solid transparent;
+        border-left: 30px solid white;
+        position: absolute;
+        top: 50%;
+        margin-top: -50px;
+        margin-left: 1px;
+        left: 100%;
+        z-index: 1;
+      }
+
+    }
+
+    &:first-child {
+      a {
+        padding-left: 10px;
+      }
+    }
+
+    &:nth-child(2) {
+      a {
+        background: hsla(34,85%,45%,1);
+
+        &::after {
+          border-left-color: hsla(34,85%,45%,1);
+        }
+      }
+    }
+    &:nth-child(3) {
+      a {
+        background: hsla(34,85%,55%,1);
+
+        &::after {
+          border-left-color: hsla(34,85%,55%,1);
+        }
+      }
+    }
+    &:nth-child(4) {
+      a {
+        background: hsla(34,85%,65%,1);
+
+        &::after {
+          border-left-color: hsla(34,85%,65%,1);
+        }
+      }
+    }
+    &:nth-child(5) {
+      a {
+        background: hsla(34,85%,75%,1);
+
+        &::after {
+          border-left-color: hsla(34,85%,75%,1);
+        }
+      }
+    }
+  }
+}

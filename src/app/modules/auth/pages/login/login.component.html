@@ -1,0 +1,28 @@
+<div class="page-container flex flex-content-center">
+  <mat-card class="loginCard">
+    <mat-card-title>{{projectName}} Login</mat-card-title>
+    <mat-card-subtitle>{{errorMsg}}</mat-card-subtitle>
+    <mat-card-content>
+      <form #loginForm class="loginForm flex-column" [formGroup]="loginData">
+        <mat-form-field appearance="standard">
+          <mat-label>Email Address</mat-label>
+          <input matInput placeholder="youremail@knowhere.com" type="email" [formControl]="email" name="email" (keypress)="onKeypress($event)">
+          <mat-error *ngIf="email.invalid">{{getFieldErrorMessage('email')}}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="standard">
+          <mat-label>Password</mat-label>
+          <input matInput placeholder="Password" type="password" [formControl]="password" name="password" (keypress)="onKeypress($event)">
+          <mat-error *ngIf="password.invalid">{{getFieldErrorMessage('password')}}</mat-error>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+    <mat-card-actions class="flex-row flex-content-end">
+      <button mat-raised-button (click)="loginForm.reset()">Reset</button>
+      <button mat-raised-button color="primary" (click)="loginClick()">Login</button>
+    </mat-card-actions>
+    <mat-card-footer class="flex-row flex-content-center">
+      <a routerLink="/auth/register" title="Register">Register</a>
+      <a routerLink="/auth/forgot" title="Forgotten Password">Forgotten Password</a>
+    </mat-card-footer>
+  </mat-card>
+</div>

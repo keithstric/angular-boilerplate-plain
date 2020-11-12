@@ -1,0 +1,13 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>{{ title }}</span>
+    <span class="spacer"></span>
+    <mat-menu #userMenu="matMenu">
+      <a mat-menu-item [routerLink]="['/auth/login']">Login</a>
+      <a mat-menu-item (click)="logout()">Logout</a>
+      <a mat-menu-item [routerLink]="['/auth/user']">User Profile</a>
+    </mat-menu>
+    <app-user-avatar *ngIf="user && user.avatar" class="small" [matMenuTriggerFor]="userMenu"></app-user-avatar>
+    <mat-icon *ngIf="!user || !user.avatar" [matMenuTriggerFor]="userMenu" class="userIcon">perm_identity</mat-icon>
+  </mat-toolbar-row>
+</mat-toolbar>

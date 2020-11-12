@@ -1,0 +1,14 @@
+<mat-card>
+  <mat-card-title>
+    {{ cardTitle }}
+  </mat-card-title>
+  <mat-card-subtitle>
+    {{ cardSubTitle }}
+  </mat-card-subtitle>
+  <mat-card-content>
+    <ng-content select="[content]"></ng-content>
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <ng-content select="[actions]"></ng-content>
+  </mat-card-actions>
+</mat-card>

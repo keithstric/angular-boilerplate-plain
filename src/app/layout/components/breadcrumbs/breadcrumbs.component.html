@@ -1,0 +1,7 @@
+<div class="breadcrumb-container">
+  <ul class="breadcrumbs-list">
+    <li *ngFor="let bc of breadcrumbs">
+      <a [href]="bc.url" [title]="bc.title">{{bc.title | titlecase}}</a>
+    </li>
+  </ul>
+</div>

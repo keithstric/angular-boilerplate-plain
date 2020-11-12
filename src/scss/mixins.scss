@@ -1,0 +1,51 @@
+@import 'src/scss/variables';
+
+@mixin font-size($size) {
+	font-size: $size;
+	font-size: ($size / 16px) * 1rem; // convert to rem if browser supports it
+}
+
+@mixin box-shadow( $hOffset: 10px, $vOffset: 10px, $blurPx: 0, $spreadPx: 0px, $colorVal: #000000 ) {
+	box-shadow: $hOffset $vOffset $blurPx $spreadPx $colorVal;
+}
+
+@mixin border-radius($size) {
+	border-radius: $size;
+}
+
+@mixin ellipsis($maxWidth) {
+	max-width: $maxWidth;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+@mixin roundCorners() {
+	border-radius: 5px;
+}
+
+/**
+ * Fade-in/out
+ */
+@mixin keyframe-fade-in {
+	0% { opacity: 0 };
+	100% {opacity: 1};
+}
+
+@mixin keyframe-fade-out {
+	0% { opacity: 1 };
+	100% {opacity: 0};
+}
+
+@keyframes fadeIn {
+	@include keyframe-fade-in;
+}
+
+@keyframes fadeOut {
+	@include keyframe-fade-out;
+}
+
+@mixin fadeInOut($duration, $keyframeName: fadeIn) {
+	animation: $keyframeName ease $duration;
+}
+/********************/

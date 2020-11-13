@@ -1,7 +1,6 @@
 import {withKnobs} from '@storybook/addon-knobs';
 import {moduleMetadata} from '@storybook/angular';
 import {UserAvatarComponent} from '@shared/components/user-avatar/user-avatar.component';
-import {MaterialModule} from '@core/modules/material.module';
 import {AuthService} from '@core/services/auth/auth.service';
 import {MockStorybookUserAvatarComponent} from 'src/app/testing/mock-components';
 import {MockAuthService} from 'src/app/testing/mock-services';
@@ -13,7 +12,7 @@ export default {
 	title: 'app-user-avatar',
 	decorators: [
 		moduleMetadata({
-			imports: [MaterialModule],
+			imports: [],
 			declarations: [UserAvatarComponent],
 			providers: [
 				{provide: AuthService, useClass: MockAuthService}

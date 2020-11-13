@@ -1,7 +1,6 @@
 import {RouterTestingModule} from '@angular/router/testing';
 import {boolean, withKnobs} from '@storybook/addon-knobs';
 import {moduleMetadata} from '@storybook/angular';
-import {MaterialModule} from '@core/modules/material.module';
 import {BreadcrumbsComponent} from '@layout/components/breadcrumbs/breadcrumbs.component';
 import {MockStorybookPageBreadcrumbHeaderComponent} from 'src/app/testing/mock-components';
 
@@ -13,7 +12,6 @@ export default {
 	decorators: [
 		moduleMetadata({
 			imports: [
-				MaterialModule,
 				RouterTestingModule
 			],
 			declarations: [

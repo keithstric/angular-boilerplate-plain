@@ -7,7 +7,6 @@ import {
 	MockPageBreadcrumbHeaderComponent,
 	MockPageNotFoundComponent,
 	MockSiteHeaderComponent,
-	MockStorybookOpenDialogComponent,
 	MockStorybookPageBreadcrumbHeaderComponent,
 	MockStorybookUserAvatarComponent,
 	MockStorybookDialogContentComponent
@@ -15,13 +14,11 @@ import {
 
 const components = [
 	MockCardComponent,
-	MockStorybookOpenDialogComponent,
 	MockStorybookPageBreadcrumbHeaderComponent,
 	MockPageBreadcrumbHeaderComponent,
 	MockPageNotFoundComponent,
 	MockSiteHeaderComponent,
-	MockStorybookUserAvatarComponent,
-	MockStorybookDialogContentComponent
+	MockStorybookUserAvatarComponent
 ];
 
 @NgModule({

@@ -1,0 +1,33 @@
+<div class="modal-header flex-row">
+	<div class="modal-header-text">
+		{{modalHeaderText}}
+	</div>
+	<button class="btn btn-reset" (click)="bsModalRef.hide()">
+		<i class="material-icons">close</i>
+	</button>
+</div>
+<div class="modal-body">
+	<h2 *ngIf="modalTitle" class="modalTitle">{{modalTitle}}</h2>
+	<h2 *ngIf="modalTitleHtml" class="modalTitle" [innerHTML]="modalTitleHtml"></h2>
+	<h6 *ngIf="modalSubHeading" class="modalSubHeading">{{modalSubHeading}}</h6>
+	<h6 *ngIf="modalSubHeadingHtml" class="modalSubHeading" [innerHTML]="modalSubHeadingHtml"></h6>
+	<div *ngIf="modalHtmlContent" class="content-container" [innerHTML]="modalHtmlContent"></div>
+	<div *ngIf="modalTextContent" class="content-container">
+		{{modalTextContent}}
+	</div>
+	<ng-template *ngIf="modalTemplateContent" [ngTemplateOutlet]="modalTemplateContent"></ng-template>
+	<ng-container *ngComponentOutlet="modalComponentContent"></ng-container>
+</div>
+<div class="modal-footer flex-row">
+	<button
+		*ngIf="!hideCancelButton"
+		class="btn rds--button--primary"
+		(click)="onCancel()">
+		{{cancelButtonLabel}}
+	</button>
+	<button
+		class="btn btn-primary"
+		(click)="onConfirm()">
+		{{confirmButtonLabel}}
+	</button>
+</div>

@@ -1,0 +1,25 @@
+.modal-body {
+
+	.modalSubHeading {
+		opacity: 0.6;
+		margin-bottom: 25px;
+	}
+
+	.content-container {
+		height: 100%;
+		overflow-y: auto;
+		overflow-x: hidden;
+
+		.modalTitle {
+			margin-bottom: 12px;
+		}
+
+		pre {
+			white-space: pre-wrap;
+		}
+	}
+}
+
+.modal-footer {
+	justify-content: flex-end !important;
+}

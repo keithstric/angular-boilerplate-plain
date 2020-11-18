@@ -2,6 +2,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {ErrorHandler, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {HttpRequestInterceptor} from '@core/interceptors/http-request-interceptor.service';
+import {RootStoreModule} from '@core/root-store';
 import {ErrorService} from '@core/services/error/error.service';
 import {HttpService} from '@core/services/http/http.service';
 import {LocalStorageService} from '@core/services/local-storage/local-storage.service';
@@ -18,7 +19,8 @@ const components = [];
 	],
 	imports: [
 		CommonModule,
-		HttpClientModule
+		HttpClientModule,
+		RootStoreModule
 	],
 	exports: [
 		...components

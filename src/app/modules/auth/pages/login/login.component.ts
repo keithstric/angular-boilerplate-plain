@@ -1,6 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
+import {LoginUserAction, UserActionTypes} from '@core/root-store/user/user.action';
+import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {User} from '@shared/models/user.model';
 import {ErrorService} from '@core/services/error/error.service';
@@ -26,7 +28,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 		private _error: ErrorService,
 		private _auth: AuthService,
 		private _router: Router,
-		private _ui: UiService
+		private _ui: UiService,
+		private store: Store<{user: User}>
 	) {
 	}
 
@@ -78,11 +81,12 @@ export class LoginComponent implements OnInit, OnDestroy {
 	 * Perform the authentication
 	 */
 	loginClick() {
-		this.subscriptions.add(this._auth.login(this.loginData.getRawValue())
-			.subscribe((user: User) => {
-				this._ui.notifyUserShowSnackbar(`Welcome to ${PROJECT_NAME}!`);
-				this._router.navigateByUrl('/auth/user');
-			}));
+		this.store.dispatch(new LoginUserAction(this.loginData.getRawValue()));
+		// this.subscriptions.add(this._auth.login(this.loginData.getRawValue())
+		// 	.subscribe((user: User) => {
+		// 		this._ui.notifyUserShowSnackbar(`Welcome to ${PROJECT_NAME}!`);
+		// 		this._router.navigateByUrl('/auth/user');
+		// 	}));
 	}
 
 	/**

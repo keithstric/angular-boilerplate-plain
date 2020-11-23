@@ -15,8 +15,8 @@ import {environment} from 'src/environments/environment';
 		StoreModule.forRoot({
 			user: UserReducer
 		}, {}),
-		StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
-		EffectsModule.forRoot([UserEffects])
+		EffectsModule.forRoot([UserEffects]),
+		StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production})
 	]
 })
 export class RootStoreModule {

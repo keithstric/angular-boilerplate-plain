@@ -14,21 +14,25 @@ export interface iUserState extends iFeatureState {
 export const initialState: iUserState = {
 	data: null,
 	loading: false,
-	error: null
+	error: undefined
 };
 
 export function UserReducer(state: iUserState = initialState, action: UserAction) {
 	switch (action.type) {
-		// handled by UserEffects
-		// case UserActionTypes.LOGIN_USER:
-		// 	console.log('UserReducer, LOGIN_USER action.payload=', action.payload);
-		// 	return {...state, data: action.payload, loading: true};
 		case UserActionTypes.LOGIN_USER_SUCCESS:
-			console.log('UserReducer, LOGIN_USER_SUCCESS action.payload=', action.payload);
-			const user = User.deserialize(action.payload);
-			return {...state, data: user, loading: false};
+			const loginUser = User.deserialize(action.payload);
+			return {...state, data: loginUser, loading: false, error: undefined};
 		case UserActionTypes.LOGIN_USER_FAILURE:
-			return {...state, data: null, loading: false};
+			return {...state, data: null, loading: false, error: action.payload};
+		case UserActionTypes.LOGOUT_USER_SUCCESS:
+			return {...state, data: null, loading: false, error: undefined};
+		case UserActionTypes.LOGOUT_USER_FAILURE:
+			return {...state, data: null, loading: false, error: action.payload};
+		case UserActionTypes.REGISTER_USER_SUCCESS:
+			const registerUser = User.deserialize(action.payload);
+			return {...state, data: registerUser, loading: false, error: undefined};
+		case UserActionTypes.REGISTER_USER_FAILURE:
+			return {...state, data: null, loading: false, error: action.payload};
 	}
 	return state;
 }

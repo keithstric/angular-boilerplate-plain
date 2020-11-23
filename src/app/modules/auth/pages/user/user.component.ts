@@ -1,6 +1,8 @@
 import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
+import {iUserState} from '@core/root-store/user/user.reducer';
+import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {ErrorService} from '@core/services/error/error.service';
 import {AuthService} from '@core/services/auth/auth.service';
@@ -25,9 +27,9 @@ export class UserComponent implements OnInit, OnChanges {
 
 	constructor(
 		private _formBuilder: FormBuilder,
-		private _auth: AuthService,
 		private _error: ErrorService,
-		private _router: Router
+		private _router: Router,
+		private store: Store<{user: iUserState}>
 	) { }
 
 	ngOnInit(): void {
@@ -91,13 +93,15 @@ export class UserComponent implements OnInit, OnChanges {
 	 * Reset the form to it's original values
 	 */
 	reset() {
-		const userObj = this._auth.getUser();
-		if (userObj) {
-			this.email.setValue(userObj.email);
-			this.first_name.setValue(userObj.first_name);
-			this.last_name.setValue(userObj.last_name);
-			this.password.setValue('');
-			this.verify_password.setValue('');
-		}
+		const userObj = this.store.select(store => store.user)
+			.subscribe((state) => {
+				if (state && state.data) {
+					this.email.setValue(state.data.email);
+					this.first_name.setValue(state.data.first_name);
+					this.last_name.setValue(state.data.last_name);
+					this.password.setValue('');
+					this.verify_password.setValue('');
+				}
+			});
 	}
 }

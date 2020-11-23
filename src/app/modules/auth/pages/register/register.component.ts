@@ -1,9 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
+import {RegisterUserAction} from '@core/root-store/user/user.action';
+import {iUserState} from '@core/root-store/user/user.reducer';
+import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
-import {User} from '@shared/models/user.model';
-import {AuthService} from '@core/services/auth/auth.service';
 import {ErrorService} from '@core/services/error/error.service';
 import {PROJECT_NAME} from 'src/environments/environment';
 
@@ -26,8 +27,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
 	constructor(
 		private _formBuilder: FormBuilder,
 		private _error: ErrorService,
-		private _auth: AuthService,
-		private _router: Router
+		private _router: Router,
+		private store: Store<{user: iUserState}>
 	) { }
 
 	ngOnInit(): void {
@@ -35,6 +36,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(this._error.errorEvent.subscribe((err: Error) => {
 			this.errorMsg = err.message;
 		}));
+		this.store.select(store => store.user)
+			.subscribe((state) => {
+				console.log('got a user, state=', state);
+				if (state && state.data) {
+					this._router.navigateByUrl('/auth/user');
+				}
+			});
 		this.buildFormGroup();
 	}
 
@@ -79,9 +87,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
 	 */
 	register() {
 		this.errorMsg = undefined;
-		this.subscriptions.add(this._auth.register(this.registrationData.getRawValue())
-			.subscribe((resp: User) => {
-				this._router.navigateByUrl('/auth/user');
-			}));
+		this.store.dispatch(new RegisterUserAction(this.registrationData.getRawValue()));
 	}
 }

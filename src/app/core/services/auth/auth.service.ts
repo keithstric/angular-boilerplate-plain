@@ -54,11 +54,8 @@ export class AuthService {
 	 * @returns {Observable<RawUser>}
 	 */
 	login(loginData: RawUser) {
-		console.log('AuthService.login, loginData=', loginData);
 		return this._http.requestCall(ApiEndpoints.LOGIN, ApiMethod.POST, loginData)
-			.pipe(tap((rawUser: RawUser) => {
-				return this.updateLocalUser(rawUser);
-			}));
+			.pipe(tap(user => this.updateLocalUser(user)));
 	}
 
 	/**

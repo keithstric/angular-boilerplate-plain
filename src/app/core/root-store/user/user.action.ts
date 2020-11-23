@@ -18,9 +18,7 @@ export enum UserActionTypes {
 
 export class LoginUserAction implements Action {
 	readonly type = UserActionTypes.LOGIN_USER;
-	constructor(public payload: RawUser) {
-		console.log('LoginUserAction, payload=', payload);
-	}
+	constructor(public payload: RawUser) {}
 }
 
 export class LoginUserSuccessAction implements Action {

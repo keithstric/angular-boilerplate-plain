@@ -1,27 +1,57 @@
 import {Injectable} from '@angular/core';
-import {LoginUserAction, LoginUserSuccessAction, UserActionTypes} from '@core/root-store/user/user.action';
+import {
+	LoginUserAction,
+	LoginUserFailureAction,
+	LoginUserSuccessAction,
+	LogOutUserAction,
+	LogOutUserFailureAction,
+	LogOutUserSuccessAction,
+	RegisterUserAction, RegisterUserFailureAction,
+	RegisterUserSuccessAction,
+	UserActionTypes
+} from '@core/root-store/user/user.action';
 import {AuthService} from '@core/services/auth/auth.service';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {of} from 'rxjs';
-import {catchError, map, mergeMap, tap} from 'rxjs/operators';
+import {catchError, map, mergeMap} from 'rxjs/operators';
 
 @Injectable()
 export class UserEffects {
 
-	@Effect()	loginUser = this.actions
+	@Effect()
+	loginUser = this.actions
 		.pipe(
 			ofType<LoginUserAction>(UserActionTypes.LOGIN_USER),
-			mergeMap((action: LoginUserAction) => {
-				console.log('createUser Effect, mergeMap, action=', action);
-				return this._auth.login(action.payload)
-					.pipe(
-						tap((user) => {
-							console.log('createUser Effect, map of network response, user=', user);
-							return new LoginUserSuccessAction(user);
-						}),
-						catchError(err => of({type: UserActionTypes.LOGIN_USER_FAILURE, payload: err.error}))
-					);
-			})
+			mergeMap(action => this._auth.login(action.payload)
+				.pipe(
+					map(user => new LoginUserSuccessAction(user)),
+					catchError(err => of(new LoginUserFailureAction(err)))
+				)
+			)
+		);
+
+	@Effect()
+	logoutUser = this.actions
+		.pipe(
+			ofType<LogOutUserAction>(UserActionTypes.LOGOUT_USER),
+			mergeMap(action => this._auth.logout()
+				.pipe(
+					map(() => new LogOutUserSuccessAction()),
+					catchError(err => of(new LogOutUserFailureAction(err)))
+				)
+			)
+		);
+
+	@Effect()
+	registerUser = this.actions
+		.pipe(
+			ofType<RegisterUserAction>(UserActionTypes.REGISTER_USER),
+			mergeMap(action => this._auth.register(action.payload)
+				.pipe(
+					map(user => new RegisterUserSuccessAction(user)),
+					catchError(err => of(new RegisterUserFailureAction(err)))
+				)
+			)
 		);
 
 	constructor(

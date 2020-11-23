@@ -1,4 +1,4 @@
-import {User} from '@shared/models/user.model';
+import {iUserState} from '@core/root-store/user/user.reducer';
 
 interface iLayout {
 	header: any;
@@ -6,6 +6,6 @@ interface iLayout {
 }
 
 export interface AppState {
-	readonly user: User | null;
+	readonly user: iUserState | null;
 	readonly layout: iLayout;
 }

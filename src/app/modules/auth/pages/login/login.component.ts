@@ -2,11 +2,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {LoginUserAction, UserActionTypes} from '@core/root-store/user/user.action';
+import {iUserState} from '@core/root-store/user/user.reducer';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
-import {User} from '@shared/models/user.model';
 import {ErrorService} from '@core/services/error/error.service';
-import {AuthService} from '@core/services/auth/auth.service';
 import {UiService} from '@core/services/ui/ui.service';
 import {PROJECT_NAME} from 'src/environments/environment';
 
@@ -26,10 +25,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 	constructor(
 		private _formBuilder: FormBuilder,
 		private _error: ErrorService,
-		private _auth: AuthService,
 		private _router: Router,
 		private _ui: UiService,
-		private store: Store<{user: User}>
+		private store: Store<{user: iUserState}>
 	) {
 	}
 
@@ -38,9 +36,12 @@ export class LoginComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(this._error.errorEvent.subscribe((err: Error) => {
 			this.errorMsg = err.message;
 		}));
-		if (this._auth.isAuthenticated()) {
-			this._router.navigateByUrl('/');
-		}
+		this.store.select(store => store.user)
+			.subscribe((state) => {
+				if (state && state.data) {
+					this._router.navigateByUrl('/');
+				}
+			});
 		this.buildFormGroup();
 	}
 

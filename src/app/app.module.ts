@@ -35,9 +35,7 @@ import { EffectsModule } from '@ngrx/effects';
 		HomeModule,
 		LayoutModule,
 		ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
-		SharedModule,
-		RootStoreModule,
-		EffectsModule.forRoot([])
+		SharedModule
 	],
 	exports: [
 		CoreModule

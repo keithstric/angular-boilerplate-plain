@@ -1,13 +1,18 @@
 import {Injectable} from '@angular/core';
 import {
-	ChangeUserPasswordAction, ChangeUserPasswordFailureAction, ChangeUserPasswordSuccessAction,
+	ChangeUserPasswordAction,
+	ChangeUserPasswordFailureAction,
+	ChangeUserPasswordSuccessAction,
+	ForgotUserPasswordAction, ForgotUserPasswordFailureAction,
+	ForgotUserPasswordSuccessAction,
 	LoginUserAction,
 	LoginUserFailureAction,
 	LoginUserSuccessAction,
 	LogOutUserAction,
 	LogOutUserFailureAction,
 	LogOutUserSuccessAction,
-	RegisterUserAction, RegisterUserFailureAction,
+	RegisterUserAction,
+	RegisterUserFailureAction,
 	RegisterUserSuccessAction,
 	UserActionTypes
 } from '@core/root-store/user/user.action';
@@ -61,8 +66,20 @@ export class UserEffects {
 			ofType<ChangeUserPasswordAction>(UserActionTypes.CHANGE_PASSWORD),
 			mergeMap(action => this._auth.changePassword(action.payload)
 				.pipe(
-					map((data) => new ChangeUserPasswordSuccessAction(data)),
+					map((rawUser) => new ChangeUserPasswordSuccessAction(rawUser)),
 					catchError(err => of(new ChangeUserPasswordFailureAction(err)))
+				)
+			)
+		);
+
+	@Effect()
+	forgotPw = this.actions
+		.pipe(
+			ofType<ForgotUserPasswordAction>(UserActionTypes.FORGOT_PASSWORD),
+			mergeMap(action => this._auth.forgotPassword(action.payload)
+				.pipe(
+					map((rawUser) => new ForgotUserPasswordSuccessAction(rawUser)),
+					catchError(err => of(new ForgotUserPasswordFailureAction(err)))
 				)
 			)
 		);

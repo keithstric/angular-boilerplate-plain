@@ -1,6 +1,9 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {iUserState} from '@core/root-store/models/app-state.model';
+import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {AuthService} from '@core/services/auth/auth.service';
+import * as tinycolor from 'tinycolor2';
 
 /**
  * A user avatar component
@@ -15,18 +18,31 @@ export class UserAvatarComponent implements OnInit, OnDestroy {
 	user: any;
 	subscriptions: Subscription = new Subscription();
 	initials: string;
+	backgroundColor: string = 'transparent';
+	contrastingColor: string = 'white';
 	@Output() avatarClicked = new EventEmitter<any>();
 
 	constructor(
-		private _auth: AuthService
+		private _auth: AuthService,
+		private store: Store<{user: iUserState}>
 	) {
 	}
 
 	ngOnInit(): void {
-		this.subscriptions.add(this._auth.authData.subscribe((user) => {
-			this.user = user;
-			this.initials = this._auth.getUserInitials();
-		}));
+		this.subscriptions.add(this.store.select(store => store.user)
+			.subscribe((user) => {
+				console.log('UserAvatar, ngOnInit user subscribe, user=', user);
+				this.user = user.data;
+				if (this.user) {
+					this.initials = this._auth.getUserInitials();
+					this.backgroundColor = this.getBackgroundColor();
+					this.contrastingColor = this.getContrastingColor(this.backgroundColor);
+				}else{
+					this.backgroundColor = 'transparent';
+					this.contrastingColor = 'white';
+				}
+			})
+		);
 	}
 
 	ngOnDestroy() {
@@ -41,6 +57,38 @@ export class UserAvatarComponent implements OnInit, OnDestroy {
 	avatarClick(evt: MouseEvent) {
 		evt.stopPropagation();
 		this.avatarClicked.emit(evt);
+	}
+
+	/**
+	 * Determine a background color for the avatar based on the email address
+	 * @returns {string}
+	 */
+	getBackgroundColor() {
+		let color = 'transparent';
+		if (this.user) {
+			let hash = 0;
+			const {email} = this.user;
+			for (let i = 0; i < email.length; i++) {
+				hash = email.charCodeAt(i) + ((hash << 5) - hash);
+			}
+			color = '#';
+			for (let j = 0; j < 3; j++) {
+				const value = (hash >> (j * 8)) & 0xFF;
+				const valueStr = value.toString(16);
+				const hexColor = ('00' + valueStr).substr(-2);
+				color += hexColor;
+			}
+		}
+		return color;
+	}
+
+	/**
+	 * Get a text color based on the background color
+	 * @returns {string}
+	 */
+	getContrastingColor(color: string) {
+		const tColor = tinycolor(color);
+		return tColor.isDark() ? 'white' : 'black';
 	}
 
 }

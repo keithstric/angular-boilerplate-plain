@@ -5,29 +5,50 @@
   padding: 0;
 
   &.small {
-    height: 48px;
-    width: 48px;
 
-		.material-icons {
-			font-size: 32px;
+		.avatar-container {
+			height: 24px;
+			width: 24px;
+
+			.material-icons {
+				font-size: 24px;
+			}
+
+			.initials {
+				font-size: 18px;
+			}
 		}
   }
 
   &.medium {
-    height: 64px;
-    width: 64px;
 
-		.material-icons {
-			font-size: 52px;
+		.avatar-container {
+			height: 48px;
+			width: 48px;
+
+			.material-icons {
+				font-size: 48px;
+			}
+
+			.initials {
+				font-size: 24px;
+			}
 		}
   }
 
   &.large {
-    height: 120px;
-    width: 120px;
 
-		.material-icons {
-			font-size: 108px;
+		.avatar-container {
+			height: 64px;
+			width: 64px;
+
+			.material-icons {
+				font-size: 64px;
+			}
+
+			.initials {
+				font-size: 32px;
+			}
 		}
   }
 
@@ -37,11 +58,12 @@
 }
 
 .avatar-container {
-  height: 100%;
-  width: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	padding: 7px;
+	border-radius: 50%;
+	border: 1px solid transparent;
 
   .avatar {
     margin: 0;

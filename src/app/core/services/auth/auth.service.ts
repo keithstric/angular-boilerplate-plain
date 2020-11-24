@@ -3,7 +3,7 @@ import {BehaviorSubject} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {ApiEndpoints, ApiMethod} from '@core/interfaces/api.interface';
 import {LocalStorageTypes} from '@core/interfaces/local-storage.interface';
-import {RawUser, User} from '@shared/models/user.model';
+import {ChangeUserPassword, RawUser, User} from '@shared/models/user.model';
 import {ErrorService} from '@core/services/error/error.service';
 import {HttpService} from '@core/services/http/http.service';
 import {LocalStorageService} from '@core/services/local-storage/local-storage.service';
@@ -87,7 +87,7 @@ export class AuthService {
 	 * @param {RawUser} chgPwData
 	 * @returns {Observable<RawUser>}
 	 */
-	changePassword(chgPwData) {
+	changePassword(chgPwData: ChangeUserPassword) {
 		return this._http.requestCall(ApiEndpoints.CHANGE_PW, ApiMethod.PUT, chgPwData)
 			.pipe(tap((rawUser: RawUser) => {
 				return this.updateLocalUser(rawUser);
@@ -100,7 +100,10 @@ export class AuthService {
 	 * @return {Observable<RawUser>}
 	 */
 	forgotPassword(forgotPwData) {
-		return this._http.requestCall(ApiEndpoints.FORGOT, ApiMethod.PUT, forgotPwData);
+		return this._http.requestCall(ApiEndpoints.FORGOT, ApiMethod.PUT, forgotPwData)
+			.pipe(tap((rawUser: RawUser) => {
+				this.updateLocalUser(rawUser);
+			}));
 	}
 
 	/**

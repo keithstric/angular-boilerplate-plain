@@ -28,9 +28,10 @@ export function UserReducer(state: iUserState = initialState, action: UserAction
 		case UserActionTypes.REGISTER_USER_FAILURE:
 			return {...state, data: null, loading: false, error: action.payload};
 		case UserActionTypes.CHANGE_PASSWORD_SUCCESS:
-			break;
+			const chgPwUser = User.deserialize(action.payload);
+			return {...state, data: chgPwUser, loading: false, error: undefined};
 		case UserActionTypes.CHANGE_PASSWORD_FAILURE:
-			break;
+			return {...state, error: action.payload};
 	}
 	return state;
 }

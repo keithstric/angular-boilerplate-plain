@@ -1,6 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
+import {iUserState} from '@core/root-store/models/app-state.model';
+import {ChangeUserPasswordAction} from '@core/root-store/user/user.action';
+import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {AuthService} from '@core/services/auth/auth.service';
 import {UiService} from '@core/services/ui/ui.service';
@@ -20,14 +23,17 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private _formBuilder: FormBuilder,
-		private _auth: AuthService,
 		private _router: Router,
-		private _ui: UiService
+		private _ui: UiService,
+		private store: Store<{user: iUserState}>
 	) { }
 
 	ngOnInit(): void {
 		this.buildFormGroup();
-		this.user = this._auth.getUser();
+		this.store.select(state => state.user.data)
+			.subscribe((user) => {
+				this.user = user;
+		});
 	}
 
 	ngOnDestroy() { }
@@ -56,11 +62,6 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
 	 * Handler for clicking the update button
 	 */
 	onUpdateClick() {
-		const chgPwSub = this._auth.changePassword(this.changePwForm.getRawValue())
-			.subscribe((resp) => {
-				this._ui.notifyUserShowSnackbar(`Password successfully updated`);
-				this._router.navigateByUrl('/auth/user');
-				chgPwSub.unsubscribe();
-			});
+		this.store.dispatch(new ChangeUserPasswordAction(this.changePwForm.getRawValue()));
 	}
 }

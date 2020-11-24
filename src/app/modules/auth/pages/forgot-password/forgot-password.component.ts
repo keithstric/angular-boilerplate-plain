@@ -1,7 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
+import {iUserState} from '@core/root-store/models/app-state.model';
+import {ForgotUserPasswordAction} from '@core/root-store/user/user.action';
 import {AuthService} from '@core/services/auth/auth.service';
+import {Store} from '@ngrx/store';
+import {User} from '@shared/models/user.model';
 
 @Component({
 	selector: 'app-forgot-password',
@@ -17,13 +21,16 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private _formBuilder: FormBuilder,
-		private _auth: AuthService,
-		private _router: Router
+		private _router: Router,
+		private store: Store<{user: iUserState}>
 	) { }
 
 	ngOnInit(): void {
 		this.buildFormGroup();
-		this.user = this._auth.getUser();
+		this.store.select(store => store.user.data)
+			.subscribe((user: User) => {
+				this.user = user;
+			});
 	}
 
 	ngOnDestroy() { }
@@ -54,6 +61,6 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
 	 * Click handler for the Update button
 	 */
 	onUpdateClick() {
-		this._auth.forgotPassword(this.forgotPwForm.getRawValue());
+		this.store.dispatch(new ForgotUserPasswordAction(this.forgotPwForm.getRawValue()));
 	}
 }

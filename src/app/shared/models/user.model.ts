@@ -7,6 +7,18 @@ export interface RawUser {
 	avatar: string;
 }
 
+export interface ChangeUserPassword {
+	new_password: string;
+	password: string;
+	verify_password: string;
+}
+
+export interface ForgotUserPassword {
+	email: string;
+	new_password: string;
+	verify_password: string;
+}
+
 class UserMapping extends Mapping<RawUser> {
 	first_name: string;
 	last_name: string;

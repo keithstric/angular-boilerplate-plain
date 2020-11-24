@@ -6,10 +6,6 @@ import {PROJECT_NAME} from 'src/environments/environment';
 	providedIn: 'root'
 })
 export class LocalStorageService {
-	prefix: string = PROJECT_NAME;
-
-	constructor() {
-	}
 
 	/**
 	 * Get the storage facility
@@ -26,9 +22,9 @@ export class LocalStorageService {
 	 * @param storageType {'local'|'session'}
 	 * @param varName {string}
 	 */
-	getItem(storageType: LocalStorageTypes, varName: string) {
+	static getItem(storageType: LocalStorageTypes, varName: string) {
 		const storage = LocalStorageService._getStorage(storageType);
-		const val = storage.getItem(`${this.prefix}:${varName}`);
+		const val = storage.getItem(`${PROJECT_NAME}:${varName}`);
 		try {
 			return JSON.parse(val);
 		} catch (e) {
@@ -42,10 +38,10 @@ export class LocalStorageService {
 	 * @param varName {string}
 	 * @param value {any}
 	 */
-	setItem(storageType: LocalStorageTypes, varName: string, value: any) {
+	static setItem(storageType: LocalStorageTypes, varName: string, value: any) {
 		const storage = LocalStorageService._getStorage(storageType);
 		const val = typeof value === 'string' ? value : JSON.stringify(value);
-		storage.setItem(`${this.prefix}:${varName}`, val);
+		storage.setItem(`${PROJECT_NAME}:${varName}`, val);
 	}
 
 	/**
@@ -53,9 +49,9 @@ export class LocalStorageService {
 	 * @param storageType {LocalStorageTypes}
 	 * @param varName {string}
 	 */
-	removeItem(storageType: LocalStorageTypes, varName: string) {
+	static removeItem(storageType: LocalStorageTypes, varName: string) {
 		const storage = LocalStorageService._getStorage(storageType);
-		storage.removeItem(`${this.prefix}:${varName}`);
+		storage.removeItem(`${PROJECT_NAME}:${varName}`);
 	}
 
 }

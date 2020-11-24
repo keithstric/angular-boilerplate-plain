@@ -16,7 +16,6 @@ export class AuthService {
 
 	constructor(
 		private _http: HttpService,
-		private _localStorage: LocalStorageService,
 		private _error: ErrorService
 	) {
 	}
@@ -26,7 +25,7 @@ export class AuthService {
 	 * @returns {boolean}
 	 */
 	isAuthenticated() {
-		return !!this._localStorage.getItem(LocalStorageTypes.SESSION, 'user');
+		return !!LocalStorageService.getItem(LocalStorageTypes.SESSION, 'user');
 	}
 
 	/**
@@ -34,7 +33,7 @@ export class AuthService {
 	 * 2returns {User}
 	 */
 	getUser() {
-		return User.deserialize(this._localStorage.getItem(LocalStorageTypes.SESSION, 'user'));
+		return User.deserialize(LocalStorageService.getItem(LocalStorageTypes.SESSION, 'user'));
 	}
 
 	/**
@@ -55,7 +54,7 @@ export class AuthService {
 	 */
 	login(loginData: RawUser) {
 		return this._http.requestCall(ApiEndpoints.LOGIN, ApiMethod.POST, loginData)
-			.pipe(tap(user => this.updateLocalUser(user)));
+			.pipe(tap((rawUser: RawUser) => this.updateLocalUser(rawUser)));
 	}
 
 	/**
@@ -65,7 +64,7 @@ export class AuthService {
 	logout() {
 		return this._http.requestCall(ApiEndpoints.LOGOUT, ApiMethod.GET)
 			.pipe(tap((response) => {
-				this._localStorage.removeItem(LocalStorageTypes.SESSION, 'user');
+				LocalStorageService.removeItem(LocalStorageTypes.SESSION, 'user');
 				this.authData.next(null);
 				return response;
 			}));
@@ -111,7 +110,7 @@ export class AuthService {
 	 */
 	updateLocalUser(rawUser: RawUser) {
 		const user: User = User.deserialize(rawUser);
-		this._localStorage.setItem(LocalStorageTypes.SESSION, 'user', user);
+		LocalStorageService.setItem(LocalStorageTypes.SESSION, 'user', user);
 		this.authData.next(user);
 		return user;
 	}

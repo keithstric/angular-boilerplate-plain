@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {
+	ChangeUserPasswordAction, ChangeUserPasswordFailureAction, ChangeUserPasswordSuccessAction,
 	LoginUserAction,
 	LoginUserFailureAction,
 	LoginUserSuccessAction,
@@ -50,6 +51,18 @@ export class UserEffects {
 				.pipe(
 					map(user => new RegisterUserSuccessAction(user)),
 					catchError(err => of(new RegisterUserFailureAction(err)))
+				)
+			)
+		);
+
+	@Effect()
+	changePw = this.actions
+		.pipe(
+			ofType<ChangeUserPasswordAction>(UserActionTypes.CHANGE_PASSWORD),
+			mergeMap(action => this._auth.changePassword(action.payload)
+				.pipe(
+					map((data) => new ChangeUserPasswordSuccessAction(data)),
+					catchError(err => of(new ChangeUserPasswordFailureAction(err)))
 				)
 			)
 		);

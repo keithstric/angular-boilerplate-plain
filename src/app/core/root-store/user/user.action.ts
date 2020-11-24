@@ -3,17 +3,17 @@ import {RawUser, User} from '@shared/models/user.model';
 
 export enum UserActionTypes {
 	LOGIN_USER = '[USER] Login',
-	LOGIN_USER_SUCCESS = '[USER] Login Success',
-	LOGIN_USER_FAILURE = '[USER] Login Failure',
+	LOGIN_USER_SUCCESS = '[USER Effect] Login Success',
+	LOGIN_USER_FAILURE = '[USER Effect] Login Failure',
 	LOGOUT_USER = '[USER] Logout',
-	LOGOUT_USER_SUCCESS = '[USER] Logout Success',
-	LOGOUT_USER_FAILURE = '[USER] Logout Failure',
+	LOGOUT_USER_SUCCESS = '[USER Effect] Logout Success',
+	LOGOUT_USER_FAILURE = '[USER Effect] Logout Failure',
 	REGISTER_USER = '[USER] Register',
-	REGISTER_USER_SUCCESS = '[USER] Register Success',
-	REGISTER_USER_FAILURE = '[USER] Register Failure',
+	REGISTER_USER_SUCCESS = '[USER Effect] Register Success',
+	REGISTER_USER_FAILURE = '[USER Effect] Register Failure',
 	CHANGE_PASSWORD = '[USER] Change Password',
-	CHANGE_PASSWORD_SUCCESS = '[USER] Change Password Success',
-	CHANGE_PASSWORD_FAILURE = '[USER] Change Password Failure'
+	CHANGE_PASSWORD_SUCCESS = '[USER Effect] Change Password Success',
+	CHANGE_PASSWORD_FAILURE = '[USER Effect] Change Password Failure'
 }
 
 export class LoginUserAction implements Action {

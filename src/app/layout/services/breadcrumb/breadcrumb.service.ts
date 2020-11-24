@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {NavigationEnd, NavigationStart, Router} from '@angular/router';
 import {BehaviorSubject} from 'rxjs';
 import {titleCaseString} from '@shared/utils/string.utils';
-import {HeaderService} from '@layout/services/header/header.service';
 import {Breadcrumb} from '@layout/interfaces/breadcrumb.interface';
 
 /**
@@ -23,8 +22,7 @@ export class BreadcrumbService {
 	 * @constructor
 	 */
 	constructor(
-		private _router: Router,
-		private _header: HeaderService
+		private _router: Router
 	) {
 		_router.events.subscribe((evt) => {
 			if (evt instanceof NavigationStart) {

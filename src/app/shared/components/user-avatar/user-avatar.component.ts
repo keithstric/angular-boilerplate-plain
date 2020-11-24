@@ -31,7 +31,6 @@ export class UserAvatarComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.subscriptions.add(this.store.select(store => store.user)
 			.subscribe((user) => {
-				console.log('UserAvatar, ngOnInit user subscribe, user=', user);
 				this.user = user.data;
 				if (this.user) {
 					this.initials = this._auth.getUserInitials();

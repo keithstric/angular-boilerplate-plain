@@ -1,10 +1,9 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {LayoutService} from '@layout/services/layout/layout.service';
 import {Subscription} from 'rxjs';
 import {delay} from 'rxjs/operators';
 import {SiteFooterComponent} from '@layout/components/site-footer/site-footer.component';
 import {SiteHeaderComponent} from '@layout/components/site-header/site-header.component';
-import {FooterService} from '@layout/services/footer/footer.service';
-import {HeaderService} from '@layout/services/header/header.service';
 import {LoadingService} from '@layout/services/loading/loading.service';
 import {PROJECT_NAME} from 'src/environments/environment';
 
@@ -18,23 +17,23 @@ export class AppComponent implements OnInit, OnDestroy {
 	loading: boolean = false;
 	headerComponent: any;
 	footerComponent: any;
+	sidebarComponent: any;
 	subscriptions: Subscription = new Subscription();
 
 	constructor(
 		private _loading: LoadingService,
-		private _header: HeaderService,
-		private _footer: FooterService,
-		private _cdr: ChangeDetectorRef
+		private _cdr: ChangeDetectorRef,
+		private _layout: LayoutService
 	) {
 	}
 
 	ngOnInit() {
-		//
 		this.listenToHeader();
 		this.listenToFooter();
+		this.listenToSidebar();
 		this.listenToLoading();
-		this._header.setHeader(SiteHeaderComponent);
-		this._footer.setFooter(SiteFooterComponent);
+		this._layout.setHeader(SiteHeaderComponent);
+		this._layout.setFooter(SiteFooterComponent);
 	}
 
 	ngOnDestroy() {
@@ -45,7 +44,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	 * Listen to changes of the header and update the header component
 	 */
 	listenToHeader() {
-		this.subscriptions.add(this._header.headerComponent.subscribe((header: Component) => {
+		this.subscriptions.add(this._layout.headerComponent.subscribe((header: Component) => {
 			this.headerComponent = header;
 			this._cdr.detectChanges();
 		}));
@@ -56,10 +55,14 @@ export class AppComponent implements OnInit, OnDestroy {
 	 * remove the subscription
 	 */
 	listenToFooter() {
-		this.subscriptions.add(this._footer.footerComponent.subscribe((footer: Component) => {
+		this.subscriptions.add(this._layout.footerComponent.subscribe((footer: Component) => {
 			this.footerComponent = footer;
 			this._cdr.detectChanges();
 		}));
+	}
+
+	listenToSidebar() {
+		// TODO
 	}
 
 	/**

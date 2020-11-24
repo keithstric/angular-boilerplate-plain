@@ -5,13 +5,13 @@ import {LocalStorageService} from '@core/services/local-storage/local-storage.se
 import {ActionReducer} from '@ngrx/store';
 import {User} from '@shared/models/user.model';
 
-export const initialState: iUserState = {
+export const initialUserState: iUserState = {
 	data: null,
 	loading: false,
 	error: undefined
 };
 
-export function UserReducer(state: iUserState = initialState, action: UserAction) {
+export function UserReducer(state: iUserState = initialUserState, action: UserAction) {
 	switch (action.type) {
 		case UserActionTypes.LOGIN_USER_SUCCESS:
 			const loginUser = User.deserialize(action.payload);
@@ -40,7 +40,7 @@ export function UserReducer(state: iUserState = initialState, action: UserAction
  * Get user from local storage and update the state
  * @param reducer
  */
-export function getUserFromStorage(reducer: ActionReducer<any>) {
+export function UserFromStorageMetaReducer(reducer: ActionReducer<any>) {
 	return (state, action) => {
 		let newState = state ? {...state} : state;
 		if (state && state.user) {

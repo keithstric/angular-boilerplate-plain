@@ -1,10 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+import {iUserState} from '@core/root-store/models/app-state.model';
+import {LogOutUserAction} from '@core/root-store/user/user.action';
+import {Store} from '@ngrx/store';
+import {User} from '@shared/models/user.model';
 import {Subscription} from 'rxjs';
-import {AuthService} from '@core/services/auth/auth.service';
-import {HttpService} from '@core/services/http/http.service';
 import {LocalStorageService} from '@core/services/local-storage/local-storage.service';
-import {HeaderService} from '@layout/services/header/header.service';
 import {PROJECT_NAME} from 'src/environments/environment';
 
 @Component({
@@ -18,11 +19,9 @@ export class SiteHeaderComponent implements OnInit, OnDestroy {
 	subscriptions: Subscription = new Subscription();
 
 	constructor(
-		// private _header: HeaderService,
 		private _storage: LocalStorageService,
 		private _router: Router,
-		private _http: HttpService,
-		private _auth: AuthService
+		private store: Store<{user: iUserState}>
 	) {	}
 
 	ngOnInit(): void {
@@ -47,18 +46,16 @@ export class SiteHeaderComponent implements OnInit, OnDestroy {
 	 * Setup a listener for a user
 	 */
 	private listenToAuth() {
-		this.subscriptions.add(this._auth.authData.subscribe((user) => {
-			this.user = user;
-		}));
+		this.store.select(state => state.user.data)
+			.subscribe((user: User) => {
+				this.user = user;
+			});
 	}
 
 	/**
 	 * Logout the current user
 	 */
 	logout() {
-		this.subscriptions.add(this._auth.logout()
-			.subscribe((args) => {
-				this._router.navigateByUrl('/auth/login');
-			}));
+		this.store.dispatch(new LogOutUserAction());
 	}
 }

@@ -6,7 +6,7 @@ import {PageNotFoundComponent} from '@layout/components/page-not-found/page-not-
 import {SiteFooterComponent} from '@layout/components/site-footer/site-footer.component';
 import {SiteHeaderComponent} from '@layout/components/site-header/site-header.component';
 import {BreadcrumbService} from '@layout/services/breadcrumb/breadcrumb.service';
-import {HeaderService} from '@layout/services/header/header.service';
+import {LayoutService} from '@layout/services/layout/layout.service';
 import {LoadingService} from '@layout/services/loading/loading.service';
 import {SharedModule} from '@shared/shared.module';
 import {BreadcrumbsComponent} from './components/breadcrumbs/breadcrumbs.component';
@@ -37,7 +37,7 @@ const components = [
 	],
 	providers: [
 		BreadcrumbService,
-		HeaderService,
+		LayoutService,
 		LoadingService
 	],
 	entryComponents: [

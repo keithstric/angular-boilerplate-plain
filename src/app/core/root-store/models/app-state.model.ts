@@ -1,10 +1,5 @@
 import {User} from '@shared/models/user.model';
 
-interface iLayout {
-	header: any;
-	footer: any;
-}
-
 export interface iStateItem {
 	data: any;
 	loading: boolean;
@@ -17,7 +12,6 @@ export interface iUserState extends iStateItem {
 
 export interface AppState {
 	readonly user: iUserState | null;
-	readonly layout: iLayout;
 }
 
 

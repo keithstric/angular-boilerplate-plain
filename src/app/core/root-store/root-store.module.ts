@@ -1,14 +1,14 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {UserEffects} from '@core/root-store/user/user.effects';
-import {getUserFromStorage, UserReducer} from '@core/root-store/user/user.reducer';
+import {UserFromStorageMetaReducer, UserReducer} from '@core/root-store/user/user.reducer';
 import {EffectsModule} from '@ngrx/effects';
 import {MetaReducer, StoreModule} from '@ngrx/store';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {environment} from 'src/environments/environment';
 
 
-export const metaReducers: MetaReducer<any>[] = [getUserFromStorage];
+export const metaReducers: MetaReducer<any>[] = [UserFromStorageMetaReducer];
 
 @NgModule({
 	declarations: [],

@@ -4,6 +4,8 @@ import {FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ErrorService} from '@core/services/error/error.service';
 import {AuthService} from '@core/services/auth/auth.service';
+import {StateObservable, Store} from '@ngrx/store';
+import {provideMockStore} from '@ngrx/store/testing';
 import {MockAuthService, MockErrorService} from 'src/app/testing/mock-services';
 
 import {UserComponent} from './user.component';
@@ -11,6 +13,21 @@ import {UserComponent} from './user.component';
 describe('UserComponent', () => {
 	let component: UserComponent;
 	let fixture: ComponentFixture<UserComponent>;
+	const initialState = {
+		user: {
+			data: {
+				_key: '605429',
+				_id: 'people/605429',
+				_rev: '_bdrJp_C--_',
+				first_name: 'William',
+				last_name: 'Strickland',
+				email: 'keith.strickland@randstadusa.com',
+				password: '$2b$13$XTy42M0WijOEHVF9MzfnquuHqs2uMCIJvBVulqoUcbvVpFFYXbS5q',
+				created_date: '2020-11-19T14:38:32.189Z'
+			},
+			loading: false
+		}
+	};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -22,7 +39,8 @@ describe('UserComponent', () => {
 			declarations: [UserComponent],
 			providers: [
 				{provide: AuthService, useClass: MockAuthService},
-				{provide: ErrorService, useClass: MockErrorService}
+				{provide: ErrorService, useClass: MockErrorService},
+				provideMockStore({initialState})
 			],
 			schemas: [CUSTOM_ELEMENTS_SCHEMA]
 		})

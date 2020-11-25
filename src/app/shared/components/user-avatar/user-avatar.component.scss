@@ -7,8 +7,8 @@
   &.small {
 
 		.avatar-container {
-			height: 24px;
-			width: 24px;
+			height: 32px;
+			width: 32px;
 
 			.material-icons {
 				font-size: 24px;
@@ -61,15 +61,17 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: 7px;
 	border-radius: 50%;
-	border: 1px solid transparent;
 
   .avatar {
     margin: 0;
     padding: 0;
     height: 100%;
     width: 100%;
-    @include border-radius(100%);
+    @include border-radius(50%);
   }
+
+	.initials {
+		padding: 7px;
+	}
 }

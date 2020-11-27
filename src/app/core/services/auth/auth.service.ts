@@ -3,7 +3,7 @@ import {BehaviorSubject} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {ApiEndpoints, ApiMethod} from '@core/interfaces/api.interface';
 import {LocalStorageTypes} from '@core/interfaces/local-storage.interface';
-import {ChangeUserPassword, RawUser, User} from '@shared/models/user.model';
+import {ChangeUserPassword, RawUser, User} from '@core/models/user.model';
 import {ErrorService} from '@core/services/error/error.service';
 import {HttpService} from '@core/services/http/http.service';
 import {LocalStorageService} from '@core/services/local-storage/local-storage.service';

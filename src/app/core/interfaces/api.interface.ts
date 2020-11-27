@@ -1,7 +1,7 @@
 /**
  * Http request methods
  */
-import {User} from '@shared/models/user.model';
+import {User} from '@core/models/user.model';
 
 export enum ApiMethod {
 	GET = 'GET',

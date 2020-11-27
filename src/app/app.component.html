@@ -4,17 +4,22 @@
 </div>
 
 <!-- App container -->
-<div class="site-container">
-  <div class="site-header">
+<div class="site-container flex-row">
+	<div *ngIf="sidebarComponent" class="site-sidebar">
+		<ng-container *ngComponentOutlet="sidebarComponent"></ng-container>
+	</div>
+	<div class="site-right-content">
+		<div class="site-header">
+			<!-- container for the header which can be changed based on page via HeaderService.setHeader method -->
+			<ng-container *ngComponentOutlet="headerComponent"></ng-container>
+		</div>
+		<!-- container for the content. If a footer is present, add the with-footer class to ensure height of the content area is properly set -->
+		<div class="site-content" [class.with-footer]="footerComponent">
+			<router-outlet></router-outlet>
+		</div>
 		<!-- container for the header which can be changed based on page via HeaderService.setHeader method -->
-    <ng-container *ngComponentOutlet="headerComponent"></ng-container>
-  </div>
-	<!-- container for the content. If a footer is present, add the with-footer class to ensure height of the content area is properly set -->
-  <div class="site-content" [class.with-footer]="footerComponent">
-    <router-outlet></router-outlet>
-  </div>
-	<!-- container for the header which can be changed based on page via HeaderService.setHeader method -->
-	<div *ngIf="footerComponent" class="site-footer">
-		<ng-container *ngComponentOutlet="footerComponent"></ng-container>
+		<div *ngIf="footerComponent" class="site-footer">
+			<ng-container *ngComponentOutlet="footerComponent"></ng-container>
+		</div>
 	</div>
 </div>

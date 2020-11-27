@@ -1,5 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {LoadingReducer} from '@core/root-store/loading/loading.reducer';
 import {UserEffects} from '@core/root-store/user/user.effects';
 import {UserFromStorageMetaReducer, UserReducer} from '@core/root-store/user/user.reducer';
 import {EffectsModule} from '@ngrx/effects';
@@ -15,7 +16,8 @@ export const metaReducers: MetaReducer<any>[] = [UserFromStorageMetaReducer];
 	imports: [
 		CommonModule,
 		StoreModule.forRoot({
-			user: UserReducer
+			user: UserReducer,
+			loading: LoadingReducer
 		}, {
 			metaReducers
 		}),

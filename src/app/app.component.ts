@@ -1,5 +1,6 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {LayoutService} from '@layout/services/layout/layout.service';
+import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {delay} from 'rxjs/operators';
 import {SiteFooterComponent} from '@layout/components/site-footer/site-footer.component';
@@ -23,7 +24,8 @@ export class AppComponent implements OnInit, OnDestroy {
 	constructor(
 		private _loading: LoadingService,
 		private _cdr: ChangeDetectorRef,
-		private _layout: LayoutService
+		private _layout: LayoutService,
+		private store: Store<{loading: boolean}>
 	) {
 	}
 
@@ -61,8 +63,15 @@ export class AppComponent implements OnInit, OnDestroy {
 		}));
 	}
 
+	/**
+	 * Listen to changes of the sidebar and update the sidebar component. If not sidebar is desired
+	 * remove the subscription
+	 */
 	listenToSidebar() {
-		// TODO
+		this.subscriptions.add(this._layout.sidebarComponent.subscribe((sidebar: Component) => {
+			this.sidebarComponent = sidebar;
+			this._cdr.detectChanges();
+		}));
 	}
 
 	/**
@@ -70,10 +79,10 @@ export class AppComponent implements OnInit, OnDestroy {
 	 * toggle visibility of the spinner
 	 */
 	listenToLoading() {
-		this.subscriptions.add(this._loading.loadingSub
-			.pipe(delay(0)) // This prevents a ExpressionChangedAfterItHasBeenCheckedError for subsequent requests
+		this.store.select(store => store.loading)
+			.pipe(delay(0))
 			.subscribe((loading) => {
 				this.loading = loading;
-			}));
+			});
 	}
 }

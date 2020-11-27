@@ -1,5 +1,5 @@
 import {Action} from '@ngrx/store';
-import {ChangeUserPassword, ForgotUserPassword, RawUser, User} from '@shared/models/user.model';
+import {ChangeUserPassword, ForgotUserPassword, RawUser} from '@core/models/user.model';
 
 export enum UserActionTypes {
 	LOGIN_USER = '[USER] Login',

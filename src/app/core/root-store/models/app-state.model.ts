@@ -1,4 +1,4 @@
-import {User} from '@shared/models/user.model';
+import {User} from '@core/models/user.model';
 
 export interface iStateItem {
 	data: any;
@@ -10,8 +10,13 @@ export interface iUserState extends iStateItem {
 	data: User | null;
 }
 
+export interface iRootState {
+	loading: boolean;
+}
+
 export interface AppState {
 	readonly user: iUserState | null;
+	readonly loading: boolean | false;
 }
 
 

@@ -1,4 +1,6 @@
 import {Injectable} from '@angular/core';
+import {SetLoadingAction} from '@core/root-store/loading/loading.action';
+import {Store} from '@ngrx/store';
 import {BehaviorSubject} from 'rxjs';
 
 /**
@@ -11,8 +13,9 @@ export class LoadingService {
 	loadingSub: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	loadingMap: Map<string, boolean> = new Map<string, boolean>();
 
-	constructor() {
-	}
+	constructor(
+		private store: Store<{loading: boolean}>
+	) {}
 
 	/**
 	 * This method is only called from the @link(HttpRequestInterceptor)
@@ -23,10 +26,12 @@ export class LoadingService {
 		if (loading === true) {
 			this.loadingMap.set(url, loading);
 			this.loadingSub.next(true);
+			this.store.dispatch(new SetLoadingAction(true));
 		} else if (loading === false && this.loadingMap.has(url)) {
 			this.loadingMap.delete(url);
 			if (this.loadingMap.size === 0) {
 				this.loadingSub.next(false);
+				this.store.dispatch(new SetLoadingAction(false));
 			}
 		}
 	}

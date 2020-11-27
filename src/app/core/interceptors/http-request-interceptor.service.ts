@@ -5,6 +5,8 @@ import {
 	HttpEvent,
 	HttpResponse, HttpErrorResponse
 } from '@angular/common/http';
+import {SetLoadingAction} from '@core/root-store/loading/loading.action';
+import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {ErrorService} from '@core/services/error/error.service';
@@ -32,16 +34,18 @@ export class HttpRequestInterceptor implements HttpRequestInterceptor {
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		this._loading.setLoading(true, request.url);
 		return next.handle(request)
-			.pipe(catchError((err: HttpErrorResponse) => {
-				this._loading.setLoading(false, request.url);
-				return this._error.handleResponseError(err);
-			}))
-			.pipe(tap<HttpEvent<any>>((httpEvent: HttpEvent<any>) => {
-				if (httpEvent instanceof HttpResponse) {
+			.pipe(
+				tap<HttpEvent<any>>((httpEvent: HttpEvent<any>) => {
+					if (httpEvent instanceof HttpResponse) {
+						this._loading.setLoading(false, request.url);
+					}
+					return httpEvent;
+				}),
+				catchError((err: HttpErrorResponse) => {
 					this._loading.setLoading(false, request.url);
-				}
-				return httpEvent;
-			}));
+					return this._error.handleResponseError(err);
+				})
+			);
 	}
 }
 

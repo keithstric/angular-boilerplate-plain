@@ -3,7 +3,7 @@ import {iUserState} from '@core/root-store/models/app-state.model';
 import {UserAction, UserActionTypes} from '@core/root-store/user/user.action';
 import {LocalStorageService} from '@core/services/local-storage/local-storage.service';
 import {ActionReducer} from '@ngrx/store';
-import {User} from '@shared/models/user.model';
+import {User} from '@core/models/user.model';
 
 export const initialUserState: iUserState = {
 	data: null,

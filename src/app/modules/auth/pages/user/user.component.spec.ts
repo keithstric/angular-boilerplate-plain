@@ -21,7 +21,7 @@ describe('UserComponent', () => {
 				_rev: '_bdrJp_C--_',
 				first_name: 'William',
 				last_name: 'Strickland',
-				email: 'keith.strickland@randstadusa.com',
+				email: 'capt.jack.sparrow@eastindiatradingcompany.com',
 				password: '$2b$13$XTy42M0WijOEHVF9MzfnquuHqs2uMCIJvBVulqoUcbvVpFFYXbS5q',
 				created_date: '2020-11-19T14:38:32.189Z'
 			},

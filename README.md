@@ -83,6 +83,6 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 * Where should individual components reside in context to a feature/module? My observations so far are:
     1) Some companies use something like `src/app/modules/some-feature/pages/some-page` for parent components and then all components specifically for that feature are stored in `src/app/modules/some-feature/components` - _I feel this would be the easiest way to find code_
-    2) Some companies use something like `src/app/modules/some-feature/components/some-feature` for parent components and then all components  specifically for that feature are stored in `src/app/modules/some-feature/components/some-page/some-component` and that is carried on for an undetermined depth - _I think this makes it difficult to find code_
+    2) Some companies use something like `src/app/modules/some-feature/components/some-page` for parent components and then all components  specifically for that feature are stored in `src/app/modules/some-feature/components/some-page/some-component` and that is carried on for an undetermined depth - _I think this makes it difficult to find code_
 * How should the loading spinner be controlled? All in-progress http requests? Manually by the developer? Or, a combination of both? If both, how do you prevent the http request from showing the spinner?
 

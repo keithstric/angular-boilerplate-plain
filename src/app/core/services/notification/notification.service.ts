@@ -11,7 +11,7 @@ enum NotificationPermissions {
 @Injectable({
 	providedIn: 'root'
 })
-export class UiService {
+export class NotificationService {
 
 	constructor(
 		private swPush: SwPush
@@ -24,7 +24,7 @@ export class UiService {
 	 * @param action {string}
 	 * @param actionFn {Function}
 	 */
-	notifyUserShowSnackbar(msg: string, duration?: number, action?: string, actionFn?: (...args) => void): void {
+	showSnackbar(msg: string, duration?: number, action?: string, actionFn?: (...args) => void): void {
 		/*duration = duration ? duration : 3000;
 		action = action || 'dismiss';
 		this.snackbarRef = this._snackbar.open(msg, action, {...this.snackbarConfig, duration});
@@ -87,7 +87,7 @@ export class UiService {
 	 * @param {ConfirmDialogData} dialogData
 	 * @returns {MatDialogRef<ConfirmDialogComponent, ConfirmDialogData>}
 	 */
-	notifyUserShowConfirmDialog(dialogData: ConfirmDialogData) {
+	showConfirmDialog(dialogData: ConfirmDialogData) {
 		// return this._dialog.open(ConfirmDialogComponent, {data: dialogData});
 	}
 }

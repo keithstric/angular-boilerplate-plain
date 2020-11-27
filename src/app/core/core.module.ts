@@ -6,7 +6,7 @@ import {RootStoreModule} from '@core/root-store';
 import {ErrorService} from '@core/services/error/error.service';
 import {HttpService} from '@core/services/http/http.service';
 import {LocalStorageService} from '@core/services/local-storage/local-storage.service';
-import {UiService} from '@core/services/ui/ui.service';
+import {NotificationService} from '@core/services/notification/notification.service';
 
 const components = [];
 
@@ -31,7 +31,7 @@ const components = [];
 		ErrorService,
 		HttpService,
 		LocalStorageService,
-		UiService
+		NotificationService
 	]
 })
 export class CoreModule { }

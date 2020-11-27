@@ -1,4 +1,4 @@
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Observable} from 'rxjs';
@@ -6,6 +6,11 @@ import {catchError, map} from 'rxjs/operators';
 import {ApiEndpoints, ApiMethod, ApiRouteToClass} from '@core/interfaces/api.interface';
 import {ErrorService} from '@core/services//error/error.service';
 
+/**
+ * This service is for handling all http requests and responses. If an error occurs handle the error.
+ * If the request route is defined in @link {ApiRouteToClass} will automatically deserialize the Raw object
+ * into it's respective class.
+ */
 @Injectable({
 	providedIn: 'root'
 })
@@ -15,8 +20,7 @@ export class HttpService {
 		private _http: HttpClient,
 		private _error: ErrorService,
 		private _router: Router
-	) {
-	}
+	) {}
 
 	/**
 	 * Make an http request
@@ -47,18 +51,20 @@ export class HttpService {
 				break;
 		}
 		response = reqObservable
-			.pipe(catchError((err) => this.handleError(err, this)))
-			.pipe(map((resp) => { // Convert our raw object to a class instance
-				const clazz = this.getRouteClass(apiUrl);
-				if (clazz) {
-					if (Array.isArray(resp)) {
-						return resp.map(item => clazz.deserialize(item));
-					} else {
-						return clazz.deserialize(resp);
+			.pipe(
+				map((resp: HttpResponse<any>) => { // Convert our raw object to a class instance
+					const clazz = this.getRouteClass(apiUrl);
+					if (clazz) {
+						if (Array.isArray(resp)) {
+							return resp.map(item => clazz.deserialize(item));
+						} else {
+							return clazz.deserialize(resp);
+						}
 					}
-				}
-				return resp;
-			}));
+					return resp;
+				}),
+				catchError((err: HttpErrorResponse) => this.handleError(err, this))
+			);
 		return response;
 	}
 
@@ -83,14 +89,15 @@ export class HttpService {
 	 * Assumes an apiUrl like "/api/<something>/..." that matches
 	 * @param {string} apiUrl
 	 * @returns {Class | undefined}
+	 * @link {ApiRouteToClass}
 	 */
 	getRouteClass(apiUrl: string) {
 		let clazz;
 		if (apiUrl) {
 			const pathKey = apiUrl.split('/')
-				.filter(Boolean)
-				.slice(0, 2)
-				.join('/');
+				.filter(Boolean) // remove empty string/null/undefined items
+				.slice(0, 2) // remove everything past the 2nd path part (i.e. '/api/auth/<remove>/<everything>/<else>
+				.join('/'); // Put it all back together
 			clazz = ApiRouteToClass[`/${pathKey}`] || undefined;
 		}
 		return clazz;

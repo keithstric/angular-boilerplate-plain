@@ -15,8 +15,7 @@ export class AuthGuard implements CanActivate {
 	constructor(
 		private _auth: AuthService,
 		private _router: Router
-	) {
-	}
+	) {}
 
 	/**
 	 * Determine if the active route can be activated or not. If not, redirect to login page

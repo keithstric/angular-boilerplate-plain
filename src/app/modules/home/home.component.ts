@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {UiService} from '@core/services/ui/ui.service';
+import {NotificationService} from '@core/services/notification/notification.service';
 
 @Component({
 	selector: 'app-home',

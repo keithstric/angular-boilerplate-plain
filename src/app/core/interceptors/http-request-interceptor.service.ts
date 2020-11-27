@@ -5,8 +5,6 @@ import {
 	HttpEvent,
 	HttpResponse, HttpErrorResponse
 } from '@angular/common/http';
-import {SetLoadingAction} from '@core/root-store/loading/loading.action';
-import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {ErrorService} from '@core/services/error/error.service';
@@ -27,8 +25,8 @@ export class HttpRequestInterceptor implements HttpRequestInterceptor {
 	/**
 	 * When an http request starts, set loading to true. When the request is finished, set loading to false.
 	 * If an error is thrown be sure loading is set to false.
-	 * @param request
-	 * @param next
+	 * @param {HttpRequest} request
+	 * @param {HttpHandler} next
 	 * @returns {Observable<HttpEvent<any>>}
 	 */
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

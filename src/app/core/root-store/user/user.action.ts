@@ -1,5 +1,5 @@
 import {Action} from '@ngrx/store';
-import {ChangeUserPassword, ForgotUserPassword, RawUser} from '@core/models/user.model';
+import {ChangeUserPassword, ForgotUserPassword, RawUser, User} from '@core/models/user.model';
 
 export enum UserActionTypes {
 	LOGIN_USER = '[USER] Login',
@@ -26,7 +26,7 @@ export class LoginUserAction implements Action {
 
 export class LoginUserSuccessAction implements Action {
 	readonly type = UserActionTypes.LOGIN_USER_SUCCESS;
-	constructor(public payload: RawUser) {}
+	constructor(public payload: User) {}
 }
 
 export class LoginUserFailureAction implements Action {
@@ -56,7 +56,7 @@ export class RegisterUserAction implements Action {
 
 export class RegisterUserSuccessAction implements Action {
 	readonly type = UserActionTypes.REGISTER_USER_SUCCESS;
-	constructor(public payload: RawUser) {}
+	constructor(public payload: User) {}
 }
 
 export class RegisterUserFailureAction implements Action {
@@ -71,7 +71,7 @@ export class ChangeUserPasswordAction implements Action {
 
 export class ChangeUserPasswordSuccessAction implements Action {
 	readonly type = UserActionTypes.CHANGE_PASSWORD_SUCCESS;
-	constructor(public payload: RawUser) {}
+	constructor(public payload: User) {}
 }
 
 export class ChangeUserPasswordFailureAction implements Action {
@@ -86,7 +86,7 @@ export class ForgotUserPasswordAction implements Action {
 
 export class ForgotUserPasswordSuccessAction implements Action {
 	readonly type = UserActionTypes.FORGOT_PASSWORD_SUCCESS;
-	constructor(public payload: RawUser) {}
+	constructor(public payload: User) {}
 }
 
 export class ForgotUserPasswordFailureAction implements Action {

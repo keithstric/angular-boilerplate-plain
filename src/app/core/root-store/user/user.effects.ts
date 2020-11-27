@@ -87,5 +87,5 @@ export class UserEffects {
 	constructor(
 		private actions: Actions,
 		private _auth: AuthService
-	) { }
+	) {}
 }

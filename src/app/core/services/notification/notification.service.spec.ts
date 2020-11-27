@@ -2,10 +2,10 @@ import {TestBed} from '@angular/core/testing';
 import {ServiceWorkerModule, SwPush} from '@angular/service-worker';
 import {environment} from 'src/environments/environment';
 
-import {UiService} from './ui.service';
+import {NotificationService} from './notification.service';
 
 describe('UiService', () => {
-	let service: UiService;
+	let service: NotificationService;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -16,7 +16,7 @@ describe('UiService', () => {
 				SwPush
 			]
 		});
-		service = TestBed.inject(UiService);
+		service = TestBed.inject(NotificationService);
 	});
 
 	it('should be created', () => {

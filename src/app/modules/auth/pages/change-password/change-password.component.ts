@@ -6,7 +6,7 @@ import {ChangeUserPasswordAction} from '@core/root-store/user/user.action';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {AuthService} from '@core/services/auth/auth.service';
-import {UiService} from '@core/services/ui/ui.service';
+import {NotificationService} from '@core/services/notification/notification.service';
 import {PROJECT_NAME} from 'src/environments/environment';
 
 @Component({
@@ -24,7 +24,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
 	constructor(
 		private _formBuilder: FormBuilder,
 		private _router: Router,
-		private _ui: UiService,
+		private _notify: NotificationService,
 		private store: Store<{user: iUserState}>
 	) { }
 

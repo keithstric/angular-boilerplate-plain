@@ -6,7 +6,7 @@ import {LoginUserAction, UserActionTypes} from '@core/root-store/user/user.actio
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {ErrorService} from '@core/services/error/error.service';
-import {UiService} from '@core/services/ui/ui.service';
+import {NotificationService} from '@core/services/notification/notification.service';
 import {PROJECT_NAME} from 'src/environments/environment';
 
 @Component({
@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 		private _formBuilder: FormBuilder,
 		private _error: ErrorService,
 		private _router: Router,
-		private _ui: UiService,
+		private _notify: NotificationService,
 		private store: Store<{user: iUserState}>
 	) {
 	}

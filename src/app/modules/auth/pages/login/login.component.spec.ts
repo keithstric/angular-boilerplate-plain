@@ -4,7 +4,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ErrorService} from '@core/services/error/error.service';
 import {AuthService} from '@core/services/auth/auth.service';
-import {UiService} from '@core/services/ui/ui.service';
+import {NotificationService} from '@core/services/notification/notification.service';
 import {StateObservable, Store} from '@ngrx/store';
 import {provideMockStore} from '@ngrx/store/testing';
 import {MockAuthService, MockErrorService, MockUiService} from 'src/app/testing/mock-services';
@@ -41,7 +41,7 @@ describe('LoginComponent', () => {
 			providers: [
 				{provide: ErrorService, useClass: MockErrorService},
 				{provide: AuthService, useClass: MockAuthService},
-				{provide: UiService, useClass: MockUiService},
+				{provide: NotificationService, useClass: MockUiService},
 				provideMockStore({initialState})
 			],
 			schemas: [CUSTOM_ELEMENTS_SCHEMA]

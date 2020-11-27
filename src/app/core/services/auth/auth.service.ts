@@ -30,7 +30,7 @@ export class AuthService {
 
 	/**
 	 * Get the current user
-	 * 2returns {User}
+	 * @returns {User}
 	 */
 	getUser() {
 		return User.deserialize(LocalStorageService.getItem(LocalStorageTypes.SESSION, 'user'));
@@ -50,16 +50,16 @@ export class AuthService {
 	/**
 	 * Perform the login and store the returned user in sessionStorage
 	 * @param loginData {RawUser}
-	 * @returns {Observable<RawUser>}
+	 * @returns {Observable<User>}
 	 */
 	login(loginData: RawUser) {
 		return this._http.requestCall(ApiEndpoints.LOGIN, ApiMethod.POST, loginData)
-			.pipe(tap((rawUser: RawUser) => this.updateLocalUser(rawUser)));
+			.pipe(tap((rawUser: User) => this.updateLocalUser(rawUser)));
 	}
 
 	/**
 	 * Perform a logout and remove the current user from sessionStorage
-	 * @returns {Observable<RawUser>}
+	 * @returns {Observable<User>}
 	 */
 	logout() {
 		return this._http.requestCall(ApiEndpoints.LOGOUT, ApiMethod.GET)
@@ -73,11 +73,11 @@ export class AuthService {
 	/**
 	 * Perform a registration and store the returned user in sessionStorage
 	 * @param {RawUser} registrationData
-	 * @returns {Observable<RawUser>}
+	 * @returns {Observable<User>}
 	 */
 	register(registrationData) {
 		return this._http.requestCall(ApiEndpoints.REGISTER, ApiMethod.POST, registrationData)
-			.pipe(tap((rawUser: RawUser) => {
+			.pipe(tap((rawUser: User) => {
 				return this.updateLocalUser(rawUser);
 			}));
 	}
@@ -85,11 +85,11 @@ export class AuthService {
 	/**
 	 * Change a user's password
 	 * @param {RawUser} chgPwData
-	 * @returns {Observable<RawUser>}
+	 * @returns {Observable<User>}
 	 */
 	changePassword(chgPwData: ChangeUserPassword) {
 		return this._http.requestCall(ApiEndpoints.CHANGE_PW, ApiMethod.PUT, chgPwData)
-			.pipe(tap((rawUser: RawUser) => {
+			.pipe(tap((rawUser: User) => {
 				return this.updateLocalUser(rawUser);
 			}));
 	}
@@ -97,11 +97,11 @@ export class AuthService {
 	/**
 	 * Provide user a means to reset their password
 	 * @param forgotPwData
-	 * @return {Observable<RawUser>}
+	 * @return {Observable<User>}
 	 */
 	forgotPassword(forgotPwData) {
 		return this._http.requestCall(ApiEndpoints.FORGOT, ApiMethod.PUT, forgotPwData)
-			.pipe(tap((rawUser: RawUser) => {
+			.pipe(tap((rawUser: User) => {
 				this.updateLocalUser(rawUser);
 			}));
 	}
@@ -111,8 +111,7 @@ export class AuthService {
 	 * @param rawUser
 	 * @returns {User}
 	 */
-	updateLocalUser(rawUser: RawUser) {
-		const user: User = User.deserialize(rawUser);
+	updateLocalUser(user: User) {
 		LocalStorageService.setItem(LocalStorageTypes.SESSION, 'user', user);
 		this.authData.next(user);
 		return user;

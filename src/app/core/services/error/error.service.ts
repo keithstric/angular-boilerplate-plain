@@ -1,7 +1,7 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Subject, throwError} from 'rxjs';
-import {UiService} from '@core/services/ui/ui.service';
+import {NotificationService} from '@core/services/notification/notification.service';
 import {DEBUG_DIALOGS} from 'src/environments/environment';
 
 /**
@@ -16,7 +16,7 @@ export class ErrorService {
 	public errorEvent: Subject<Error> = new Subject<any>();
 
 	constructor(
-		private _ui: UiService
+		private _notify: NotificationService
 	) {	}
 
 	/**
@@ -25,7 +25,7 @@ export class ErrorService {
 	 * @param {string} notification - The notification message
 	 */
 	notifyUserSnackbar(notificationCode: number, notification: string) {
-		this._ui.notifyUserShowSnackbar(`${notificationCode}: ${notification}`, 5000);
+		this._notify.showSnackbar(`${notificationCode}: ${notification}`, 5000);
 	}
 
 	/**
@@ -66,7 +66,7 @@ export class ErrorService {
 			// console.log('Error Type=', err.name);
 		}
 		if (DEBUG_DIALOGS) {
-			this._ui.notifyUserShowConfirmDialog({
+			this._notify.showConfirmDialog({
 				noCancelButton: true,
 				messageHtml: `<span>${err.message}</span><pre>${err.stack}</pre>`,
 				title: `Error: ${err.name}`,

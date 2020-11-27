@@ -4,6 +4,13 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 The folder structure of this project was inspired by [this video](https://www.youtube.com/watch?v=WA95EJGhbLc&t=1s).
 
+## Project Goals
+
+* Basic Angular implementation (no layout/styling packages like material or bootstrap)
+* Provide useful base features that can be used in any project (i.e. loading spinner, http requests, error handling, etc.)
+* Speed up process of spinning up a new application
+* Make it easy to arrange and find code
+
 ## Features
 
 * Included [@ngrx/store](https://ngrx.io/guide/store) and [@ngrx/effects](https://ngrx.io/guide/effects) - Angular Redux implementation
@@ -48,15 +55,34 @@ npm start
 
 ## Configure for _your_ use case
 
-Upon first configuration you will want to change the following items:
+Upon first configuration you may want to change all or some of the following items:
 
 * `package.json` - The name field. This is used to drive the site title, header title and localStorage/sessionStorage prefix. If you create your project from the template on GitHub, this step may not be required.
 * `src/environments/environment*.ts` - Update the Notifications Server public key variable. This is to support push notifications. Leave it blank if push notifications are not going to be used
-* `src/app/core/interfaces/api.interface.ts` - Update the `ApiEndpoints` enum to match your routes
+* `src/app/core/interfaces/api.interface.ts` - Update the `ApiEndpoints` enum and `ApiRouteToClass` constant to match your routes
+* Modify `proxy.conf.json` to match your backend api location and port. You can delete this file if there is no need to proxy routes. Be sure to update `angular.json` if you delete this file
 * If not using Breadcrumbs delete: `src/app/layout/components/breadcrumbs`, `src/app/layout/components/page-breadcrumb-header` and `src/app/layout/services/breadcrumb`
-* Modify `proxy.conf.json` to match your backend api location and port
 * Modify `src/scss/theme.scss` to meet your theming needs
+* Update items in `src/app/modules/auth` and `src/app/core/services/auth/auth.service.ts` for your authentication needs
 
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+
+## Naming Conventions
+
+* "core" - Things need to load the layout and authenticate
+* "modules" - This kind of has 2 meanings:
+    1) Where custom or 3rd party module files are located
+    2) Where top level features are located
+* "layout" - The base application UI structure (where the header, sidebar, footer and content area are). NOT the content shown in the layout.
+* "shared" - This is where components, services, models, interfaces, etc are located which are used across many features
+* "page" - This would be a top level component which has it's own route
+
+## Undecided Items/Topics
+
+* Where should individual components reside in context to a feature/module? My observations so far are:
+    1) Some companies use something like `src/app/modules/some-feature/pages/some-page` for parent components and then all components specifically for that feature are stored in `src/app/modules/some-feature/components` - _I feel this would be the easiest way to find code_
+    2) Some companies use something like `src/app/modules/some-feature/components/some-feature` for parent components and then all components  specifically for that feature are stored in `src/app/modules/some-feature/components/some-page/some-component` and that is carried on for an undetermined depth - _I think this makes it difficult to find code_
+* How should the loading spinner be controlled? All in-progress http requests? Manually by the developer? Or, a combination of both? If both, how do you prevent the http request from showing the spinner?
+

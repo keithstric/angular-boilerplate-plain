@@ -7,7 +7,7 @@ import {ApiEndpoints, ApiMethod, ApiRouteToClass} from '@core/interfaces/api.int
 import {ErrorService} from '@core/services//error/error.service';
 
 /**
- * This service is for handling all http requests and responses. If an error occurs handle the error.
+ * This service is for handling all http requests and responses. If an error occurs, handle the error.
  * If the request route is defined in @link {ApiRouteToClass} will automatically deserialize the Raw object
  * into it's respective class.
  */
@@ -30,7 +30,6 @@ export class HttpService {
 	 * @returns {Observable<any>}
 	 */
 	requestCall(apiUrl: ApiEndpoints | string, method: ApiMethod, data?: any) {
-		// console.log('HttpService.requestCall, apiUrl=', apiUrl);
 		let response: Observable<any>;
 		let reqObservable: Observable<any>;
 		switch (method) {

@@ -1,8 +1,8 @@
+import {User} from '@core/models/user.model';
+
 /**
  * Http request methods
  */
-import {User} from '@core/models/user.model';
-
 export enum ApiMethod {
 	GET = 'GET',
 	POST = 'POST',

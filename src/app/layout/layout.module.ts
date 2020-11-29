@@ -41,7 +41,8 @@ const components = [
 		LoadingService
 	],
 	entryComponents: [
-		SiteHeaderComponent
+		SiteHeaderComponent,
+		SiteFooterComponent
 	]
 })
 export class LayoutModule {

@@ -17,8 +17,7 @@ export class AuthService {
 	constructor(
 		private _http: HttpService,
 		private _error: ErrorService
-	) {
-	}
+	) {}
 
 	/**
 	 * Determine if current user is authenticated or not

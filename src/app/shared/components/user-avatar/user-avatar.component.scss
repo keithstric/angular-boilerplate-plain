@@ -52,6 +52,22 @@
 		}
   }
 
+	&.huge {
+
+		.avatar-container {
+			height: 120px;
+			width: 120px;
+
+			.material-icons {
+				font-size: 120px;
+			}
+
+			.initials {
+				font-size: 60px;
+			}
+		}
+  }
+
   &:hover {
     cursor: pointer;
   }

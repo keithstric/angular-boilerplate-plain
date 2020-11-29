@@ -1,4 +1,5 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {User} from '@core/models/user.model';
 import {iUserState} from '@core/root-store/models/app-state.model';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
@@ -15,7 +16,7 @@ import * as tinycolor from 'tinycolor2';
 	styleUrls: ['./user-avatar.component.scss']
 })
 export class UserAvatarComponent implements OnInit, OnDestroy {
-	user: any;
+	user: User;
 	subscriptions: Subscription = new Subscription();
 	initials: string;
 	backgroundColor: string = 'transparent';
@@ -25,8 +26,7 @@ export class UserAvatarComponent implements OnInit, OnDestroy {
 	constructor(
 		private _auth: AuthService,
 		private store: Store<{user: iUserState}>
-	) {
-	}
+	) {}
 
 	ngOnInit(): void {
 		this.subscriptions.add(this.store.select(store => store.user)

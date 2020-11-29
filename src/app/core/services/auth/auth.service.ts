@@ -107,8 +107,8 @@ export class AuthService {
 
 	/**
 	 * update a user's object in session storage
-	 * @param rawUser
 	 * @returns {User}
+	 * @param user
 	 */
 	updateLocalUser(user: User) {
 		LocalStorageService.setItem(LocalStorageTypes.SESSION, 'user', user);

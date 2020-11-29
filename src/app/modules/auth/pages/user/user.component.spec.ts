@@ -1,10 +1,9 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ErrorService} from '@core/services/error/error.service';
 import {AuthService} from '@core/services/auth/auth.service';
-import {StateObservable, Store} from '@ngrx/store';
 import {provideMockStore} from '@ngrx/store/testing';
 import {MockAuthService, MockErrorService} from 'src/app/testing/mock-services';
 

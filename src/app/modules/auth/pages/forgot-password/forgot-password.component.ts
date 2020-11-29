@@ -3,7 +3,6 @@ import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
 import {iUserState} from '@core/root-store/models/app-state.model';
 import {ForgotUserPasswordAction} from '@core/root-store/user/user.action';
-import {AuthService} from '@core/services/auth/auth.service';
 import {Store} from '@ngrx/store';
 import {User} from '@core/models/user.model';
 

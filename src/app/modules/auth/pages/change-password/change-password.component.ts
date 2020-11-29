@@ -4,10 +4,7 @@ import {Router} from '@angular/router';
 import {iUserState} from '@core/root-store/models/app-state.model';
 import {ChangeUserPasswordAction} from '@core/root-store/user/user.action';
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
-import {AuthService} from '@core/services/auth/auth.service';
 import {NotificationService} from '@core/services/notification/notification.service';
-import {PROJECT_NAME} from 'src/environments/environment';
 
 @Component({
 	selector: 'app-change-password',

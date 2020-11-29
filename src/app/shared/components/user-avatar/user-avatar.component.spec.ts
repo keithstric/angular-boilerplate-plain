@@ -1,6 +1,5 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {AuthService} from '@core/services/auth/auth.service';
-import {StateObservable, Store} from '@ngrx/store';
 import {provideMockStore} from '@ngrx/store/testing';
 import {MockAuthService} from 'src/app/testing/mock-services';
 

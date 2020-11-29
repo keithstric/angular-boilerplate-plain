@@ -5,7 +5,6 @@ import {iUserState} from '@core/root-store/models/app-state.model';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {ErrorService} from '@core/services/error/error.service';
-import {AuthService} from '@core/services/auth/auth.service';
 import {PROJECT_NAME} from 'src/environments/environment';
 
 @Component({

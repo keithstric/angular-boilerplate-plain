@@ -18,7 +18,6 @@ export class BreadcrumbService {
 	 * BreadcrumbService constructor. Subscribes to router events and updates breadcrumbs
 	 * accordingly
 	 * @param _router
-	 * @param _header
 	 * @constructor
 	 */
 	constructor(

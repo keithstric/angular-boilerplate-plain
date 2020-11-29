@@ -1,5 +1,4 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {RouterTestingModule} from '@angular/router/testing';
 import {NotificationService} from '@core/services/notification/notification.service';
 import {MockUiService} from 'src/app/testing/mock-services';
 

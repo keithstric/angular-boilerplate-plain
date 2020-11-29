@@ -1,7 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
-import {CoreModule} from '@core/core.module';
 import {PageNotFoundComponent} from '@layout/components/page-not-found/page-not-found.component';
 import {SiteFooterComponent} from '@layout/components/site-footer/site-footer.component';
 import {SiteHeaderComponent} from '@layout/components/site-header/site-header.component';

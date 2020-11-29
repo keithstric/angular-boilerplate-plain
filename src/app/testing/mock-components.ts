@@ -1,11 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
-import {User} from '@core/models/user.model';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {iUserState} from '@core/root-store/models/app-state.model';
-import {LogOutUserAction, LogOutUserSuccessAction} from '@core/root-store/user';
 import {AuthService} from '@core/services/auth/auth.service';
-import {Store} from '@ngrx/store';
 import {MockStore} from '@ngrx/store/testing';
-import {ConfirmDialogData} from '@shared/interfaces/confirm-dialog-data.interface';
 import {PageBreadcrumbHeaderComponent} from '@layout/components/page-breadcrumb-header/page-breadcrumb-header.component';
 import {BreadcrumbService} from '@layout/services/breadcrumb/breadcrumb.service';
 

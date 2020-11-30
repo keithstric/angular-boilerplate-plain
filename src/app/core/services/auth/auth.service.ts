@@ -108,7 +108,7 @@ export class AuthService {
 
 	/**
 	 * update a user's object in session storage
-	 * @param rawUser
+	 * @param user
 	 * @returns {User}
 	 */
 	updateLocalUser(user: User) {

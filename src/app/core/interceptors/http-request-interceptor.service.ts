@@ -8,7 +8,7 @@ import {
 import {Observable} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {ErrorService} from '@core/services/error/error.service';
-import {LoadingService} from '../../layout/services/loading/loading.service';
+import {LoadingService} from '@layout/services/loading/loading.service';
 
 /**
  * Intercept all http requests

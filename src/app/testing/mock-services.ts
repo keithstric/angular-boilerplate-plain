@@ -56,6 +56,7 @@ export class MockAuthService {
 	}
 }
 
+
 export class MockHeaderService {
 	currentHeaderTitleSub: BehaviorSubject<string> = new BehaviorSubject(PROJECT_NAME);
 

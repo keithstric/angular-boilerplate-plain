@@ -1,5 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
-import {ConfirmDialogData} from '@shared/interfaces/confirm-dialog-data.interface';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {iUserState} from '@core/root-store/models/app-state.model';
+import {AuthService} from '@core/services/auth/auth.service';
+import {MockStore} from '@ngrx/store/testing';
 import {PageBreadcrumbHeaderComponent} from '@layout/components/page-breadcrumb-header/page-breadcrumb-header.component';
 import {BreadcrumbService} from '@layout/services/breadcrumb/breadcrumb.service';
 
@@ -115,10 +117,40 @@ export class MockStorybookDialogContentComponent {
 	template: `
 		<p>Click the avatar and see the console for the click message</p>
 		<div style="height: 48px; width: 48px;">
-			<app-user-avatar (avatarClicked)="onAvatarClicked($event)"></app-user-avatar>
+			<app-user-avatar class="small" (avatarClicked)="onAvatarClicked($event)"></app-user-avatar>
 		</div>`
 })
 export class MockStorybookUserAvatarComponent {
+
+	onAvatarClicked(evt: any) {
+		console.log('Avatar Clicked! evt=', evt);
+	}
+}
+
+@Component({
+	selector: 'app-mock-no-user-avatar',
+	template: `
+		<div style="height: 48px; width: 48px;">
+			<app-user-avatar class="small" (avatarClicked)="onAvatarClicked($event)"></app-user-avatar>
+			<app-user-avatar class="medium" (avatarClicked)="onAvatarClicked($event)"></app-user-avatar>
+			<app-user-avatar class="large" (avatarClicked)="onAvatarClicked($event)"></app-user-avatar>
+			<app-user-avatar class="huge" (avatarClicked)="onAvatarClicked($event)"></app-user-avatar>
+		</div>`
+})
+export class MockStorybookNoUserAvatarComponent implements OnInit {
+
+	constructor(
+		private _auth: AuthService,
+		private store: MockStore<{user: iUserState}>
+	) {}
+
+	ngOnInit() {
+		this.store.select(store => store.user)
+			.subscribe((user) => {
+				console.log('user=', user);
+			});
+		this.store.setState({user: {data: null, loading: false, error: null}});
+	}
 
 	onAvatarClicked(evt: any) {
 		console.log('Avatar Clicked!', evt);

@@ -6,7 +6,6 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {AppErrorHandler} from '@core/services/error-handler/error-handler.service';
 import {HttpService} from '@core/services/http/http.service';
 import {LocalStorageService} from '@core/services/local-storage/local-storage.service';
-import {StateObservable, Store} from '@ngrx/store';
 import {provideMockStore} from '@ngrx/store/testing';
 import {MockErrorService, MockHttpService, MockLocalStorageService} from 'src/app/testing/mock-services';
 

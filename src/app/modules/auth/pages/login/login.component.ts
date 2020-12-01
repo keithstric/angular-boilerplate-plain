@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {iUserState} from '@core/root-store/models/app-state.model';
-import {LoginUserAction, UserActionTypes} from '@core/root-store/user/user.action';
+import {LoginUserAction} from '@core/root-store/user/user.action';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {AppErrorHandler} from '@core/services/error-handler/error-handler.service';

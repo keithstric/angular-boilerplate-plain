@@ -6,11 +6,9 @@ import {AuthService} from '@core/services/auth/auth.service';
 import {HttpService} from '@core/services/http/http.service';
 import {LocalStorageService} from '@core/services/local-storage/local-storage.service';
 import {SiteHeaderComponent} from '@layout/components/site-header/site-header.component';
-import {StateObservable, Store} from '@ngrx/store';
 import {provideMockStore} from '@ngrx/store/testing';
 import {
 	MockAuthService,
-	MockHeaderService,
 	MockHttpService,
 	MockLocalStorageService
 } from 'src/app/testing/mock-services';

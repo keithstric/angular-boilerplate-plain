@@ -1,5 +1,5 @@
 import {Location} from '@angular/common';
-import {async, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {async, TestBed} from '@angular/core/testing';
 import {Router} from '@angular/router';
 import {RouterTestingModule} from '@angular/router/testing';
 import {appRoutes} from 'src/app/app-routing.module';

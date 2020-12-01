@@ -1,7 +1,8 @@
 import {HttpErrorResponse} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Subject, throwError} from 'rxjs';
+import {ErrorHandler, Injectable} from '@angular/core';
 import {NotificationService} from '@core/services/notification/notification.service';
+import {SnackbarConfig, SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.component';
+import {Subject, throwError} from 'rxjs';
 import {DEBUG_DIALOGS} from 'src/environments/environment';
 
 /**
@@ -12,12 +13,14 @@ import {DEBUG_DIALOGS} from 'src/environments/environment';
 @Injectable({
 	providedIn: 'root'
 })
-export class ErrorService {
+export class AppErrorHandler extends ErrorHandler {
 	public errorEvent: Subject<Error> = new Subject<any>();
 
 	constructor(
 		private _notify: NotificationService
-	) {	}
+	) {
+		super();
+	}
 
 	/**
 	 * Create a snackbar notification
@@ -25,7 +28,12 @@ export class ErrorService {
 	 * @param {string} notification - The notification message
 	 */
 	notifyUserSnackbar(notificationCode: number, notification: string) {
-		this._notify.showSnackbar(`${notificationCode}: ${notification}`, 5000);
+		const snackbarConfig: SnackbarConfig = {
+			message: `${notificationCode}: ${notification}`,
+			duration: 5000,
+			messageType: SnackbarMessageTypes.DANGER
+		};
+		this._notify.showSnackbar(snackbarConfig);
 	}
 
 	/**
@@ -47,7 +55,8 @@ export class ErrorService {
 	 * @param err {Error}
 	 */
 	handleError(err: Error) {
-		console.error('ErrorService.handleError, err', err);
+		const displayMessage = `An error occurred: ${err.message}`;
+		// console.error('ErrorService.handleError, err', err);
 		if (err instanceof EvalError) {
 			// console.log('Error Type=', err.name);
 		}else if (err instanceof RangeError) {
@@ -73,6 +82,14 @@ export class ErrorService {
 				confirmButtonText: 'OK'
 			});
 		}
+		const snackbarConfig: SnackbarConfig = {
+			messageType: SnackbarMessageTypes.DANGER,
+			message: displayMessage,
+			duration: 5000
+		};
+		this._notify.showSnackbar(snackbarConfig);
+		this.errorEvent.next(err);
+		super.handleError(err);
 	}
 
 	/**

@@ -3,7 +3,7 @@ import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterTestingModule} from '@angular/router/testing';
-import {ErrorService} from '@core/services/error/error.service';
+import {AppErrorHandler} from '@core/services/error-handler/error-handler.service';
 import {HttpService} from '@core/services/http/http.service';
 import {LocalStorageService} from '@core/services/local-storage/local-storage.service';
 import {StateObservable, Store} from '@ngrx/store';
@@ -41,7 +41,7 @@ describe('RegisterComponent', () => {
 			],
 			declarations: [RegisterComponent],
 			providers: [
-				{provide: ErrorService, useClass: MockErrorService},
+				{provide: AppErrorHandler, useClass: MockErrorService},
 				{provide: LocalStorageService, useClass: MockLocalStorageService},
 				{provide: HttpService, useClass: MockHttpService},
 				provideMockStore({initialState})

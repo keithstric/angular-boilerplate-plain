@@ -4,7 +4,7 @@ import {Router} from '@angular/router';
 import {iUserState} from '@core/root-store/models/app-state.model';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
-import {ErrorService} from '@core/services/error/error.service';
+import {AppErrorHandler} from '@core/services/error-handler/error-handler.service';
 import {AuthService} from '@core/services/auth/auth.service';
 import {PROJECT_NAME} from 'src/environments/environment';
 
@@ -27,7 +27,7 @@ export class UserComponent implements OnInit, OnChanges {
 
 	constructor(
 		private _formBuilder: FormBuilder,
-		private _error: ErrorService,
+		private _error: AppErrorHandler,
 		private _router: Router,
 		private store: Store<{user: iUserState}>
 	) { }

@@ -4,7 +4,7 @@ import {Router} from '@angular/router';
 import {Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {ApiEndpoints, ApiMethod, ApiRouteToClass} from '@core/interfaces/api.interface';
-import {ErrorService} from '@core/services//error/error.service';
+import {AppErrorHandler} from '@core/services/error-handler/error-handler.service';
 
 /**
  * This service is for handling all http requests and responses. If an error occurs, handle the error.
@@ -18,7 +18,7 @@ export class HttpService {
 
 	constructor(
 		private _http: HttpClient,
-		private _error: ErrorService,
+		private _error: AppErrorHandler,
 		private _router: Router
 	) {}
 

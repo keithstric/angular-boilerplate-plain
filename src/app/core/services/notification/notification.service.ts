@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
-import {SwPush} from '@angular/service-worker';
+import {SnackbarConfig} from '@shared/components/snack-bar/snack-bar.component';
+import {SnackBarRef} from '@shared/components/snack-bar/snack-bar.ref';
 import {ConfirmDialogData} from '@shared/interfaces/confirm-dialog-data.interface';
 
 enum NotificationPermissions {
@@ -8,37 +9,20 @@ enum NotificationPermissions {
 	DEFAULT = 'default'
 }
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class NotificationService {
+	foo = 'bar';
 
 	constructor(
-		private swPush: SwPush
-	) { }
+		private _snackbarRef: SnackBarRef
+	) {}
 
 	/**
 	 * Show a snackbar/toast message
-	 * @param msg {string}
-	 * @param duration {number}
-	 * @param action {string}
-	 * @param actionFn {Function}
+	 * @param config
 	 */
-	showSnackbar(msg: string, duration?: number, action?: string, actionFn?: (...args) => void): void {
-		/*duration = duration ? duration : 3000;
-		action = action || 'dismiss';
-		this.snackbarRef = this._snackbar.open(msg, action, {...this.snackbarConfig, duration});
-		const dismissSub = this.snackbarRef.afterDismissed()
-			.subscribe((matSnackbarDismissedEvt: MatSnackBarDismiss) => {
-				dismissSub.unsubscribe();
-			});
-		const actionSub = this.snackbarRef.onAction()
-			.subscribe(() => {
-				if (actionFn) {
-					actionFn();
-				}
-				actionSub.unsubscribe();
-			});*/
+	showSnackbar(config: SnackbarConfig) {
+		this._snackbarRef.show(config);
 	}
 
 	/**
@@ -85,7 +69,6 @@ export class NotificationService {
 	 * ref.afterOpen().subscribe(result => {console.log(result)});
 	 *
 	 * @param {ConfirmDialogData} dialogData
-	 * @returns {MatDialogRef<ConfirmDialogComponent, ConfirmDialogData>}
 	 */
 	showConfirmDialog(dialogData: ConfirmDialogData) {
 		// return this._dialog.open(ConfirmDialogComponent, {data: dialogData});

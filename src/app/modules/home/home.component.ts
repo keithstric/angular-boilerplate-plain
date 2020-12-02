@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {LoggerService} from '@core/services/logger/logger.service';
 import {NotificationService} from '@core/services/notification/notification.service';
 import {SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.component';
 
@@ -10,7 +11,8 @@ import {SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.compo
 export class HomeComponent implements OnInit {
 
 	constructor(
-		private _notify: NotificationService
+		private _notify: NotificationService,
+		private logger: LoggerService
 	) {}
 
 	ngOnInit(): void {
@@ -18,9 +20,7 @@ export class HomeComponent implements OnInit {
 			message: 'Welcome to angular-boilerplate-plain!',
 			messageType: SnackbarMessageTypes.SUCCESS
 		});
-		// this.logger.info('Here is an info log with params', 'string param', {foo: 'bar', baz: 'boo'}, ['foo', 'bar']);
-		// this.logger.warn('Here is an warning log with params', 'string param', {foo: 'bar', baz: 'boo'}, ['foo', 'bar']);
-		// this.logger.error('Here is an error log with params', 'string param', {foo: 'bar', baz: 'boo'}, ['foo', 'bar']);
+		this.logger.info(`Welcome to angular-boilerplate-plain logger`, 'string param', {foo: 'bar', baz: 'boo'}, ['foo', 'bar']);
 	}
 
 }

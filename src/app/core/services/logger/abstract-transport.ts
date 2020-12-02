@@ -7,10 +7,10 @@ export interface FormattedMessage {
 }
 
 export abstract class AbstractTransport {
+
 	/**
 	 * Set to true to include the date in the logging message
 	 */
-
 	abstract readonly logWithDate: boolean = true;
 
 	/**

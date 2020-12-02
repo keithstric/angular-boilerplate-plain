@@ -1,6 +1,6 @@
 import {AbstractTransport} from '@core/services/logger/abstract-transport';
 import {LogEntry} from '@core/services/logger/log-entry';
-import {LogLevel, LogLevelMap} from '@core/services/logger/logger.service';
+import {LogLevel, LogLevelNameMap} from '@core/services/logger/logger.service';
 
 /**
  * This is a console logger transport. Will display all received log entries in the console
@@ -32,8 +32,8 @@ export class ConsoleTransport extends AbstractTransport {
 		return [
 			{
 				partName: 'level',
-				styles: `${levelColor}font-weight: bold;`,
-				value: `%c${LogLevelMap[logEntry.level]} - `
+				styles: `${levelColor} font-weight: bold; font-size: 1.1em`,
+				value: `%c${LogLevelNameMap[logEntry.level]} - `
 			},
 			{partName: 'date', styles: 'color: default;', value: `%c${logEntry.entryDate} - `},
 			{partName: 'message', styles: levelColor, value: `%c${logEntry.message}`}

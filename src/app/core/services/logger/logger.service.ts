@@ -16,7 +16,7 @@ export enum LogLevel {
 	silly
 }
 
-export const LogLevelMap = [
+export const LogLevelNameMap = [
 	'error',
 	'warn',
 	'info',

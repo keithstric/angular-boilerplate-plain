@@ -1,4 +1,5 @@
 import {HttpErrorResponse} from '@angular/common/http';
+import {SnackbarConfig} from '@shared/components/snack-bar/snack-bar.component';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {ApiEndpoints, ApiMethod} from '@core/interfaces/api.interface';
 import userJson from 'src/app/testing/mock-data/user.json';
@@ -34,8 +35,8 @@ export class MockLocalStorageService {
 }
 
 export class MockUiService {
-	notifyUser(msg: string, duration?: number, action?: string, actionFn?: (...args) => void) {
-	}
+	notifyUser(msg: string, duration?: number, action?: string, actionFn?: (...args) => void) {}
+	showSnackbar(config: SnackbarConfig) {}
 }
 
 export class MockAuthService {

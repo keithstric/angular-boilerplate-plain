@@ -2,6 +2,9 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {TestBed} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {AppErrorHandler} from '@core/services/error-handler/error-handler.service';
+import {LoggerService} from '@core/services/logger/logger.service';
+import {NotificationService} from '@core/services/notification/notification.service';
+import {SnackBarRef} from '@shared/components/snack-bar/snack-bar.ref';
 import {MockErrorService} from 'src/app/testing/mock-services';
 
 import {HttpService} from './http.service';
@@ -16,7 +19,10 @@ describe('HttpService', () => {
 				RouterTestingModule
 			],
 			providers: [
-				{provide: AppErrorHandler, useClass: MockErrorService}
+				{provide: AppErrorHandler, useClass: MockErrorService},
+				LoggerService,
+				NotificationService,
+				SnackBarRef
 			]
 		});
 		service = TestBed.inject(HttpService);

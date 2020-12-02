@@ -1,16 +1,20 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { DomInjectorService } from 'src/app/core/services/dom-injector/dom-injector.service';
+import {DomInjectorService} from 'src/app/core/services/dom-injector/dom-injector.service';
 
 describe('DomInjectorService', () => {
-  let service: DomInjectorService;
+	let service: DomInjectorService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(DomInjectorService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({
+			providers: [
+				DomInjectorService
+			]
+		});
+		service = TestBed.inject(DomInjectorService);
+	});
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should be created', () => {
+		expect(service).toBeTruthy();
+	});
 });

@@ -1,0 +1,11 @@
+<div class="flex-row snackbar-container" [ngClass]="messageType">
+	<span class="snackbar-message" [innerHTML]="message"></span>
+	<div class="snackbar-action-container">
+		<button *ngIf="action" class="btn withAction" (click)="dismiss()" title="run action and dismiss">
+			{{action.label}}
+		</button>
+		<button *ngIf="!action" class="btn" (click)="dismiss()" title="dismiss">
+			<i class="material-icons">close</i>
+		</button>
+	</div>
+</div>

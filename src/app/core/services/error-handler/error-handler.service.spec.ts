@@ -2,10 +2,10 @@ import {TestBed} from '@angular/core/testing';
 import {NotificationService} from '@core/services/notification/notification.service';
 import {MockUiService} from 'src/app/testing/mock-services';
 
-import {ErrorService} from './error.service';
+import {AppErrorHandler} from 'src/app/core/services/error-handler/error-handler.service';
 
 describe('ErrorService', () => {
-	let service: ErrorService;
+	let service: AppErrorHandler;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -13,7 +13,7 @@ describe('ErrorService', () => {
 				{provide: NotificationService, useClass: MockUiService}
 			]
 		});
-		service = TestBed.inject(ErrorService);
+		service = TestBed.inject(AppErrorHandler);
 	});
 
 	it('should be created', () => {

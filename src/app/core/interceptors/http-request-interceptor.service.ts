@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
-import {ErrorService} from '@core/services/error/error.service';
+import {AppErrorHandler} from '@core/services/error-handler/error-handler.service';
 import {LoadingService} from '@layout/services/loading/loading.service';
 
 /**
@@ -19,7 +19,7 @@ export class HttpRequestInterceptor implements HttpRequestInterceptor {
 
 	constructor(
 		private _loading: LoadingService,
-		private _error: ErrorService
+		private _error: AppErrorHandler
 	) { }
 
 	/**

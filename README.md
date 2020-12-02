@@ -71,7 +71,7 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Naming Conventions
 
-* "core" - Things need to load the layout and authenticate
+* "core" - Things needed to load the layout, authenticate and system level services
 * "modules" - This kind of has 2 meanings:
     1) Where custom or 3rd party module files are located
     2) Where top level features are located

@@ -2,7 +2,16 @@
 
 $app-primary: #3F51B5;
 $app-accent: #03A9F4;
-$app-warn: #E91E63;
+$app-error: #de1414;
+$app-error-color: white;
+$app-info: #d1ecf1;
+$app-info-color: #0c5460;
+$app-success: #d4edda;
+$app-success-color: #155724;
+$app-danger: #f8d7da;
+$app-danger-color: #721c24;
+$app-warn: #fff3cd;
+$app-warn-color: #856404;
 
 .form-field {
 	margin-bottom: 10px;

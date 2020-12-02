@@ -12,11 +12,6 @@ import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
 import { SharedModule } from '@shared/shared.module';
 
-/*
- * todo: CoreModule should only be imported here and nowhere else
- *  ref: https://youtu.be/WoCReDUpcVs?t=451
- */
-
 /**
  * The AppModule
  */
@@ -35,9 +30,7 @@ import { SharedModule } from '@shared/shared.module';
 		ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
 		SharedModule
 	],
-	exports: [
-		CoreModule
-	],
+	exports: [],
 	providers: [],
 	bootstrap: [AppComponent]
 })

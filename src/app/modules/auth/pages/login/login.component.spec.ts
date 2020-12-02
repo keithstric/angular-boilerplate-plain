@@ -2,7 +2,7 @@ import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterTestingModule} from '@angular/router/testing';
-import {ErrorService} from '@core/services/error/error.service';
+import {AppErrorHandler} from '@core/services/error-handler/error-handler.service';
 import {AuthService} from '@core/services/auth/auth.service';
 import {NotificationService} from '@core/services/notification/notification.service';
 import {provideMockStore} from '@ngrx/store/testing';
@@ -38,7 +38,7 @@ describe('LoginComponent', () => {
 			],
 			declarations: [LoginComponent],
 			providers: [
-				{provide: ErrorService, useClass: MockErrorService},
+				{provide: AppErrorHandler, useClass: MockErrorService},
 				{provide: AuthService, useClass: MockAuthService},
 				{provide: NotificationService, useClass: MockUiService},
 				provideMockStore({initialState})

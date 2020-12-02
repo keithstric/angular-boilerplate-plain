@@ -5,7 +5,7 @@ import {iUserState} from '@core/root-store/models/app-state.model';
 import {RegisterUserAction} from '@core/root-store/user/user.action';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
-import {ErrorService} from '@core/services/error/error.service';
+import {AppErrorHandler} from '@core/services/error-handler/error-handler.service';
 import {PROJECT_NAME} from 'src/environments/environment';
 
 @Component({
@@ -26,7 +26,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private _formBuilder: FormBuilder,
-		private _error: ErrorService,
+		private _error: AppErrorHandler,
 		private _router: Router,
 		private store: Store<{user: iUserState}>
 	) { }

@@ -1,0 +1,84 @@
+@import 'src/scss/variables';
+@import 'src/scss/mixins';
+
+.snackbar-container {
+	position: fixed;
+	bottom: 65px;
+	left: 15px;
+	align-items: center;
+	justify-content: space-between;
+	border: 1px solid transparent;
+	padding: .75rem 1.25rem;
+	margin-bottom: 1rem;
+	z-index: 10;
+	max-width: 92%;
+	@include border-radius(.25rem);
+	@include elevation(6);
+	@include slide-animation(0, 0.5s, animation-slide-in-up, ease);
+
+	.snackbar-message {
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+
+	.snackbar-action-container {
+		margin-left: 1.25rem;
+
+		.btn {
+			background: transparent;
+			color: inherit;
+			padding: 2px;
+			height: 30px;
+			width: 30px;
+			border-width: 0;
+
+			&.withAction {
+				width: auto;
+				font-size: 16px;
+				font-weight: 500;
+				border: 1px solid transparent;
+			}
+		}
+
+	}
+
+	&.dismiss-animation {
+		bottom: -10px;
+		@include slide-animation(0, 0.5s, animation-slide-out-down, ease);
+	}
+
+	&.info {
+		background-color: $info;
+		color: $info-color;
+		border-color: #bee5eb;
+	}
+
+	&.warning {
+		background-color: $warn;
+		color: $warn-color;
+		border-color: #ffeeba;
+	}
+
+	&.error {
+		background-color: $error;
+		color: $error-color;
+		border-color: $error;
+	}
+
+	&.success {
+		background-color: $success;
+		color: $success-color;
+		border-color: #c3e6cb;
+	}
+
+	&.danger {
+		background-color: $danger;
+		color: $danger-color;
+		border-color: #f5c6cb;
+
+		.btn.withAction {
+			border-color: $danger-color;
+		}
+	}
+}

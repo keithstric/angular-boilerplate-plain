@@ -7,6 +7,7 @@ import {DomInjectorService} from '@core/services/dom-injector/dom-injector.servi
 import {AppErrorHandler} from '@core/services/error-handler/error-handler.service';
 import {HttpService} from '@core/services/http/http.service';
 import {LocalStorageService} from '@core/services/local-storage/local-storage.service';
+import {LoggerService} from '@core/services/logger/logger.service';
 import {NotificationService} from '@core/services/notification/notification.service';
 
 const components = [];
@@ -29,10 +30,11 @@ const components = [];
 	providers: [
 		{provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true},
 		{provide: ErrorHandler, useClass: AppErrorHandler},
+		DomInjectorService,
 		HttpService,
 		LocalStorageService,
+		LoggerService,
 		NotificationService,
-		DomInjectorService
 	]
 })
 export class CoreModule { }

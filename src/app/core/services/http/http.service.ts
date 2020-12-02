@@ -1,6 +1,7 @@
 import {HttpClient, HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
+import {LoggerService} from '@core/services/logger/logger.service';
 import {Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {ApiEndpoints, ApiMethod, ApiRouteToClass} from '@core/interfaces/api.interface';
@@ -19,7 +20,8 @@ export class HttpService {
 	constructor(
 		private _http: HttpClient,
 		private _error: AppErrorHandler,
-		private _router: Router
+		private _router: Router,
+		private logger: LoggerService
 	) {}
 
 	/**
@@ -75,11 +77,13 @@ export class HttpService {
 	 */
 	handleError(error: HttpErrorResponse, self: HttpService) {
 		if (error.error instanceof ErrorEvent) {
-			console.error(`An error occurred: ${error.error.message}`);
+			// console.error(`An error occurred: ${error.error.message}`);
+			this.logger.error(error.error.message, error);
 		} else {
 			if (error.status === 401) {
 				this._router.navigateByUrl('/auth/login');
 			}
+			this.logger.error(error.message, error);
 			return this._error.handleRequestError(error.status, error.error.message, error.error);
 		}
 	}

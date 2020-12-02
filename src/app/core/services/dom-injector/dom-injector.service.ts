@@ -8,8 +8,11 @@ import {
 } from '@angular/core';
 
 /**
+ * This service is for injecting components into the document body and being able to destroy them and ensuring that the component
+ * is known to the ng component tree.
+ *
  * Unfortunately this service cannot be injected via a parameter in a constructor. It must be used from the
- * Injector @see {Injector}
+ * Injector @link {Injector}
  *
  * @example
  *

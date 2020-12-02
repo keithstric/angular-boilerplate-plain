@@ -1,5 +1,5 @@
 <div class="flex-row snackbar-container" [ngClass]="messageType">
-	<span class="snackbar-message" [innerHTML]="message"></span>
+	<span class="snackbar-message" [innerHTML]="message" [title]="message"></span>
 	<div class="snackbar-action-container">
 		<button *ngIf="action" class="btn withAction" (click)="dismiss()" title="run action and dismiss">
 			{{action.label}}

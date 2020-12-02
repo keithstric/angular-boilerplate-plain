@@ -1,5 +1,6 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import {ErrorHandler, Injectable} from '@angular/core';
+import {LoggerService} from '@core/services/logger/logger.service';
 import {NotificationService} from '@core/services/notification/notification.service';
 import {SnackbarConfig, SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.component';
 import {Subject, throwError} from 'rxjs';
@@ -17,7 +18,8 @@ export class AppErrorHandler extends ErrorHandler {
 	public errorEvent: Subject<Error> = new Subject<any>();
 
 	constructor(
-		private _notify: NotificationService
+		private _notify: NotificationService,
+		private logger: LoggerService
 	) {
 		super();
 	}
@@ -89,6 +91,7 @@ export class AppErrorHandler extends ErrorHandler {
 		};
 		this._notify.showSnackbar(snackbarConfig);
 		this.errorEvent.next(err);
+		this.logger.error(err.message, err);
 		super.handleError(err);
 	}
 

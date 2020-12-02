@@ -1,4 +1,5 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {LogLevel} from '@core/services/logger/logger.service';
 import {SnackBarRef} from '@shared/components/snack-bar/snack-bar.ref';
 
 export enum SnackbarMessageTypes {

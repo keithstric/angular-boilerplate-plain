@@ -9,7 +9,7 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {environment} from 'src/environments/environment';
 
 
-export const metaReducers: MetaReducer<any>[] = [UserFromStorageMetaReducer];
+export const metaReducers: MetaReducer[] = [UserFromStorageMetaReducer];
 
 @NgModule({
 	declarations: [],

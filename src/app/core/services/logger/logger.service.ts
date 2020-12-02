@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {ConsoleTransport} from '@core/services/logger/console-transport';
+import {HttpTransport} from '@core/services/logger/http-transport';
 import {LogEntry} from '@core/services/logger/log-entry';
 import {AbstractTransport} from '@core/services/logger/abstract-transport';
 import {NotificationService} from '@core/services/notification/notification.service';
@@ -36,7 +37,6 @@ export const SnackbarMessageLoggingMap = {
 
 @Injectable()
 export class LoggerService {
-	logs: BehaviorSubject<LogEntry[]> = new BehaviorSubject<LogEntry[]>([]);
 	/**
 	 * Array of transports. There should be a transport for every logging type you
 	 * might need
@@ -50,31 +50,15 @@ export class LoggerService {
 	constructor(
 		private _notify: NotificationService
 	) {
-		this.listenToLogs();
 		if (environment.production) {
-			this.transports = [];
+			this.transports = [
+				new HttpTransport(this.level)
+			];
 		}else{
 			this.transports = [
-				new ConsoleTransport(LogLevel.info)
+				new ConsoleTransport(this.level)
 			];
 		}
-	}
-
-	/**
-	 * Listen to the logs array. If we get a certain amount or reach a time
-	 * threshold then send the log entries to the backend to be persisted and
-	 * clear the array
-	 *
-	 * @todo: Decide where this should reside. I think it should actually be in the transport
-	 */
-	listenToLogs() {
-		this.logs
-			.subscribe((logs) => {
-				if (logs && logs.length) {
-					// send the logs to a logging service
-					// todo: Figure out what to do with the logs. Maybe this should be handled in a transport?
-				}
-			});
 	}
 
 	error(message, ...optionalParams: any[]) {
@@ -115,11 +99,6 @@ export class LoggerService {
 			}
 			this.transports.forEach((transport) => {
 				const loggedEntry = transport.logMessage(logEntry);
-				if (loggedEntry.shouldPersist) {
-					const newLogs = [...this.logs.value];
-					newLogs.push(loggedEntry);
-					this.logs.next(newLogs);
-				}
 				if (loggedEntry.shouldNotifyUser) {
 					this._notify.showSnackbar({
 						message: loggedEntry.message,

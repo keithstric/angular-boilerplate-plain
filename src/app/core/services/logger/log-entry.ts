@@ -1,3 +1,4 @@
+import {User} from '@core/models/user.model';
 import {LogLevel, LogLevelNameMap} from '@core/services/logger/logger.service';
 
 export class LogEntry {
@@ -5,6 +6,7 @@ export class LogEntry {
 	private _logWithDate = true;
 	private _shouldPersist = false;
 	private _shouldNotifyUser = false;
+	private _user: User;
 
 	constructor(
 		public level: LogLevel,
@@ -33,6 +35,14 @@ export class LogEntry {
 
 	set shouldNotifyUser(shouldNotifyUser) {
 		this._shouldNotifyUser = shouldNotifyUser;
+	}
+
+	get user() {
+		return this._user;
+	}
+
+	set user(user) {
+		this._user = user;
 	}
 
 	toJson() {

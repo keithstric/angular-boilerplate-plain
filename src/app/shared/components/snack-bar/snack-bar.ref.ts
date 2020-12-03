@@ -61,10 +61,7 @@ export class SnackBarRef {
 			const {componentRef, config} = currentSnackbar;
 			// remove snackbar after set time
 			currentSnackbar.timeout = setTimeout(() => {
-				this.dismiss()
-					.catch((err) => {
-						throw err;
-					});
+				this.dismiss();
 			}, config.duration || 5000);
 			this._currentSnackbar = currentSnackbar;
 			this._setSnackbarDismissEventHandler(componentRef.instance as SnackBarComponent);
@@ -73,36 +70,38 @@ export class SnackBarRef {
 	}
 
 	/**
-	 * Dismiss the snackbar. Run the action, clear the timer, add the exit animation, then once
+	 * Dismiss the snackbar. Clear the timer, add the exit animation, then once
 	 * the animation is done, clear the _currentSnackbar and get rid of the top
-	 * element in the que
+	 * element in the que. Do not run the action unless the action button is
+	 * clicked on
 	 * @returns {Promise}
 	 */
 	dismiss() {
 		clearTimeout(this._currentSnackbar.timeout);
-		return this._runAction()
-			.then(() => {
-				this._addExitAnimationClass();
-				// wait for animation to finish, animation is 500ms
-				setTimeout(() => {
-					const {componentRef} = this._currentSnackbar;
-					this._domInjector.removeComponent(componentRef);
-					this._currentSnackbar = undefined;
-					const currQue = this.snackbarsQue.value;
-					currQue.shift();
-					this.snackbarsQue.next(currQue);
-				}, 510);
-			});
+		this._addExitAnimationClass();
+		// wait for animation to finish, animation is 500ms
+		setTimeout(() => {
+			const {componentRef} = this._currentSnackbar;
+			this._domInjector.removeComponent(componentRef);
+			this._currentSnackbar = undefined;
+			const currQue = this.snackbarsQue.value;
+			currQue.shift();
+			this.snackbarsQue.next(currQue);
+		}, 515);
 	}
 
 	/**
-	 * Setup the event handler to catch the dismiss event from the snackbar component
+	 * Setup the event handler to catch the dismiss event from the snackbar component.
+	 * Runs the action and then dismisses the snackbar
 	 * @param snackBar
 	 * @private
 	 */
 	private _setSnackbarDismissEventHandler(snackBar: SnackBarComponent) {
 		snackBar.dismissSnackbar.subscribe(() => {
-			this.dismiss();
+			this._runAction()
+				.then(() => {
+					this.dismiss();
+				});
 		});
 	}
 

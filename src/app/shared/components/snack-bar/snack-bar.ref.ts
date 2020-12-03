@@ -56,6 +56,9 @@ export class SnackBarRef {
 	private _displaySnackbar(config: SnackbarConfig) {
 		this.config = config;
 		this.snackBarRef = this._domInjector.createComponent(SnackBarComponent, config);
+		(this.snackBarRef.instance as SnackBarComponent).onDismiss.subscribe(() => {
+			this.dismiss();
+		});
 		this._domInjector.attachComponent(this.snackBarRef, document.body);
 		setTimeout(() => {
 			if (this.snackBarRef) {
@@ -76,6 +79,7 @@ export class SnackBarRef {
 		return this._runAction()
 			.then(() => {
 				this._addExitAnimationClass();
+				// wait for animation to finish
 				setTimeout(() => {
 					this._domInjector.removeComponent(this.snackBarRef);
 					this.snackBarRef = undefined;

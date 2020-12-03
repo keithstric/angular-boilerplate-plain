@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, ViewEncapsulation, Output} from '@angular/core';
 import {LogLevel} from '@core/services/logger/logger.service';
 import {SnackBarRef} from '@shared/components/snack-bar/snack-bar.ref';
 
@@ -32,15 +32,14 @@ export class SnackBarComponent implements OnInit {
 	@Input() messageType: SnackbarMessageTypes = SnackbarMessageTypes.INFO;
 	@Input() message: string = 'Add a message';
 	@Input() action: SnackbarAction;
+	@Output() onDismiss: EventEmitter<any> = new EventEmitter<any>();
 
-	constructor(
-		public snackbarRef: SnackBarRef
-	) {}
+	constructor() {}
 
 	ngOnInit(): void {}
 
 	dismiss() {
-		const skip = this.snackbarRef.dismiss();
+		this.onDismiss.emit();
 	}
 
 }

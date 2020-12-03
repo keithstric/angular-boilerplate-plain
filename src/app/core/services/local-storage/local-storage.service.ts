@@ -20,11 +20,11 @@ export class LocalStorageService {
 	/**
 	 * Get a localStorage or sessionStorage item value
 	 * @param storageType {'local'|'session'}
-	 * @param varName {string}
+	 * @param key {string}
 	 */
-	static getItem(storageType: LocalStorageTypes, varName: string) {
+	static getItem(storageType: LocalStorageTypes, key: string) {
 		const storage = LocalStorageService._getStorage(storageType);
-		const val = storage.getItem(`${PROJECT_NAME}:${varName}`);
+		const val = storage.getItem(`${PROJECT_NAME}:${key}`);
 		try {
 			return JSON.parse(val);
 		} catch (e) {
@@ -35,23 +35,23 @@ export class LocalStorageService {
 	/**
 	 * Set a localStorage or sessionStorage item value
 	 * @param storageType {LocalStorageTypes}
-	 * @param varName {string}
+	 * @param key {string}
 	 * @param value {any}
 	 */
-	static setItem(storageType: LocalStorageTypes, varName: string, value: any) {
+	static setItem(storageType: LocalStorageTypes, key: string, value: any) {
 		const storage = LocalStorageService._getStorage(storageType);
 		const val = typeof value === 'string' ? value : JSON.stringify(value);
-		storage.setItem(`${PROJECT_NAME}:${varName}`, val);
+		storage.setItem(`${PROJECT_NAME}:${key}`, val);
 	}
 
 	/**
 	 * Remove an item from localStorage or sessionStorage
 	 * @param storageType {LocalStorageTypes}
-	 * @param varName {string}
+	 * @param key {string}
 	 */
-	static removeItem(storageType: LocalStorageTypes, varName: string) {
+	static removeItem(storageType: LocalStorageTypes, key: string) {
 		const storage = LocalStorageService._getStorage(storageType);
-		storage.removeItem(`${PROJECT_NAME}:${varName}`);
+		storage.removeItem(`${PROJECT_NAME}:${key}`);
 	}
 
 }

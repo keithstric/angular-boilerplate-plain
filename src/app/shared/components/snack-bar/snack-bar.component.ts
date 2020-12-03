@@ -1,26 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, ViewEncapsulation, Output} from '@angular/core';
-import {LogLevel} from '@core/services/logger/logger.service';
-import {SnackBarRef} from '@shared/components/snack-bar/snack-bar.ref';
-
-export enum SnackbarMessageTypes {
-	INFO = 'info',
-	WARNING = 'warning',
-	ERROR = 'error',
-	SUCCESS = 'success',
-	DANGER = 'danger'
-}
-
-export interface SnackbarAction {
-	label: string;
-	actionHandler?: any;
-}
-
-export interface SnackbarConfig {
-	messageType?: SnackbarMessageTypes;
-	message: string;
-	duration?: number;
-	action?: SnackbarAction;
-}
+import {SnackbarAction, SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.interface';
 
 @Component({
 	selector: 'app-snack-bar',
@@ -32,14 +11,14 @@ export class SnackBarComponent implements OnInit {
 	@Input() messageType: SnackbarMessageTypes = SnackbarMessageTypes.INFO;
 	@Input() message: string = 'Add a message';
 	@Input() action: SnackbarAction;
-	@Output() onDismiss: EventEmitter<any> = new EventEmitter<any>();
+	@Output() dismissSnackbar: EventEmitter<any> = new EventEmitter<any>();
 
 	constructor() {}
 
 	ngOnInit(): void {}
 
 	dismiss() {
-		this.onDismiss.emit();
+		this.dismissSnackbar.emit();
 	}
 
 }

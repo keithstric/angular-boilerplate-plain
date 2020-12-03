@@ -1,39 +1,11 @@
 import { Injectable } from '@angular/core';
+import {LogLevel, SnackbarMessageLoggingMap} from '@core/interfaces/logger.interface';
 import {ConsoleTransport} from '@core/services/logger/console-transport';
 import {HttpTransport} from '@core/services/logger/http-transport';
 import {LogEntry} from '@core/services/logger/log-entry';
 import {AbstractTransport} from '@core/services/logger/abstract-transport';
 import {NotificationService} from '@core/services/notification/notification.service';
-import {SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.component';
-import {BehaviorSubject} from 'rxjs';
 import {environment} from 'src/environments/environment';
-
-export enum LogLevel {
-	error,
-	warn,
-	info,
-	verbose,
-	debug,
-	silly
-}
-
-export const LogLevelNameMap = [
-	'error',
-	'warn',
-	'info',
-	'verbose',
-	'debug',
-	'silly'
-];
-
-export const SnackbarMessageLoggingMap = {
-	[LogLevel.info]: SnackbarMessageTypes.INFO,
-	[LogLevel.warn]: SnackbarMessageTypes.WARNING,
-	[LogLevel.error]: SnackbarMessageTypes.DANGER,
-	[LogLevel.debug]: SnackbarMessageTypes.SUCCESS,
-	[LogLevel.verbose]: SnackbarMessageTypes.INFO,
-	[LogLevel.silly]: SnackbarMessageTypes.INFO,
-};
 
 @Injectable()
 export class LoggerService {
@@ -52,7 +24,7 @@ export class LoggerService {
 	) {
 		if (environment.production) {
 			this.transports = [
-				new HttpTransport(this.level)
+				// new HttpTransport(this.level)
 			];
 		}else{
 			this.transports = [

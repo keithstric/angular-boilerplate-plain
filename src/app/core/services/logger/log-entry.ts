@@ -1,5 +1,5 @@
+import {LogLevel} from '@core/interfaces/logger.interface';
 import {User} from '@core/models/user.model';
-import {LogLevel, LogLevelNameMap} from '@core/services/logger/logger.service';
 
 export class LogEntry {
 	entryDate: string = new Date().toISOString();

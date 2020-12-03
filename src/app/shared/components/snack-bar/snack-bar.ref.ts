@@ -1,6 +1,7 @@
 import {ComponentRef, EmbeddedViewRef, Injectable, Injector} from '@angular/core';
 import {DomInjectorService} from '@core/services/dom-injector/dom-injector.service';
-import {SnackBarComponent, SnackbarConfig} from '@shared/components/snack-bar/snack-bar.component';
+import {SnackBarComponent} from '@shared/components/snack-bar/snack-bar.component';
+import {SnackbarConfig} from '@shared/components/snack-bar/snack-bar.interface';
 import {BehaviorSubject} from 'rxjs';
 
 @Injectable()
@@ -56,18 +57,16 @@ export class SnackBarRef {
 	private _displaySnackbar(config: SnackbarConfig) {
 		this.config = config;
 		this.snackBarRef = this._domInjector.createComponent(SnackBarComponent, config);
-		(this.snackBarRef.instance as SnackBarComponent).onDismiss.subscribe(() => {
-			this.dismiss();
-		});
+		this._setSnackbarDismissEventHandler();
 		this._domInjector.attachComponent(this.snackBarRef, document.body);
-		setTimeout(() => {
+		/*setTimeout(() => {
 			if (this.snackBarRef) {
 				this.dismiss()
 					.catch((err) => {
 						throw err;
 					});
 			}
-		}, config.duration || 5000);
+		}, config.duration || 5000);*/
 		return this.snackBarRef;
 	}
 
@@ -87,6 +86,12 @@ export class SnackBarRef {
 					this.snackbarsObs.next(new Map());
 				}, 500);
 			});
+	}
+
+	private _setSnackbarDismissEventHandler() {
+		(this.snackBarRef.instance as SnackBarComponent).dismissSnackbar.subscribe(() => {
+			this.dismiss();
+		});
 	}
 
 	/**

@@ -1,6 +1,6 @@
+import {LogLevel, LogLevelNameMap} from '@core/interfaces/logger.interface';
 import {AbstractTransport} from '@core/services/logger/abstract-transport';
 import {LogEntry} from '@core/services/logger/log-entry';
-import {LogLevel, LogLevelNameMap} from '@core/services/logger/logger.service';
 
 /**
  * This is a console logger transport. Will display all received log entries in the console

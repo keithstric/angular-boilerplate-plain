@@ -1,5 +1,5 @@
+import {LogLevel} from '@core/interfaces/logger.interface';
 import {LogEntry} from '@core/services/logger/log-entry';
-import {LogLevel} from '@core/services/logger/logger.service';
 
 export interface FormattedMessage {
 	message: string;

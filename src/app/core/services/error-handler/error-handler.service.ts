@@ -2,7 +2,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {ErrorHandler, Injectable} from '@angular/core';
 import {LoggerService} from '@core/services/logger/logger.service';
 import {NotificationService} from '@core/services/notification/notification.service';
-import {SnackbarConfig, SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.component';
+import {SnackbarConfig, SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.interface';
 import {Subject, throwError} from 'rxjs';
 import {DEBUG_DIALOGS} from 'src/environments/environment';
 

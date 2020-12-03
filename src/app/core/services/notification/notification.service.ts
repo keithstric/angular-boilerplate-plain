@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {SnackbarConfig} from '@shared/components/snack-bar/snack-bar.component';
+import {SnackbarConfig} from '@shared/components/snack-bar/snack-bar.interface';
 import {SnackBarRef} from '@shared/components/snack-bar/snack-bar.ref';
-import {ConfirmDialogData} from '@shared/interfaces/confirm-dialog-data.interface';
+import {ConfirmDialogData} from '@shared/components/confirm-modal/confirm-dialog-data.interface';
 
 enum NotificationPermissions {
 	GRANTED = 'granted',

@@ -1,9 +1,9 @@
 import {ApiMethod} from '@core/interfaces/api.interface';
+import {LogLevel} from '@core/interfaces/logger.interface';
 import {AuthService} from '@core/services/auth/auth.service';
 import {HttpService} from '@core/services/http/http.service';
 import {AbstractTransport} from '@core/services/logger/abstract-transport';
 import {LogEntry} from '@core/services/logger/log-entry';
-import {LogLevel} from '@core/services/logger/logger.service';
 import {ServiceLocator} from '@core/services/service-locator';
 import {BehaviorSubject, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';

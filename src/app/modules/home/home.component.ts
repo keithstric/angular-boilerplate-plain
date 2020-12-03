@@ -16,6 +16,13 @@ export class HomeComponent implements OnInit {
 	) {}
 
 	ngOnInit(): void {
+		/*for (let i = 1; i <= 4; i++) {
+			const config = {
+				messageType: SnackbarMessageTypes.SUCCESS,
+				message: `snackbar #${i}`
+			};
+			this._notify.showSnackbar(config);
+		}*/
 		this._notify.showSnackbar({
 			message: 'Welcome to angular-boilerplate-plain!',
 			messageType: SnackbarMessageTypes.SUCCESS

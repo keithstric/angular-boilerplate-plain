@@ -4,35 +4,39 @@ import {SnackBarComponent} from '@shared/components/snack-bar/snack-bar.componen
 import {SnackbarConfig} from '@shared/components/snack-bar/snack-bar.interface';
 import {BehaviorSubject} from 'rxjs';
 
+interface SnackBarDisplay {
+	componentRef: ComponentRef<unknown>;
+	config: SnackbarConfig;
+	timeout?: any;
+}
+
 @Injectable()
 export class SnackBarRef {
-	private snackBarRef: ComponentRef<unknown>;
-	private config: SnackbarConfig;
+	private _currentSnackbar: SnackBarDisplay;
 	private _domInjector: DomInjectorService;
-	snackbarsObs: BehaviorSubject<Map<ComponentRef<unknown>, SnackbarConfig>>
-		= new BehaviorSubject<Map<ComponentRef<unknown>, SnackbarConfig>>(new Map());
+	private snackbarsQue: BehaviorSubject<SnackBarDisplay[]> = new BehaviorSubject<SnackBarDisplay[]>([]);
 
 	constructor(private _injector: Injector) {
-		this.init();
+		this._listenToSnackBars();
 	}
 
 	/**
-	 * Setup a listener for the snackbarsObs to remove any snackbars that may still be showing. This
-	 * scenario happens if a snackbar is shown before a previous snackbar is removed
+	 * Setup a listener for the snackbarsQue. Will display each snackbar in the que once
+	 * the currently displayed snackbar is dismissed and the que changes
 	 */
-	init() {
-		this.snackbarsObs
-			.subscribe((snackBarsMap) => {
-				snackBarsMap.forEach((config, snackbarRef) => {
-					this._domInjector.removeComponent(snackbarRef);
-					snackBarsMap.delete(snackbarRef);
-				});
+	private _listenToSnackBars() {
+		this.snackbarsQue
+			.subscribe((snackBars) => {
+				if (snackBars && snackBars.length) {
+					if (!this._currentSnackbar) {
+						this._displaySnackbar(snackBars[0]);
+					}
+				}
 			});
 	}
 
 	/**
-	 * Check if we currently have a snackbar showing. If so, add it to the snackBarsObs map then
-	 * display the snackbar
+	 * Create the SnackbarDisplay and add it to the que
 	 * @param {SnackbarConfig} config
 	 * @returns {ComponentRef}
 	 */
@@ -40,56 +44,64 @@ export class SnackBarRef {
 		if (!this._domInjector) {
 			this._domInjector = this._injector.get(DomInjectorService);
 		}
-		if (this.snackBarRef) {
-			const snackbarsMap = this.snackbarsObs.value;
-			snackbarsMap.set(this.snackBarRef, this.config);
-			this.snackbarsObs.next(snackbarsMap);
-		}
-		return this._displaySnackbar(config);
+		const componentRef = this._domInjector.createComponent(SnackBarComponent, config);
+		const snackbars = this.snackbarsQue.value;
+		snackbars.push({componentRef, config});
+		this.snackbarsQue.next(snackbars);
+		return componentRef;
 	}
 
 	/**
-	 * Display the snackbar
-	 * @param {SnackbarConfig} config
-	 * @returns {ComponentRef}
+	 * Display the snackbar, setup the dismiss timer, set _currentSnackbar
+	 * @param currentSnackbar
 	 * @private
 	 */
-	private _displaySnackbar(config: SnackbarConfig) {
-		this.config = config;
-		this.snackBarRef = this._domInjector.createComponent(SnackBarComponent, config);
-		this._setSnackbarDismissEventHandler();
-		this._domInjector.attachComponent(this.snackBarRef, document.body);
-		/*setTimeout(() => {
-			if (this.snackBarRef) {
+	private _displaySnackbar(currentSnackbar: SnackBarDisplay): void {
+		if (currentSnackbar) {
+			const {componentRef, config} = currentSnackbar;
+			// remove snackbar after set time
+			currentSnackbar.timeout = setTimeout(() => {
 				this.dismiss()
 					.catch((err) => {
 						throw err;
 					});
-			}
-		}, config.duration || 5000);*/
-		return this.snackBarRef;
+			}, config.duration || 5000);
+			this._currentSnackbar = currentSnackbar;
+			this._setSnackbarDismissEventHandler(componentRef.instance as SnackBarComponent);
+			this._domInjector.attachComponent(componentRef, document.body);
+		}
 	}
 
 	/**
-	 * Dismiss the snackbar
+	 * Dismiss the snackbar. Run the action, clear the timer, add the exit animation, then once
+	 * the animation is done, clear the _currentSnackbar and get rid of the top
+	 * element in the que
 	 * @returns {Promise}
 	 */
 	dismiss() {
+		clearTimeout(this._currentSnackbar.timeout);
 		return this._runAction()
 			.then(() => {
 				this._addExitAnimationClass();
-				// wait for animation to finish
+				// wait for animation to finish, animation is 500ms
 				setTimeout(() => {
-					this._domInjector.removeComponent(this.snackBarRef);
-					this.snackBarRef = undefined;
-					this.config = undefined;
-					this.snackbarsObs.next(new Map());
-				}, 500);
+					const {componentRef} = this._currentSnackbar;
+					this._domInjector.removeComponent(componentRef);
+					this._currentSnackbar = undefined;
+					const currQue = this.snackbarsQue.value;
+					currQue.shift();
+					this.snackbarsQue.next(currQue);
+				}, 510);
 			});
 	}
 
-	private _setSnackbarDismissEventHandler() {
-		(this.snackBarRef.instance as SnackBarComponent).dismissSnackbar.subscribe(() => {
+	/**
+	 * Setup the event handler to catch the dismiss event from the snackbar component
+	 * @param snackBar
+	 * @private
+	 */
+	private _setSnackbarDismissEventHandler(snackBar: SnackBarComponent) {
+		snackBar.dismissSnackbar.subscribe(() => {
 			this.dismiss();
 		});
 	}
@@ -99,7 +111,8 @@ export class SnackBarRef {
 	 * @private
 	 */
 	private _getDomElement() {
-		return (this.snackBarRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
+		const {componentRef} = this._currentSnackbar;
+		return (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
 	}
 
 	/**
@@ -118,9 +131,10 @@ export class SnackBarRef {
 	 * @private
 	 */
 	private _runAction() {
+		const {config} = this._currentSnackbar;
 		return new Promise((resolve, reject) => {
-			if (this.config.action && this.config.action.actionHandler) {
-				this.config.action.actionHandler();
+			if (config.action && config.action.actionHandler) {
+				config.action.actionHandler();
 			}
 			resolve();
 		});

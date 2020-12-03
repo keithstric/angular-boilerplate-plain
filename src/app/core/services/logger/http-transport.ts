@@ -42,9 +42,14 @@ export class HttpTransport extends AbstractTransport {
 			});
 	}
 
+	/**
+	 * Just adds the log entry to the logs array
+	 * @param logEntry
+	 * @returns {LogEntry}
+	 */
 	log(logEntry: LogEntry) {
 		const authService: AuthService = ServiceLocator.injector.get(AuthService);
-		logEntry.user = authService.getUser();
+		logEntry.user = authService.getUser(); // todo: causes circular dependency
 		const currentLogs = this.logs.value;
 		if (logEntry.shouldPersist) {
 			const newLogs = [...currentLogs, logEntry];
@@ -53,11 +58,14 @@ export class HttpTransport extends AbstractTransport {
 		return logEntry;
 	}
 
+	/**
+	 * Sends the logs array to the server
+	 */
 	flush() {
 		const logs = Array.from(this.logs.value);
 		this.logs.next([]);
 		if (logs.length > 0) {
-			const httpService: HttpService = ServiceLocator.injector.get(HttpService);
+			const httpService: HttpService = ServiceLocator.injector.get(HttpService); // todo: causes circular dependency
 			httpService.requestCall('/api/logs', ApiMethod.POST, logs)
 				.pipe(catchError((err) => {
 					return throwError(err);

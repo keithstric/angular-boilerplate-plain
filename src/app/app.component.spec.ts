@@ -1,4 +1,4 @@
-import {TestBed, async} from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ActionsSubject, ReducerManager, StateObservable, Store, StoreModule} from '@ngrx/store';
 import {provideMockStore} from '@ngrx/store/testing';
@@ -22,7 +22,7 @@ describe('AppComponent', () => {
 		}
 	};
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				RouterTestingModule,

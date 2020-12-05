@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {AuthService} from '@core/services/auth/auth.service';
 import {provideMockStore} from '@ngrx/store/testing';
 import {MockAuthService} from 'src/app/testing/mock-services';
@@ -24,7 +24,7 @@ describe('UserAvatarComponent', () => {
 		}
 	};
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [UserAvatarComponent],
 			providers: [

@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {DomInjectorService} from '@core/services/dom-injector/dom-injector.service';
 import {LoggerService} from '@core/services/logger/logger.service';
 import {NotificationService} from '@core/services/notification/notification.service';
@@ -11,7 +11,7 @@ describe('HomeComponent', () => {
 	let component: HomeComponent;
 	let fixture: ComponentFixture<HomeComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [HomeComponent],
 			providers: [

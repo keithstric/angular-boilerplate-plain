@@ -1,5 +1,5 @@
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {PageBreadcrumbHeaderComponent} from './page-breadcrumb-header.component';
 
@@ -7,7 +7,7 @@ describe('PageBreadcrumbHeaderComponent', () => {
 	let component: PageBreadcrumbHeaderComponent;
 	let fixture: ComponentFixture<PageBreadcrumbHeaderComponent>;
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			declarations: [PageBreadcrumbHeaderComponent],
 			schemas: [CUSTOM_ELEMENTS_SCHEMA]

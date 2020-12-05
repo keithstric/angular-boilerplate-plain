@@ -1,6 +1,6 @@
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterTestingModule} from '@angular/router/testing';
 import {AppErrorHandler} from '@core/services/error-handler/error-handler.service';
@@ -30,7 +30,7 @@ describe('RegisterComponent', () => {
 		}
 	};
 
-	beforeEach(async(() => {
+	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				FormsModule,

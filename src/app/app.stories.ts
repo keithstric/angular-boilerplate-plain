@@ -23,13 +23,7 @@ export default {
 				{provide: APP_BASE_HREF, useValue: '/'}
 			]
 		})
-	],
-	parameters: {
-		notes: {markdown: appNotes},
-		backgrounds: [
-			{name: 'primary', value: '#f5f5f5', default: true}
-		]
-	}
+	]
 };
 
 export const defaultApp = () => ({

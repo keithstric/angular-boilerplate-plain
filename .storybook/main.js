@@ -1,14 +1,11 @@
 const path = require('path');
 
 module.exports = {
-  stories: ['../src/**/*.stories.ts'],
+  stories: ['../src/**/*.stories.@(ts|js)'],
   addons: [
-  	'@storybook/addon-actions',
-		'@storybook/addon-knobs',
-		'@storybook/addon-links',
-		'@storybook/addon-notes',
-		'@storybook/addon-backgrounds',
 		{
+			name: '@storybook/addon-essentials'
+		},{
 			name: '@storybook/addon-storysource',
 			options: {
 				rule: {

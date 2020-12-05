@@ -39,13 +39,7 @@ export default {
 				SwPush
 			]
 		})
-	],
-	parameters: {
-		notes: {markdown: docs},
-		backgrounds: [
-			{name: 'primary', value: '#3F51B5', default: true}
-		]
-	}
+	]
 };
 
 export const small = () => ({

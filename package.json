@@ -1,6 +1,6 @@
 {
   "name": "angular-boilerplate",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve -o --port 4201",
@@ -10,7 +10,7 @@
     "e2e": "ng e2e",
     "start-dist-server": "npm run build --prod && http-server dist/angular-boilerplate/ -p 8080",
     "compodoc": "npx compodoc",
-		"storybook:docs": "compodoc -p ./tsconfig.json -e json -d .",
+    "storybook:docs": "compodoc -p ./tsconfig.json -e json -d .",
     "storybook": "npm run storybook:docs && start-storybook -p 6006 src/assets",
     "build-storybook": "build-storybook"
   },
@@ -42,11 +42,7 @@
     "@angular/language-service": "^11.0.3",
     "@babel/core": "^7.10.3",
     "@compodoc/compodoc": "^1.1.11",
-    "@storybook/addon-actions": "^6.1.10",
-    "@storybook/addon-backgrounds": "^6.1.10",
     "@storybook/addon-essentials": "^6.1.10",
-    "@storybook/addon-knobs": "^6.1.10",
-    "@storybook/addon-links": "^6.1.10",
     "@storybook/addon-storysource": "^6.1.10",
     "@storybook/addons": "^6.1.10",
     "@storybook/angular": "^6.1.10",

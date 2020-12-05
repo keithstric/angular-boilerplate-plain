@@ -11328,23 +11328,7 @@
                 },
                 {
                     "type": "declarations",
-                    "elements": [
-                        {
-                            "name": "BreadcrumbsComponent"
-                        },
-                        {
-                            "name": "PageBreadcrumbHeaderComponent"
-                        },
-                        {
-                            "name": "PageNotFoundComponent"
-                        },
-                        {
-                            "name": "SiteFooterComponent"
-                        },
-                        {
-                            "name": "SiteHeaderComponent"
-                        }
-                    ]
+                    "elements": []
                 },
                 {
                     "type": "imports",
@@ -11356,23 +11340,7 @@
                 },
                 {
                     "type": "exports",
-                    "elements": [
-                        {
-                            "name": "BreadcrumbsComponent"
-                        },
-                        {
-                            "name": "PageBreadcrumbHeaderComponent"
-                        },
-                        {
-                            "name": "PageNotFoundComponent"
-                        },
-                        {
-                            "name": "SiteFooterComponent"
-                        },
-                        {
-                            "name": "SiteHeaderComponent"
-                        }
-                    ]
+                    "elements": []
                 },
                 {
                     "type": "bootstrap",
@@ -11440,23 +11408,7 @@
                 },
                 {
                     "type": "declarations",
-                    "elements": [
-                        {
-                            "name": "BreadcrumbsComponent"
-                        },
-                        {
-                            "name": "PageBreadcrumbHeaderComponent"
-                        },
-                        {
-                            "name": "PageNotFoundComponent"
-                        },
-                        {
-                            "name": "SiteFooterComponent"
-                        },
-                        {
-                            "name": "SiteHeaderComponent"
-                        }
-                    ]
+                    "elements": []
                 },
                 {
                     "type": "imports",
@@ -11468,23 +11420,7 @@
                 },
                 {
                     "type": "exports",
-                    "elements": [
-                        {
-                            "name": "BreadcrumbsComponent"
-                        },
-                        {
-                            "name": "PageBreadcrumbHeaderComponent"
-                        },
-                        {
-                            "name": "PageNotFoundComponent"
-                        },
-                        {
-                            "name": "SiteFooterComponent"
-                        },
-                        {
-                            "name": "SiteHeaderComponent"
-                        }
-                    ]
+                    "elements": []
                 },
                 {
                     "type": "bootstrap",
@@ -11538,23 +11474,7 @@
                 },
                 {
                     "type": "declarations",
-                    "elements": [
-                        {
-                            "name": "BreadcrumbsComponent"
-                        },
-                        {
-                            "name": "PageBreadcrumbHeaderComponent"
-                        },
-                        {
-                            "name": "PageNotFoundComponent"
-                        },
-                        {
-                            "name": "SiteFooterComponent"
-                        },
-                        {
-                            "name": "SiteHeaderComponent"
-                        }
-                    ]
+                    "elements": []
                 },
                 {
                     "type": "imports",
@@ -11562,23 +11482,7 @@
                 },
                 {
                     "type": "exports",
-                    "elements": [
-                        {
-                            "name": "BreadcrumbsComponent"
-                        },
-                        {
-                            "name": "PageBreadcrumbHeaderComponent"
-                        },
-                        {
-                            "name": "PageNotFoundComponent"
-                        },
-                        {
-                            "name": "SiteFooterComponent"
-                        },
-                        {
-                            "name": "SiteHeaderComponent"
-                        }
-                    ]
+                    "elements": []
                 },
                 {
                     "type": "bootstrap",
@@ -11599,23 +11503,7 @@
                 },
                 {
                     "type": "declarations",
-                    "elements": [
-                        {
-                            "name": "BreadcrumbsComponent"
-                        },
-                        {
-                            "name": "PageBreadcrumbHeaderComponent"
-                        },
-                        {
-                            "name": "PageNotFoundComponent"
-                        },
-                        {
-                            "name": "SiteFooterComponent"
-                        },
-                        {
-                            "name": "SiteHeaderComponent"
-                        }
-                    ]
+                    "elements": []
                 },
                 {
                     "type": "imports",
@@ -11633,23 +11521,7 @@
                 },
                 {
                     "type": "exports",
-                    "elements": [
-                        {
-                            "name": "BreadcrumbsComponent"
-                        },
-                        {
-                            "name": "PageBreadcrumbHeaderComponent"
-                        },
-                        {
-                            "name": "PageNotFoundComponent"
-                        },
-                        {
-                            "name": "SiteFooterComponent"
-                        },
-                        {
-                            "name": "SiteHeaderComponent"
-                        }
-                    ]
+                    "elements": []
                 },
                 {
                     "type": "bootstrap",
@@ -11685,17 +11557,17 @@
                 "name": "components",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/app/layout/layout.module.ts",
+                "file": "src/app/core/core.module.ts",
                 "type": "[]",
-                "defaultValue": "[\n\tBreadcrumbsComponent,\n\tPageBreadcrumbHeaderComponent,\n\tPageNotFoundComponent,\n\tSiteFooterComponent,\n\tSiteHeaderComponent,\n]"
+                "defaultValue": "[]"
             },
             {
                 "name": "components",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/app/core/core.module.ts",
+                "file": "src/app/layout/layout.module.ts",
                 "type": "[]",
-                "defaultValue": "[]"
+                "defaultValue": "[\n\tBreadcrumbsComponent,\n\tPageBreadcrumbHeaderComponent,\n\tPageNotFoundComponent,\n\tSiteFooterComponent,\n\tSiteHeaderComponent,\n]"
             },
             {
                 "name": "components",
@@ -11760,7 +11632,7 @@
                 "subtype": "variable",
                 "file": "src/app/layout/components/page-breadcrumb-header/page-breadcrumb-header.stories.ts",
                 "type": "",
-                "defaultValue": "() => ({\n\tcomponent: MockStorybookPageBreadcrumbHeaderComponent,\n\tprops: {\n\t\tshowAddButton: boolean('showAddButton', false)\n\t}\n})"
+                "defaultValue": "() => ({\n\tcomponent: MockStorybookPageBreadcrumbHeaderComponent,\n\targs: {\n\t\tshowAddButton: false\n\t}\n})"
             },
             {
                 "name": "environment",
@@ -11881,7 +11753,7 @@
                 "subtype": "variable",
                 "file": ".storybook/preview.ts",
                 "type": "object",
-                "defaultValue": "{\n\tcontrols: { expanded: true },\n\tbackgrounds: {\n\t\tdefault: 'gray',\n\t\tvalues: [\n\t\t\t{\n\t\t\t\tname: 'twitter',\n\t\t\t\tvalue: '#00aced',\n\t\t\t},\n\t\t\t{\n\t\t\t\tname: 'facebook',\n\t\t\t\tvalue: '#3b5998',\n\t\t\t},\n\t\t\t{\n\t\t\t\tname: 'gray',\n\t\t\t\tvalue: '#f1f1f1',\n\t\t\t},\n\t\t],\n\t},\n}"
+                "defaultValue": "{\n\tcontrols: {\n\t\texpanded: true,\n\t\thideNoControlsWarning: true\n\t},\n\tbackgrounds: {\n\t\tdefault: 'gray',\n\t\tvalues: [\n\t\t\t{\n\t\t\t\tname: 'twitter',\n\t\t\t\tvalue: '#00aced',\n\t\t\t},\n\t\t\t{\n\t\t\t\tname: 'facebook',\n\t\t\t\tvalue: '#3b5998',\n\t\t\t},\n\t\t\t{\n\t\t\t\tname: 'gray',\n\t\t\t\tvalue: '#f1f1f1',\n\t\t\t},\n\t\t],\n\t},\n}"
             },
             {
                 "name": "PROJECT_NAME",
@@ -11979,7 +11851,7 @@
                 "subtype": "variable",
                 "file": "src/app/layout/components/page-breadcrumb-header/page-breadcrumb-header.stories.ts",
                 "type": "",
-                "defaultValue": "() => ({\n\tcomponent: MockStorybookPageBreadcrumbHeaderComponent,\n\tprops: {\n\t\tshowAddButton: boolean('showAddButton', true)\n\t}\n})"
+                "defaultValue": "() => ({\n\tcomponent: MockStorybookPageBreadcrumbHeaderComponent,\n\targs: {\n\t\tshowAddButton: true\n\t}\n})"
             },
             {
                 "name": "withContent",
@@ -12575,16 +12447,6 @@
                     "defaultValue": "() => ({\n\tcomponent: UserAvatarComponent,\n\ttemplate: `<div style=\"width: 48px; height: 48px;\">\n\t\t\t<app-user-avatar class=\"small\"></app-user-avatar>\n\t\t</div>`\n})"
                 }
             ],
-            "src/app/layout/layout.module.ts": [
-                {
-                    "name": "components",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/app/layout/layout.module.ts",
-                    "type": "[]",
-                    "defaultValue": "[\n\tBreadcrumbsComponent,\n\tPageBreadcrumbHeaderComponent,\n\tPageNotFoundComponent,\n\tSiteFooterComponent,\n\tSiteHeaderComponent,\n]"
-                }
-            ],
             "src/app/core/core.module.ts": [
                 {
                     "name": "components",
@@ -12593,6 +12455,16 @@
                     "file": "src/app/core/core.module.ts",
                     "type": "[]",
                     "defaultValue": "[]"
+                }
+            ],
+            "src/app/layout/layout.module.ts": [
+                {
+                    "name": "components",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/layout/layout.module.ts",
+                    "type": "[]",
+                    "defaultValue": "[\n\tBreadcrumbsComponent,\n\tPageBreadcrumbHeaderComponent,\n\tPageNotFoundComponent,\n\tSiteFooterComponent,\n\tSiteHeaderComponent,\n]"
                 }
             ],
             "src/app/shared/shared.module.ts": [
@@ -12755,7 +12627,7 @@
                     "subtype": "variable",
                     "file": "src/app/layout/components/page-breadcrumb-header/page-breadcrumb-header.stories.ts",
                     "type": "",
-                    "defaultValue": "() => ({\n\tcomponent: MockStorybookPageBreadcrumbHeaderComponent,\n\tprops: {\n\t\tshowAddButton: boolean('showAddButton', false)\n\t}\n})"
+                    "defaultValue": "() => ({\n\tcomponent: MockStorybookPageBreadcrumbHeaderComponent,\n\targs: {\n\t\tshowAddButton: false\n\t}\n})"
                 },
                 {
                     "name": "withAddButton",
@@ -12763,7 +12635,7 @@
                     "subtype": "variable",
                     "file": "src/app/layout/components/page-breadcrumb-header/page-breadcrumb-header.stories.ts",
                     "type": "",
-                    "defaultValue": "() => ({\n\tcomponent: MockStorybookPageBreadcrumbHeaderComponent,\n\tprops: {\n\t\tshowAddButton: boolean('showAddButton', true)\n\t}\n})"
+                    "defaultValue": "() => ({\n\tcomponent: MockStorybookPageBreadcrumbHeaderComponent,\n\targs: {\n\t\tshowAddButton: true\n\t}\n})"
                 }
             ],
             "src/app/core/root-store/user/user.reducer.ts": [
@@ -12845,7 +12717,7 @@
                     "subtype": "variable",
                     "file": ".storybook/preview.ts",
                     "type": "object",
-                    "defaultValue": "{\n\tcontrols: { expanded: true },\n\tbackgrounds: {\n\t\tdefault: 'gray',\n\t\tvalues: [\n\t\t\t{\n\t\t\t\tname: 'twitter',\n\t\t\t\tvalue: '#00aced',\n\t\t\t},\n\t\t\t{\n\t\t\t\tname: 'facebook',\n\t\t\t\tvalue: '#3b5998',\n\t\t\t},\n\t\t\t{\n\t\t\t\tname: 'gray',\n\t\t\t\tvalue: '#f1f1f1',\n\t\t\t},\n\t\t],\n\t},\n}"
+                    "defaultValue": "{\n\tcontrols: {\n\t\texpanded: true,\n\t\thideNoControlsWarning: true\n\t},\n\tbackgrounds: {\n\t\tdefault: 'gray',\n\t\tvalues: [\n\t\t\t{\n\t\t\t\tname: 'twitter',\n\t\t\t\tvalue: '#00aced',\n\t\t\t},\n\t\t\t{\n\t\t\t\tname: 'facebook',\n\t\t\t\tvalue: '#3b5998',\n\t\t\t},\n\t\t\t{\n\t\t\t\tname: 'gray',\n\t\t\t\tvalue: '#f1f1f1',\n\t\t\t},\n\t\t],\n\t},\n}"
                 }
             ],
             "src/app/shared/utils/string.utils.ts": [

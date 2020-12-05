@@ -4,7 +4,10 @@ import docJson from '../documentation.json';
 setCompodocJson(docJson);
 
 export const parameters = {
-	controls: { expanded: true },
+	controls: {
+		expanded: true,
+		hideNoControlsWarning: false
+	},
 	backgrounds: {
 		default: 'gray',
 		values: [

@@ -11,14 +11,16 @@ export default {
 	]
 };
 
-export const defaultCard = () => ({
+export const defaultCard = (args) => ({
 	component: CardComponent,
-	args: {withBorder: true, raised: false}
+	props: args
 });
+defaultCard.args = {withBorder: true, raised: false};
 
-export const withContent = () => ({
+export const withContent = (args) => ({
 	component: CardComponent,
-	template: `<app-card [withBorder]="true" [raised]="true">
+	props: args,
+	template: `<app-card [withBorder]="${args.withBorder}" [raised]="${args.raised}">
 			<div header>Header</div>
 			<div content>
 				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
@@ -30,3 +32,4 @@ export const withContent = () => ({
 			<div footer>Footer</div>
 		</app-card>`
 });
+withContent.args = {withBorder: true, raised: true};

@@ -22,16 +22,14 @@ export default {
 	]
 };
 
-export const defaultHeader = () => ({
+export const defaultHeader = (args) => ({
 	component: MockStorybookPageBreadcrumbHeaderComponent,
-	args: {
-		showAddButton: false
-	}
+	props: args
 });
+defaultHeader.args = {showAddButton: false};
 
-export const withAddButton = () => ({
+export const withAddButton = (args) => ({
 	component: MockStorybookPageBreadcrumbHeaderComponent,
-	args: {
-		showAddButton: true
-	}
+	props: args
 });
+withAddButton.args = {showAddButton: true};

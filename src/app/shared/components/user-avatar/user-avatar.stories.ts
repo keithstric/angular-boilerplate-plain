@@ -29,6 +29,7 @@ const initialState = {
 
 export default {
 	title: 'app-user-avatar',
+	component: UserAvatarComponent,
 	decorators: [
 		moduleMetadata({
 			imports: [],

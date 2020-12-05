@@ -9,6 +9,7 @@ import appNotes from '../../README.md';
 
 export default {
 	title: 'App',
+	component: AppComponent,
 	decorators: [
 		moduleMetadata({
 			imports: [
@@ -23,7 +24,8 @@ export default {
 				{provide: APP_BASE_HREF, useValue: '/'}
 			]
 		})
-	]
+	],
+	controls: {hideNoControlsWarning: true}
 };
 
 export const defaultApp = () => ({

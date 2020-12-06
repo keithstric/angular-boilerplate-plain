@@ -2,6 +2,7 @@
   "name": "angular-boilerplate",
   "version": "1.0.0",
   "scripts": {
+    "postinstall": "ngcc",
     "ng": "ng",
     "start": "ng serve -o --port 4201",
     "build": "ng build --prod",

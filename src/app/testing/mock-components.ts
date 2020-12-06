@@ -10,8 +10,8 @@ import {BreadcrumbService} from '@layout/services/breadcrumb/breadcrumb.service'
 	template: '<p>Mock app-card</p>'
 })
 export class MockCardComponent {
-	@Input() cardTitle: string = 'Card Title';
-	@Input() cardSubTitle: string = 'Card Sub-Title';
+	@Input() withBorder = true;
+	@Input() raised = true;
 }
 
 @Component({

@@ -31,7 +31,7 @@ export class HttpService {
 	 * @param data {any}
 	 * @returns {Observable<any>}
 	 */
-	requestCall(apiUrl: ApiEndpoints | string, method: ApiMethod, data?: any) {
+	doRequest(apiUrl: ApiEndpoints | string, method: ApiMethod, data?: any) {
 		let response: Observable<any>;
 		let reqObservable: Observable<any>;
 		switch (method) {

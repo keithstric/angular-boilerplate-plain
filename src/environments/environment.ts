@@ -21,12 +21,6 @@ export const PROJECT_VERSION = version;
 export const PROJECT_NAME = name;
 
 /**
- * The notification server public key for push notifications
- * @type {string}
- */
-export const NOTIFICATION_SERVER_PUBLIC_KEY = '';
-
-/**
  * Set to true for error dialogs to be shown
  * @type {boolean}
  */

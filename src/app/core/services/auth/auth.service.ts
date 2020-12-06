@@ -55,7 +55,7 @@ export class AuthService {
 	 * @returns {Observable<User>}
 	 */
 	login(loginData: RawUser) {
-		return this._http.requestCall(ApiEndpoints.LOGIN, ApiMethod.POST, loginData)
+		return this._http.doRequest(ApiEndpoints.LOGIN, ApiMethod.POST, loginData)
 			.pipe(tap((rawUser: User) => {
 				this.logger.info('User Logged in', rawUser);
 				this.updateLocalUser(rawUser);
@@ -67,7 +67,7 @@ export class AuthService {
 	 * @returns {Observable<User>}
 	 */
 	logout() {
-		return this._http.requestCall(ApiEndpoints.LOGOUT, ApiMethod.GET)
+		return this._http.doRequest(ApiEndpoints.LOGOUT, ApiMethod.GET)
 			.pipe(tap((response) => {
 				this.logger.info('User logged out', this.getUser());
 				LocalStorageService.removeItem(LocalStorageTypes.SESSION, 'user');
@@ -82,7 +82,7 @@ export class AuthService {
 	 * @returns {Observable<User>}
 	 */
 	register(registrationData) {
-		return this._http.requestCall(ApiEndpoints.REGISTER, ApiMethod.POST, registrationData)
+		return this._http.doRequest(ApiEndpoints.REGISTER, ApiMethod.POST, registrationData)
 			.pipe(tap((rawUser: User) => {
 				this.logger.info('User registered', rawUser);
 				return this.updateLocalUser(rawUser);
@@ -95,7 +95,7 @@ export class AuthService {
 	 * @returns {Observable<User>}
 	 */
 	changePassword(chgPwData: ChangeUserPassword) {
-		return this._http.requestCall(ApiEndpoints.CHANGE_PW, ApiMethod.PUT, chgPwData)
+		return this._http.doRequest(ApiEndpoints.CHANGE_PW, ApiMethod.PUT, chgPwData)
 			.pipe(tap((rawUser: User) => {
 				this.logger.info('User changed password', rawUser);
 				return this.updateLocalUser(rawUser);
@@ -108,7 +108,7 @@ export class AuthService {
 	 * @return {Observable<User>}
 	 */
 	forgotPassword(forgotPwData) {
-		return this._http.requestCall(ApiEndpoints.FORGOT, ApiMethod.PUT, forgotPwData)
+		return this._http.doRequest(ApiEndpoints.FORGOT, ApiMethod.PUT, forgotPwData)
 			.pipe(tap((rawUser: User) => {
 				this.logger.info('User forgot password', rawUser);
 				this.updateLocalUser(rawUser);

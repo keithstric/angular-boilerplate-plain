@@ -1,7 +1,7 @@
 /**
  * The structure for mat-select options
  */
-export interface MaterialSelectOption {
+export interface SelectElementOption {
 	value: any;
 	viewValue: string;
 }

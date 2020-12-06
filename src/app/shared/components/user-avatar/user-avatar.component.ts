@@ -7,8 +7,13 @@ import {AuthService} from '@core/services/auth/auth.service';
 import * as tinycolor from 'tinycolor2';
 
 /**
- * A user avatar component
+ * A user avatar component. Use the following classes to control the size in pixels:
+ * small (32 x 32), medium (48 x 48), large (64 x 64), huge (120 x 120)
  * @class {UserAvatarComponent}
+ *
+ * @example
+ *
+ * <app-user-avatar [user]="user" class="small"></app-user-avatar>
  */
 @Component({
 	selector: 'app-user-avatar',

@@ -60,7 +60,6 @@ Be sure to remove the .git directory and add it to your source control.
 Upon first configuration you may want to change all or some of the following items:
 
 * `package.json` - The name field. This is used to drive the site title, header title and localStorage/sessionStorage prefix. If you create your project from the template on GitHub, this step may not be required.
-* `src/environments/environment*.ts` - Update the Notifications Server public key variable. This is to support push notifications. Leave it blank if push notifications are not going to be used
 * `src/app/core/interfaces/api.interface.ts` - Update the `ApiEndpoints` enum and `ApiRouteToClass` constant to match your routes
 * Modify `proxy.conf.json` to match your backend api location and port. You can delete this file if there is no need to proxy routes. Be sure to update `angular.json` if you delete this file
 * If not using Breadcrumbs delete: `src/app/layout/components/breadcrumbs`, `src/app/layout/components/page-breadcrumb-header` and `src/app/layout/services/breadcrumb`

@@ -10,6 +10,36 @@ interface SnackBarDisplay {
 	timeout?: any;
 }
 
+/**
+ * this class is for controlling the display and dismissal of toast/snackbar notifications. If multiple
+ * snackbars are received, it will que (FIFO) the requests and show each one after the previous one is dismissed.
+ *
+ * @example
+ *
+ * ```js
+ * @Injectable()
+ * export class NotificationService {
+ *
+ *	constructor(
+ *		private _snackbarRef: SnackBarRef
+ *	) {}
+ *
+ *	showSnackbar() {
+ *		const config = {
+ *		 message: 'Here is a snackbar message',
+ *		 messageType: SnackbarMessageTypes.SUCCESS,
+ *		 duration: 5000,
+ *		 action: {
+ *		 label: 'OK',
+ *		 action: () => {
+ *		 	console.log('action clicked')}
+ *		 }
+ *		}
+ *		this._snackbarRef.show(config);
+ *	}
+ * }
+ * ```
+ */
 @Injectable()
 export class SnackBarRef {
 	private _currentSnackbar: SnackBarDisplay;
@@ -40,7 +70,7 @@ export class SnackBarRef {
 	 * @param {SnackbarConfig} config
 	 * @returns {ComponentRef}
 	 */
-	show(config: SnackbarConfig) {
+	show(config: SnackbarConfig): ComponentRef<unknown> {
 		if (!this._domInjector) {
 			this._domInjector = this._injector.get(DomInjectorService);
 		}

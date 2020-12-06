@@ -30,8 +30,6 @@ export class HttpTransport extends AbstractTransport {
 	 * Listen to the logs array. If we get a certain amount or reach a time
 	 * threshold then send the log entries to the backend to be persisted and
 	 * clear the array
-	 *
-	 * @todo: Decide where this should reside. I think it should actually be in the transport
 	 */
 	listenToLogs() {
 		this.logs
@@ -66,7 +64,7 @@ export class HttpTransport extends AbstractTransport {
 		this.logs.next([]);
 		if (logs.length > 0) {
 			const httpService: HttpService = ServiceLocator.injector.get(HttpService); // todo: causes circular dependency
-			httpService.requestCall('/api/logs', ApiMethod.POST, logs)
+			httpService.doRequest('/api/logs', ApiMethod.POST, logs)
 				.pipe(catchError((err) => {
 					return throwError(err);
 				}))

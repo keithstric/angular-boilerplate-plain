@@ -6,5 +6,4 @@ export const environment = {
 
 export const PROJECT_VERSION = version;
 export const PROJECT_NAME = name;
-export const NOTIFICATION_SERVER_PUBLIC_KEY = '';
 export const DEBUG_DIALOGS = false;

@@ -11,7 +11,6 @@ enum NotificationPermissions {
 
 @Injectable()
 export class NotificationService {
-	foo = 'bar';
 
 	constructor(
 		private _snackbarRef: SnackBarRef

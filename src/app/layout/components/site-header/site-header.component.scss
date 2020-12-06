@@ -10,12 +10,44 @@
 	.title {
 		font-size: 1.5rem;
 		font-weight: 500;
+		color: white;
+
+		&:hover {
+			text-decoration: none;
+			cursor: pointer;
+			color: white;
+		}
+	}
+
+	.header-link {
+		margin-right: 15px;
+		padding: 4px;
+		border-radius: 4px;
+		background-color: $primary;
+		color: white;
+
+		&.active {
+			background-color: $app-info;
+			color: black;
+			@include elevation(2);
+			text-decoration: none;
+		}
+
+		&:hover {
+			background-color: $app-info;
+			color: black;
+			@include elevation(2);
+			text-decoration: none;
+		}
 	}
 
 	.userIcon {
+		text-decoration: none;
+
 		&:hover {
 			color: $accent;
 			cursor: pointer;
+			text-decoration: none;
 		}
 	}
 }

@@ -1,0 +1,32 @@
+@import 'src/scss/variables';
+@import 'src/scss/mixins';
+
+.features-card-list {
+	flex-wrap: wrap;
+
+	.feature-card {
+		width: 200px;
+		margin-right: 25px;
+		margin-bottom: 25px;
+	}
+
+	.feature-header, .feature-footer {
+		align-items: center;
+		justify-content: space-between;
+
+		.version {
+			background-color: $primary;
+			color: white;
+			@include border-radius(10px);
+			padding: 4px;
+		}
+	}
+
+	.feature-content {
+		height: 40px;
+	}
+
+	.doc-link {
+		color: #212121;
+	}
+}

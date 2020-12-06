@@ -32,7 +32,8 @@
               "src/scss/theme.scss",
               "src/scss/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+						"allowedCommonJsDependencies": ["tinycolor2"]
           },
           "configurations": {
             "production": {

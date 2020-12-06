@@ -1,0 +1,39 @@
+.about-container {
+
+	pre {
+		background-color: #dfdfdf;
+		white-space: pre-line;
+		font-size: 0.85rem;
+		line-height: 16px;
+	}
+
+	.config-item-title {
+		background-color: #dfdfdf;
+		font-size: 0.75rem;
+		line-height: 16px;
+	}
+
+	.contributors-list {
+		flex-wrap: wrap;
+
+		.contributor {
+			margin-right: 20px;
+			margin-bottom: 20px;
+
+			.contributor-avatar {
+				border-radius: 100%;
+				overflow: hidden;
+
+				img {
+					height: 100%;
+					width: 100%;
+				}
+			}
+
+			.contributor-name {
+				font-weight: bold;
+			}
+		}
+	}
+
+}

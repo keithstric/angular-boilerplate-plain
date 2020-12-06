@@ -1,0 +1,28 @@
+<div class="features-container flex-column">
+	<h1>FEATURES</h1>
+	<div class="features-card-list flex-row">
+		<app-card
+			*ngFor="let feature of features"
+			class="feature-card"
+			[withBorder]="true"
+			[raised]="true">
+			<div class="feature-header flex-row" header>
+				<h2>{{feature.name}}</h2>
+				<span *ngIf="feature.version" class="version">{{feature.version}}</span>
+			</div>
+			<div class="feature-content" content>{{feature.description}}</div>
+			<div class="feature-footer flex-row flex-content-start" footer>
+				<div class="feature-docs">
+					<a
+						[href]="feature.docsUrl"
+						target="_blank"
+						class="doc-link"
+						[title]="feature.name + ' docs'">
+						<i class="material-icons">{{feature.docsIcon}}</i>
+					</a>
+				</div>
+			</div>
+		</app-card>
+	</div>
+</div>
+

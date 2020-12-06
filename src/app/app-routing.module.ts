@@ -11,6 +11,8 @@ export const appRoutes: Routes = [
 	{path: '', pathMatch: 'full', component: HomeComponent},
 	// {path: '', pathMatch: 'full', component: HomeComponent, canActivate: [AuthGuard]},
 	{path: 'auth', loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule)},
+	{path: 'features', loadChildren: () => import('./modules/features/features.module').then(m => m.FeaturesModule)},
+	{path: 'about', loadChildren: () => import('./modules/about/about.module').then(m => m.AboutModule)},
 	{path: '**', component: PageNotFoundComponent}
 ];
 

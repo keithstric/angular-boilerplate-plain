@@ -24,10 +24,10 @@ import { SharedModule } from '@shared/shared.module';
 		AuthModule,
 		BrowserAnimationsModule,
 		BrowserModule,
+		ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
 		CoreModule,
 		HomeModule,
 		LayoutModule,
-		ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
 		SharedModule
 	],
 	exports: [],

@@ -1,0 +1,67 @@
+<div class="about-container flex-column">
+	<h1>Angular Boilerplate</h1>
+	<div class="get-started">
+		<h2>Getting Started</h2>
+		<p>
+		This boilerplate is a GitHub template. If you plan to store your project on GitHub you can follow the procedures documented on GitHub: <a href="https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template" target="_blank">Creating a repository from a template</a>.
+		</p>
+		<p>
+			If you do not plan to store your project on GitHub:
+		</p>
+		<pre>
+			git clone https://github.com/keithstric/angular-boilerplate-plain new-project
+			cd new-project
+			rm .git
+			npm install
+			npm start
+		</pre>
+	</div>
+	<div class="make-it-yours">
+		<h2>Configure for YOUR project</h2>
+		<p>You will want to configure the boilerplate to meet your needs. You may want to change all or just some of the following items. Hopefully future versions can take care of some of this automatically.</p>
+		<ul class="config-list">
+			<li><span class="config-item-title">package.json</span> - The name field. This is used to drive the site title, header title and localStorage/sessionStorage prefix. If you create your project from the template on GitHub, this step may not be required.</li>
+			<li><span class="config-item-title">src/app/core/interfaces/api.interface.ts</span> - Update the ApiEndpoints enum and ApiRouteToClass constant to match your routes</li>
+			<li><span class="config-item-title">proxy.conf.json</span> - Modify to match your backend api location and port. You can delete this file if there is no need to proxy routes. Be sure to update angular.json if you delete this file</li>
+			<li><span class="config-item-title">Breadcrumbs</span> - If not using breadcrumbs delete the following files:
+				<ul>
+					<li><span class="config-item-title">src/app/layout/components/breadcrumbs</span></li>
+					<li><span class="config-item-title">src/app/layout/components/page-breadcrumb-header</span></li>
+					<li><span class="config-item-title">src/app/layout/services/breadcrumb</span></li>
+				</ul>
+			</li>
+			<li><span class="config-item-title">src/scss/theme.scss</span> - To meet your theming needs</li>
+			<li><span class="config-item-title">Authenticaton</span> - Update the following for your authentication needs
+				<ul>
+					<li><span class="config-item-title">src/app/modules/auth</span></li>
+					<li><span class="config-item-title">src/app/core/services/auth/auth.service.ts</span></li>
+				</ul>
+			</li>
+			<li><span class="config-item-title">src/app/app-routing.module.ts</span> - Remove the following modules and update
+				<ul>
+					<li><span class="config-item-title">src/app/modules/home</span></li>
+					<li><span class="config-item-title">src/app/modules/about</span></li>
+					<li><span class="config-item-title">src/app/modules/features</span></li>
+				</ul>
+			</li>
+			<li><span class="config-item-title">src/app/app.module.ts</span> - Remove above modules</li>
+		</ul>
+	</div>
+	<div class="contributors">
+		<h2>Contributors</h2>
+		<div class="contributors-list flex-row">
+			<div
+				*ngFor="let contributor of contributors"
+			 	class="contributor flex-column">
+				<a
+					class="contributor-avatar"
+					target="_blank"
+					[href]="contributor.githubLink"
+					[title]="contributor.name">
+					<img [src]="contributor.avatar" alt="contributor avatar">
+				</a>
+				<span class="contributor-name">{{contributor.name}}</span>
+			</div>
+		</div>
+	</div>
+</div>

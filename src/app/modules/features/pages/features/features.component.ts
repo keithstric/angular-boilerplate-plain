@@ -46,7 +46,7 @@ export class FeaturesComponent implements OnInit {
 			docsUrl: 'https://www.typescriptlang.org',
 			docsIcon: 'article'
 		}, {
-			name: 'Laxy loading',
+			name: 'Lazy Loading',
 			version: undefined,
 			description: 'Lazy loaded feature modules',
 			docsUrl: 'https://angular.io/guide/router#lazy-loading-route-configuration',

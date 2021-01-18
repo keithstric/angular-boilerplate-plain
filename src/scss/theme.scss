@@ -1,5 +1,4 @@
-@import './mixins';
-
+/* default colors */
 $app-primary: #3F51B5;
 $app-accent: #03A9F4;
 $app-error: #de1414;
@@ -12,37 +11,3 @@ $app-danger: #f8d7da;
 $app-danger-color: #721c24;
 $app-warn: #fff3cd;
 $app-warn-color: #856404;
-
-/* Once a UI framework is included, everything below this can probably go away */
-.form-field {
-	margin-bottom: 10px;
-
-	.label {
-		margin-bottom: 3px;
-	}
-
-	.input {
-		border: 1px solid #afafaf;
-		border-radius: 5px;
-		height: 32px;
-		line-height: 32px;
-		padding: 5px;
-		font-family: inherit;
-		font-size: inherit;
-	}
-}
-
-button {
-	padding: 10px;
-	font-size: inherit;
-	background: white;
-	border: 1px solid #afafaf;
-	@include border-radius(4px);
-
-	&:hover {
-		cursor: pointer;
-		background-color: $app-primary;
-		color: white;
-		@include elevation(3);
-	}
-}

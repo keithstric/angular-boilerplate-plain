@@ -1,67 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'variables';
+
+/* Any UI framework imports go here */
+
 @import 'mixins';
 
-.flex {
-	display: flex;
+/* misc/app-global should be last in order to override any other styles */
+@import 'misc/flexbox';
+@import 'misc/app-global';
+
+body {
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+	font-size: 0.75rem;
+	overflow: hidden;
+	margin: 0;
+	height: 100vh;
 }
 
-.flex-column {
-  display: flex !important;
-  flex-direction: column;
-}
+/**
+ * For the sake of cleanliness all global styles are placed elsewhere (i.e. in the misc folder)
+ */
 
-.flex-row {
-  display: flex !important;
-  flex-direction: row;
-}
-
-.flex-content-start {
-  justify-content: flex-start;
-}
-
-.flex-content-end {
-  justify-content: flex-end;
-}
-
-.flex-content-center {
-  justify-content: center;
-  align-items: center;
-}
-
-.flex-content-end-spacer {
-	flex: 1 1 auto;
-}
-
-.page-container {
-  padding: 15px;
-}
-
-.spacer {
-  display: flex;
-  flex: 1 1 auto;
-}
-
-a {
-  color: $primary;
-	text-decoration: none;
-
-  &:hover {
-    cursor: pointer;
-    color: $accent;
-		text-decoration: underline;
-  }
-}
-
-.message-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-
-  .message {
-    font-size: 18px;
-    font-weight: 500;
-  }
-}
 

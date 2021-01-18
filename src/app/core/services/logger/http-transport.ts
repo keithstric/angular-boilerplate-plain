@@ -1,7 +1,5 @@
-import {ApiMethod} from '@core/interfaces/api.interface';
+import {HttpClient} from '@angular/common/http';
 import {LogLevel} from '@core/interfaces/logger.interface';
-import {AuthService} from '@core/services/auth/auth.service';
-import {HttpService} from '@core/services/http/http.service';
 import {AbstractTransport} from '@core/services/logger/abstract-transport';
 import {LogEntry} from '@core/services/logger/log-entry';
 import {ServiceLocator} from '@core/services/service-locator';
@@ -9,12 +7,34 @@ import {BehaviorSubject, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
 export class HttpTransport extends AbstractTransport {
+	/**
+	 * Set to true to include the date in the logging message
+	 */
 	readonly logWithDate = true;
+	/**
+	 * Set to true if entries should be persisted to db
+	 */
 	readonly shouldPersist = true;
+	/**
+	 * Set to true if entries should notify the user
+	 */
 	readonly shouldNotifyUser = false;
+	/**
+	 * The log entries that will be sent to the server
+	 */
 	logs: BehaviorSubject<LogEntry[]> = new BehaviorSubject<LogEntry[]>([]);
+	/**
+	 * The number of logs to hold before sending to the server
+	 */
 	flushThreshold: number = 10;
-	flushIntervalMs: number = 60000; // 600000;
+	/**
+	 * The interval to flush the logs. If we never reach the flushThreshold this will
+	 * ensure the logs are sent
+	 */
+	flushIntervalMs: number = 60000;
+	/**
+	 * The interval method so we can clear/stop the interval
+	 */
 	flushInterval: any;
 
 	constructor(level: LogLevel) {
@@ -46,8 +66,9 @@ export class HttpTransport extends AbstractTransport {
 	 * @returns {LogEntry}
 	 */
 	log(logEntry: LogEntry) {
-		const authService: AuthService = ServiceLocator.injector.get(AuthService);
-		logEntry.user = authService.getUser(); // todo: causes circular dependency
+		// todo: causes circular dependencies - fix may be to just add the user info server side?
+		// const authService = ServiceLocator.injector.get(AuthService);
+		// logEntry.user = authService.getUser();
 		const currentLogs = this.logs.value;
 		if (logEntry.shouldPersist) {
 			const newLogs = [...currentLogs, logEntry];
@@ -61,17 +82,14 @@ export class HttpTransport extends AbstractTransport {
 	 */
 	flush() {
 		const logs = Array.from(this.logs.value);
-		this.logs.next([]);
 		if (logs.length > 0) {
-			const httpService: HttpService = ServiceLocator.injector.get(HttpService); // todo: causes circular dependency
-			httpService.doRequest('/api/logs', ApiMethod.POST, logs)
+			const httpService: HttpClient = ServiceLocator.injector.get(HttpClient);
+			httpService.post('/api/logs', logs)
 				.pipe(catchError((err) => {
 					return throwError(err);
 				}))
 				.subscribe((response) => {
-					// console.log('flush subscribe response', response);
-				}, (err) => {
-					// console.log('flush subscribe error', err);
+					this.logs.next([]);
 				});
 		}
 	}

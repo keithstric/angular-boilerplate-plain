@@ -1,4 +1,12 @@
-# Angular Boilerplate
+```
+   #                                                 ######
+  # #   #    #  ####  #    # #        ##   #####     #     #  ####  # #      ###### #####  #####  #        ##   ##### ######
+ #   #  ##   # #    # #    # #       #  #  #    #    #     # #    # # #      #      #    # #    # #       #  #    #   #
+#     # # #  # #      #    # #      #    # #    #    ######  #    # # #      #####  #    # #    # #      #    #   #   #####
+####### #  # # #  ### #    # #      ###### #####     #     # #    # # #      #      #####  #####  #      ######   #   #
+#     # #   ## #    # #    # #      #    # #   #     #     # #    # # #      #      #   #  #      #      #    #   #   #
+#     # #    #  ####   ####  ###### #    # #    #    ######   ####  # ###### ###### #    # #      ###### #    #   #   ######
+```
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.3. This is purely a boilerplate with authentication pages. I think mainly is an example layout more than anything else as there isn't a defined backend.
 
@@ -69,6 +77,48 @@ Upon first configuration you may want to change all or some of the following ite
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+
+If creating a new module and you include a variable for the components which will be in the `declarations` and `exported` properties of the module with a spread operator. Be sure you make your variable name unique so that compodoc will properly recognize the items in the variable. If you use a variable name that is the same across multiple modules, compodoc will show the wrong exports and declarations.
+
+Example:
+
+_shared.module.ts_
+```javascript
+const components = [CardComponent];
+@NgModule({
+	delarations: [...components],
+	exports: [...components]
+})
+```
+
+_layout.module.ts_
+```javascript
+const components = [SiteHeaderComponent];
+@NgModule({
+	delarations: [...components],
+	exports: [...components]
+})
+```
+
+In the example above, compodoc will show the components declared in `layout.module.ts` as exported in the `shared.module.ts` file. However, uniquely naming the components variables will fix this issue.
+
+_shared.module.ts_
+```javascript
+const sharedComponents = [CardComponent];
+@NgModule({
+	delarations: [...sharedComponents],
+	exports: [...sharedComponents]
+})
+```
+
+_layout.module.ts_
+```javascript
+const layoutComponents = [SiteHeaderComponent];
+@NgModule({
+	delarations: [...layoutComponents],
+	exports: [...layoutComponents]
+})
+```
 
 ## Naming Conventions
 

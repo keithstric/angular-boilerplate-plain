@@ -1,15 +1,15 @@
 import {HttpClient, HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import {LoggerService} from '@core/services/logger/logger.service';
+import {ApiMethod, ApiRouteToClass} from '@core/interfaces/api.interface';
+import {Logger} from '@core/services/logger/logger';
 import {Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {ApiEndpoints, ApiMethod, ApiRouteToClass} from '@core/interfaces/api.interface';
 import {AppErrorHandler} from '@core/services/error-handler/error-handler.service';
 
 /**
  * This service is for handling all http requests and responses. If an error occurs, handle the error.
- * If the request route is defined in @link {ApiRouteToClass} will automatically deserialize the Raw object
+ * If the request route is defined in {@link ApiRouteToClass} will automatically deserialize the Raw object
  * into it's respective class.
  */
 @Injectable({
@@ -20,8 +20,7 @@ export class HttpService {
 	constructor(
 		private _http: HttpClient,
 		private _error: AppErrorHandler,
-		private _router: Router,
-		private logger: LoggerService
+		private _router: Router
 	) {}
 
 	/**
@@ -31,7 +30,7 @@ export class HttpService {
 	 * @param data {any}
 	 * @returns {Observable<any>}
 	 */
-	doRequest(apiUrl: ApiEndpoints | string, method: ApiMethod, data?: any) {
+	doRequest(apiUrl: string, method: ApiMethod, data?: any) {
 		let response: Observable<any>;
 		let reqObservable: Observable<any>;
 		switch (method) {
@@ -78,21 +77,21 @@ export class HttpService {
 	handleError(error: HttpErrorResponse, self: HttpService) {
 		if (error.error instanceof ErrorEvent) {
 			// console.error(`An error occurred: ${error.error.message}`);
-			this.logger.error(error.error.message, error);
+			Logger.error(error.error.message, error);
 		} else {
 			if (error.status === 401) {
-				this._router.navigateByUrl('/auth/login');
+				this._router.navigate(['/auth/login']);
 			}
-			this.logger.error(error.message, error);
+			Logger.error(error.message, error);
 			return this._error.handleRequestError(error.status, error.error.message, error.error);
 		}
 	}
 
 	/**
-	 * Assumes an apiUrl like "/api/<something>/..." that matches
+	 * Assumes an apiUrl like "/api/something/..." that matches
 	 * @param {string} apiUrl
 	 * @returns {Class | undefined}
-	 * @link {ApiRouteToClass}
+	 * {@link ApiRouteToClass}
 	 */
 	getRouteClass(apiUrl: string) {
 		let clazz;

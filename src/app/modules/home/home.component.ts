@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {LoggerService} from '@core/services/logger/logger.service';
+import {Logger} from '@core/services/logger/logger';
 import {NotificationService} from '@core/services/notification/notification.service';
 import {SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.interface';
 
@@ -10,10 +10,7 @@ import {SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.inter
 })
 export class HomeComponent implements OnInit {
 
-	constructor(
-		private _notify: NotificationService,
-		private logger: LoggerService
-	) {}
+	constructor() {}
 
 	ngOnInit(): void {
 		/*for (let i = 1; i <= 4; i++) {
@@ -23,15 +20,15 @@ export class HomeComponent implements OnInit {
 			};
 			this._notify.showSnackbar(config);
 		}*/
-		this._notify.showSnackbar({
+		NotificationService.showSnackbar({
 			message: 'Welcome to angular-boilerplate-plain!',
 			messageType: SnackbarMessageTypes.SUCCESS
 		});
-		this.logger.info(`Welcome to angular-boilerplate-plain logger`, 'string param', {foo: 'bar', baz: 'boo'}, ['foo', 'bar']);
+		Logger.info(`Welcome to angular-boilerplate-plain logger`, 'string param', {foo: 'bar', baz: 'boo'}, ['foo', 'bar']);
 	}
 
 	showSnackbar() {
-		this._notify.showSnackbar({
+		NotificationService.showSnackbar({
 			message: 'foo bar baz',
 			messageType: SnackbarMessageTypes.WARNING
 		});

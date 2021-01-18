@@ -6,6 +6,9 @@ export interface FormattedMessage {
 	replacementVars: any[];
 }
 
+/**
+ * Abstract transport class that all Logger Transports should extend
+ */
 export abstract class AbstractTransport {
 
 	/**

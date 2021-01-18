@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {LoggerService} from '@core/services/logger/logger.service';
+import {Logger} from '@core/services/logger/logger';
 import {BehaviorSubject} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {ApiEndpoints, ApiMethod} from '@core/interfaces/api.interface';
@@ -17,10 +17,8 @@ export class AuthService {
 
 	constructor(
 		private _http: HttpService,
-		private _error: AppErrorHandler,
-		private logger: LoggerService
-	) {
-	}
+		private _error: AppErrorHandler
+	) {}
 
 	/**
 	 * Determine if current user is authenticated or not
@@ -57,7 +55,7 @@ export class AuthService {
 	login(loginData: RawUser) {
 		return this._http.doRequest(ApiEndpoints.LOGIN, ApiMethod.POST, loginData)
 			.pipe(tap((rawUser: User) => {
-				this.logger.info('User Logged in', rawUser);
+				Logger.info('User Logged in', rawUser);
 				this.updateLocalUser(rawUser);
 			}));
 	}
@@ -69,7 +67,7 @@ export class AuthService {
 	logout() {
 		return this._http.doRequest(ApiEndpoints.LOGOUT, ApiMethod.GET)
 			.pipe(tap((response) => {
-				this.logger.info('User logged out', this.getUser());
+				Logger.info('User logged out', this.getUser());
 				LocalStorageService.removeItem(LocalStorageTypes.SESSION, 'user');
 				this.authData.next(null);
 				return response;
@@ -84,7 +82,7 @@ export class AuthService {
 	register(registrationData) {
 		return this._http.doRequest(ApiEndpoints.REGISTER, ApiMethod.POST, registrationData)
 			.pipe(tap((rawUser: User) => {
-				this.logger.info('User registered', rawUser);
+				Logger.info('User registered', rawUser);
 				return this.updateLocalUser(rawUser);
 			}));
 	}
@@ -97,7 +95,7 @@ export class AuthService {
 	changePassword(chgPwData: ChangeUserPassword) {
 		return this._http.doRequest(ApiEndpoints.CHANGE_PW, ApiMethod.PUT, chgPwData)
 			.pipe(tap((rawUser: User) => {
-				this.logger.info('User changed password', rawUser);
+				Logger.info('User changed password', rawUser);
 				return this.updateLocalUser(rawUser);
 			}));
 	}
@@ -110,7 +108,7 @@ export class AuthService {
 	forgotPassword(forgotPwData) {
 		return this._http.doRequest(ApiEndpoints.FORGOT, ApiMethod.PUT, forgotPwData)
 			.pipe(tap((rawUser: User) => {
-				this.logger.info('User forgot password', rawUser);
+				Logger.info('User forgot password', rawUser);
 				this.updateLocalUser(rawUser);
 			}));
 	}

@@ -20,30 +20,40 @@ interface SnackBarDisplay {
  * @Injectable()
  * export class NotificationService {
  *
- *	constructor(
- *		private _snackbarRef: SnackBarRef
- *	) {}
+ *   constructor(private _snackbarRef: SnackBarRef) {}
  *
- *	showSnackbar() {
- *		const config = {
- *		 message: 'Here is a snackbar message',
- *		 messageType: SnackbarMessageTypes.SUCCESS,
- *		 duration: 5000,
- *		 action: {
- *		 label: 'OK',
- *		 action: () => {
- *		 	console.log('action clicked')}
- *		 }
- *		}
- *		this._snackbarRef.show(config);
- *	}
+ *   showSnackbar() {
+ *     const config = {
+ *     message: 'Here is a snackbar message',
+ *     messageType: SnackbarMessageTypes.SUCCESS,
+ *     duration: 5000,
+ *     action: {
+ *       label: 'OK',
+ *       action: () => {
+ *         console.log('action clicked')}
+ *       }
+ *     }
+ *     this._snackbarRef.show(config);
+ *   }
  * }
  * ```
  */
 @Injectable()
 export class SnackBarRef {
+	/**
+	 * The current snackbar
+	 * @private
+	 */
 	private _currentSnackbar: SnackBarDisplay;
+	/**
+	 * The DomInjectorService for moving the snackbar out into the body tag
+	 * @private
+	 */
 	private _domInjector: DomInjectorService;
+	/**
+	 * The queue of snackbars to display. This queue is FIFO
+	 * @private
+	 */
 	private snackbarsQue: BehaviorSubject<SnackBarDisplay[]> = new BehaviorSubject<SnackBarDisplay[]>([]);
 
 	constructor(private _injector: Injector) {
@@ -117,7 +127,7 @@ export class SnackBarRef {
 			const currQue = this.snackbarsQue.value;
 			currQue.shift();
 			this.snackbarsQue.next(currQue);
-		}, 515);
+		}, 510);
 	}
 
 	/**
@@ -159,13 +169,13 @@ export class SnackBarRef {
 	 * @returns {Promise}
 	 * @private
 	 */
-	private _runAction() {
+	private _runAction(): Promise<any> {
 		const {config} = this._currentSnackbar;
 		return new Promise((resolve, reject) => {
 			if (config.action && config.action.actionHandler) {
 				config.action.actionHandler();
 			}
-			resolve();
+			resolve(true);
 		});
 	}
 }

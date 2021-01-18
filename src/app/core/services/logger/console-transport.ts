@@ -1,6 +1,9 @@
 import {LogLevel, LogLevelNameMap} from '@core/interfaces/logger.interface';
+import {AppState} from '@core/root-store/models/app-state.model';
 import {AbstractTransport} from '@core/services/logger/abstract-transport';
 import {LogEntry} from '@core/services/logger/log-entry';
+import {ServiceLocator} from '@core/services/service-locator';
+import {Store} from '@ngrx/store';
 
 /**
  * This is a console logger transport. Will display all received log entries in the console
@@ -18,7 +21,9 @@ export class ConsoleTransport extends AbstractTransport {
 		'color: #f8d7da;'
 	];
 
-	constructor(level: LogLevel) {
+	constructor(
+		level: LogLevel,
+	) {
 		super(level);
 	}
 
@@ -72,7 +77,20 @@ export class ConsoleTransport extends AbstractTransport {
 			vars = [...formatMsg.replacementVars, ...logEntry.params];
 		}
 		// Send message to console
-		console.log(message, ...vars);
+		const store = ServiceLocator.injector.get(Store);
+		if (logEntry.level !== LogLevel.error) {
+			if (logEntry.level === LogLevel.debug) {
+				console.debug(message, ...vars);
+			} else {
+				console.log(message, ...vars);
+			}
+		} else {
+			store.select((appState: AppState) => appState)
+				.subscribe((appState) => {
+					vars = [...vars, {appState}];
+					console.error(message, ...vars);
+				});
+		}
 		return logEntry;
 	}
 }

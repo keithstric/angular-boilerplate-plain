@@ -1,10 +1,9 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import {ErrorHandler, Injectable} from '@angular/core';
-import {LoggerService} from '@core/services/logger/logger.service';
+import {Logger} from '@core/services/logger/logger';
 import {NotificationService} from '@core/services/notification/notification.service';
 import {SnackbarConfig, SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.interface';
 import {Subject, throwError} from 'rxjs';
-import {DEBUG_DIALOGS} from 'src/environments/environment';
 
 /**
  * This service is for surfacing errors in the UI. By default, we'll notify the user with a snackbar (toast) message.
@@ -17,10 +16,7 @@ import {DEBUG_DIALOGS} from 'src/environments/environment';
 export class AppErrorHandler extends ErrorHandler {
 	public errorEvent: Subject<Error> = new Subject<any>();
 
-	constructor(
-		private _notify: NotificationService,
-		private logger: LoggerService
-	) {
+	constructor() {
 		super();
 	}
 
@@ -35,7 +31,7 @@ export class AppErrorHandler extends ErrorHandler {
 			duration: 5000,
 			messageType: SnackbarMessageTypes.DANGER
 		};
-		this._notify.showSnackbar(snackbarConfig);
+		NotificationService.showSnackbar(snackbarConfig);
 	}
 
 	/**
@@ -76,22 +72,22 @@ export class AppErrorHandler extends ErrorHandler {
 		}else {
 			// console.log('Error Type=', err.name);
 		}
-		if (DEBUG_DIALOGS) {
-			this._notify.showConfirmDialog({
-				noCancelButton: true,
-				messageHtml: `<span>${err.message}</span><pre>${err.stack}</pre>`,
-				title: `Error: ${err.name}`,
-				confirmButtonText: 'OK'
-			});
-		}
+		// if (DEBUG_DIALOGS) {
+		// 	this._notify.showConfirmDialog({
+		// 		noCancelButton: true,
+		// 		messageHtml: `<span>${err.message}</span><pre>${err.stack}</pre>`,
+		// 		title: `Error: ${err.name}`,
+		// 		confirmButtonText: 'OK'
+		// 	});
+		// }
 		const snackbarConfig: SnackbarConfig = {
 			messageType: SnackbarMessageTypes.DANGER,
 			message: displayMessage,
 			duration: 5000
 		};
-		this._notify.showSnackbar(snackbarConfig);
+		NotificationService.showSnackbar(snackbarConfig);
 		this.errorEvent.next(err);
-		this.logger.error(err.message, err);
+		Logger.error(err.message, err);
 		super.handleError(err);
 	}
 

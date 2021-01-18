@@ -2,16 +2,37 @@ import {LogLevel} from '@core/interfaces/logger.interface';
 import {User} from '@core/models/user.model';
 
 export class LogEntry {
+	/**
+	 * The date this entry was created
+	 */
 	entryDate: string = new Date().toISOString();
+	/**
+	 * Set to true to include the date in the log output
+	 * @private
+	 */
 	private _logWithDate = true;
+	/**
+	 * Set to true to persist to a database. Only works if the {@link AbstractTransport}
+	 * supports it
+	 * @private
+	 */
 	private _shouldPersist = false;
+	/**
+	 * Set to true to display a toast message to notify the user
+	 * @private
+	 */
 	private _shouldNotifyUser = false;
+	/**
+	 * The user for the log entry
+	 * @private
+	 */
 	private _user: User;
 
 	constructor(
 		public level: LogLevel,
 		public message: string,
-		public params?: any[]) {}
+		public params?: any[]
+	) {}
 
 	get logWithDate() {
 		return this._logWithDate;
@@ -45,14 +66,23 @@ export class LogEntry {
 		this._user = user;
 	}
 
+	/**
+	 * Convert this log entry to JSON
+	 */
 	toJson() {
 		return JSON.parse(JSON.stringify(this));
 	}
 
+	/**
+	 * Convert this log entry to a JSON string
+	 */
 	toString() {
 		return JSON.stringify(this);
 	}
 
+	/**
+	 * Convert this to a formatted JSON string
+	 */
 	toFormattedString() {
 		return JSON.stringify(this, null, 2);
 	}

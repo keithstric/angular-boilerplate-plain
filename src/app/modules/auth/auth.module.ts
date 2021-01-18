@@ -32,12 +32,7 @@ const routes: Routes = [
 	imports: [
 		CommonModule,
 		RouterModule.forChild(routes),
-		FormsModule,
-		ReactiveFormsModule,
 		SharedModule
-	],
-	exports: [
-		RouterModule
 	]
 })
 export class AuthModule {

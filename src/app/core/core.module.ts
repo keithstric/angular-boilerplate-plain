@@ -7,25 +7,16 @@ import {DomInjectorService} from '@core/services/dom-injector/dom-injector.servi
 import {AppErrorHandler} from '@core/services/error-handler/error-handler.service';
 import {HttpService} from '@core/services/http/http.service';
 import {LocalStorageService} from '@core/services/local-storage/local-storage.service';
-import {LoggerService} from '@core/services/logger/logger.service';
 import {NotificationService} from '@core/services/notification/notification.service';
-
-const components = [];
 
 /**
  * Core module
  */
 @NgModule({
-	declarations: [
-		...components
-	],
 	imports: [
 		CommonModule,
 		HttpClientModule,
 		RootStoreModule
-	],
-	exports: [
-		...components
 	],
 	providers: [
 		{provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true},
@@ -33,8 +24,7 @@ const components = [];
 		DomInjectorService,
 		HttpService,
 		LocalStorageService,
-		LoggerService,
-		NotificationService,
+		NotificationService
 	]
 })
 export class CoreModule { }

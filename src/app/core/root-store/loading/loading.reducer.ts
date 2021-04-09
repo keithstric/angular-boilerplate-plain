@@ -7,3 +7,5 @@ export function LoadingReducer(state: boolean = false, action: LoadingAction) {
 	}
 	return state;
 }
+
+export const getLoading = (state: boolean) => state;

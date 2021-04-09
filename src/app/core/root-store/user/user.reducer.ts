@@ -32,6 +32,18 @@ export function UserReducer(state: iUserState = initialUserState, action: UserAc
 	return state;
 }
 
+/*
+* User selectors
+*/
+export const getUser = (state: iUserState) => state.data;
+export const getUserLoaded = (state: iUserState) => state.loaded;
+export const getUserLoading = (state: iUserState) => state.loading;
+export const getUserFullName = (state: iUserState) => state.data.fullName;
+export const getUserLastName = (state: iUserState) => state.data.last_name;
+export const getUserFirstName = (state: iUserState) => state.data.first_name;
+export const getUserEmail = (state: iUserState) => state.data.email;
+export const getUserAvatar = (state: iUserState) => state.data.avatar;
+
 /**
  * Get user from local storage and update the state
  * @param reducer

@@ -1,4 +1,5 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {RouterStateService} from '@core/services/router-state/router-state.service';
 import {LayoutService} from '@layout/services/layout/layout.service';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
@@ -25,7 +26,8 @@ export class AppComponent implements OnInit, OnDestroy {
 		private _loading: LoadingService,
 		private _cdr: ChangeDetectorRef,
 		private _layout: LayoutService,
-		private store: Store<{loading: boolean}>
+		private store: Store<{loading: boolean}>,
+		private _routerState: RouterStateService
 	) {
 	}
 

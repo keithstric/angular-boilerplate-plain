@@ -35,3 +35,7 @@ export const ApiRouteToClass = {
 	'/api/auth': User,
 	'/api/person': User
 };
+
+export const CachableRoutePatterns = {
+	'/api/person/:id': true
+};

@@ -31,6 +31,7 @@
     "@ngrx/store": "^10.1.0",
     "@ngrx/store-devtools": "^10.1.0",
     "hammerjs": "^2.0.8",
+    "route-parser": "^0.0.5",
     "rxjs": "~6.6.3",
     "tinycolor2": "^1.4.2",
     "tslib": "^2.0.0",

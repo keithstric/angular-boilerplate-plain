@@ -1,6 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import {DomInjectorService} from '@core/services/dom-injector/dom-injector.service';
-import {LoggerService} from '@core/services/logger/logger.service';
 import {NotificationService} from '@core/services/notification/notification.service';
 import {SnackBarRef} from '@shared/components/snack-bar/snack-bar.ref';
 import {MockUiService} from 'src/app/testing/mock-services';
@@ -17,7 +15,6 @@ describe('HomeComponent', () => {
 			providers: [
 				{provide: NotificationService, useClass: MockUiService},
 				SnackBarRef,
-				LoggerService
 			]
 		})
 			.compileComponents();

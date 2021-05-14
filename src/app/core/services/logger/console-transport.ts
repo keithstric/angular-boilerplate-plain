@@ -12,6 +12,9 @@ export class ConsoleTransport extends AbstractTransport {
 	readonly logWithDate = false;
 	readonly shouldPersist = false;
 	readonly shouldNotifyUser = false;
+	private consoleLog;
+	private appState;
+	storeListener;
 	logLevelColors: string[] = [
 		'color: #de1414;',
 		'color: #fff3cd;',
@@ -23,8 +26,45 @@ export class ConsoleTransport extends AbstractTransport {
 
 	constructor(
 		level: LogLevel,
+		takeOverConsoleLog: boolean = false
 	) {
 		super(level);
+		this._listenToStore();
+		if (takeOverConsoleLog) {
+			this.takeOverConsoleLog();
+		}
+	}
+
+	private _listenToStore() {
+		ServiceLocator.observableInjector
+			.subscribe((injector) => {
+				if (injector && !this.storeListener) {
+					const store = injector.get(Store);
+					this.storeListener = store.select((appState: AppState) => appState)
+						.subscribe((appState) => {
+							this.appState = {...appState};
+						});
+				}
+			});
+	}
+
+	/**
+	 * Take over console.log and redirect it to use this transport instead. This is mainly to change
+	 * the level to DEBUG in order to prevent console.log messages from being displayed
+	 * in the production environment
+	 * @private
+	 */
+	private takeOverConsoleLog() {
+		this.consoleLog = console.log;
+		console.log = (...args) => {
+			const msg = args[0];
+			const vars = args.splice(1);
+			let logEntry = new LogEntry(LogLevel.debug, msg);
+			if (vars?.length) {
+				logEntry = new LogEntry(LogLevel.debug, msg, vars);
+			}
+			this.logMessage(logEntry);
+		};
 	}
 
 	/**
@@ -77,19 +117,19 @@ export class ConsoleTransport extends AbstractTransport {
 			vars = [...formatMsg.replacementVars, ...logEntry.params];
 		}
 		// Send message to console
-		const store = ServiceLocator.injector.get(Store);
 		if (logEntry.level !== LogLevel.error) {
 			if (logEntry.level === LogLevel.debug) {
 				console.debug(message, ...vars);
 			} else {
-				console.log(message, ...vars);
+				if (this.consoleLog) {
+					this.consoleLog(message, ...vars);
+				} else {
+					console.log(message, ...vars);
+				}
 			}
 		} else {
-			store.select((appState: AppState) => appState)
-				.subscribe((appState) => {
-					vars = [...vars, {appState}];
-					console.error(message, ...vars);
-				});
+			vars = [...vars, {appState: this.appState}];
+			console.error(message, ...vars);
 		}
 		return logEntry;
 	}

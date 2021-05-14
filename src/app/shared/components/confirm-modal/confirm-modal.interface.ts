@@ -1,4 +1,5 @@
 import {TemplateRef} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 
 export interface ConfirmModalConfig {
 	/**
@@ -49,6 +50,14 @@ export interface ConfirmModalConfig {
 	 * The label for the confirm button
 	 */
 	confirmButtonLabel?: string;
+	/**
+	 * any data item that may need to be returned
+	 */
+	data?: any;
+	/**
+	 * Provide a FormGroup to provide ability to disable the confirm button
+	 */
+	formGroup?: FormGroup;
 	/**
 	 * Handler function to run when the cancel button is clicked
 	 */

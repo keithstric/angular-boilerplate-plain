@@ -53,64 +53,31 @@ export class AppErrorHandler extends ErrorHandler {
 	 * @param err {Error}
 	 */
 	handleError(err: Error) {
-		const displayMessage = `An error occurred: ${err.message}`;
-		// console.error('ErrorService.handleError, err', err);
 		if (err instanceof EvalError) {
-			// console.log('Error Type=', err.name);
+			// console.log('Error Type=EvalError');
+			Logger.error(err.message, err);
 		}else if (err instanceof RangeError) {
-			// console.log('Error Type=', err.name);
+			// console.log('Error Type=RangeError');
+			Logger.error(err.message, err);
 		}else if (err instanceof ReferenceError) {
-			// console.log('Error Type=', err.name);
+			// console.log('Error Type=ReferenceError');
+			Logger.error(err.message, err);
 		}else if (err instanceof SyntaxError) {
-			// console.log('Error Type=', err.name);
+			// console.log('Error Type=SyntaxError');
+			Logger.error(err.message, err);
 		}else if (err instanceof TypeError) {
-			// console.log('Error Type=', err.name);
+			// console.log('Error Type=TypeError');
+			Logger.error(err.message, err);
 		}else if (err instanceof URIError) {
-			// console.log('Error Type=', err.name);
+			// console.log('Error Type=URIError');
+			Logger.error(err.message, err);
 		}else if (err instanceof ErrorEvent) {
-			// console.log('Error Type=', err.name);
+			// console.log('Error Type=ErrorEvent');
+			Logger.error(err.error.message, err);
 		}else {
-			// console.log('Error Type=', err.name);
+			// console.log('Error Type=Unknown');
+			Logger.error(err.message, err);
 		}
-		// if (DEBUG_DIALOGS) {
-		// 	this._notify.showConfirmDialog({
-		// 		noCancelButton: true,
-		// 		messageHtml: `<span>${err.message}</span><pre>${err.stack}</pre>`,
-		// 		title: `Error: ${err.name}`,
-		// 		confirmButtonText: 'OK'
-		// 	});
-		// }
-		const snackbarConfig: SnackbarConfig = {
-			messageType: SnackbarMessageTypes.DANGER,
-			message: displayMessage,
-			duration: 5000
-		};
-		NotificationService.showSnackbar(snackbarConfig);
 		this.errorEvent.next(err);
-		Logger.error(err.message, err);
-		super.handleError(err);
-	}
-
-	/**
-	 * Will notify the user and update the errorEvent Subject
-	 * @param {number} errorCode
-	 * @param {string} message
-	 * @param {Error} err
-	 */
-	handleRequestError(errorCode: number, message: string, err: Error) {
-		this.notifyUserSnackbar(errorCode, err.message);
-		this.errorEvent.next(err);
-		return throwError(err);
-	}
-
-	/**
-	 * Handle a response error: notify the user and update the errorEvent Subject
-	 * @param err
-	 * @returns {Observable<Error>}
-	 */
-	handleResponseError(err: HttpErrorResponse) {
-		this.notifyUserSnackbar(err.status, err.message);
-		this.errorEvent.next(err.error);
-		return throwError(err);
 	}
 }

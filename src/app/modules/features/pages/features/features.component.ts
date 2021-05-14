@@ -69,6 +69,12 @@ export class FeaturesComponent implements OnInit {
 			description: 'A component library for developing components in isolation',
 			docsUrl: 'https://storybook.js.org/',
 			docsIcon: 'article'
+		}, {
+			name: 'route-parser',
+			version: '0.0.5',
+			description: 'Library for parsing route patterns',
+			docsUrl: 'https://github.com/rcs/route-parser',
+			docsIcon: 'article'
 		}];
 
 	constructor() {

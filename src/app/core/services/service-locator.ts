@@ -1,8 +1,11 @@
 import {Injector} from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
 
 /**
  * This class is for locating a Service for use in a plain old class
- * for example a Model. This allows services to be used anywhere
+ * for example a Model. This allows services to be used anywhere.
+ *
+ * It also provides a static observable
  *
  * @example
  * // In plain old class
@@ -24,4 +27,5 @@ import {Injector} from '@angular/core';
  */
 export class ServiceLocator {
 	static injector: Injector;
+	static observableInjector: BehaviorSubject<Injector> = new BehaviorSubject<Injector>(ServiceLocator.injector);
 }

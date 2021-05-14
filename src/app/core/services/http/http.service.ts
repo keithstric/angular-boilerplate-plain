@@ -1,4 +1,4 @@
-import {HttpClient, HttpErrorResponse, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {ApiMethod, ApiRouteToClass} from '@core/interfaces/api.interface';
@@ -27,27 +27,46 @@ export class HttpService {
 	 * Make an http request
 	 * @param apiUrl {ApiEndpoints | string}
 	 * @param method {ApiMethod}
-	 * @param data {any}
+	 * @param body {any}
+	 * @param config
 	 * @returns {Observable<any>}
 	 */
-	doRequest(apiUrl: string, method: ApiMethod, data?: any) {
+	doRequest(apiUrl: string, method: ApiMethod, body?: any, config?: {
+		headers?: HttpHeaders | {
+			[header: string]: string | string[];
+		};
+		observe?: 'body';
+		params?: HttpParams | {
+			[param: string]: string | string[];
+		};
+		reportProgress?: boolean;
+		responseType?: 'json';
+		withCredentials?: boolean;
+	}) {
 		let response: Observable<any>;
 		let reqObservable: Observable<any>;
+		if (method === ApiMethod.GET || method === ApiMethod.DELETE) {
+			if (!config && body) {
+				config = {observe: body};
+			}else if (config && body) {
+				config.observe = body;
+			}
+		}
 		switch (method) {
 			case ApiMethod.GET:
-				reqObservable = this._http.get(apiUrl);
+				reqObservable = this._http.get(apiUrl, config);
 				break;
 			case ApiMethod.DELETE:
-				reqObservable = this._http.delete(apiUrl);
+				reqObservable = this._http.delete(apiUrl, config);
 				break;
 			case ApiMethod.PATCH:
-				reqObservable = this._http.patch(apiUrl, data);
+				reqObservable = this._http.patch(apiUrl, body, config);
 				break;
 			case ApiMethod.POST:
-				reqObservable = this._http.post(apiUrl, data);
+				reqObservable = this._http.post(apiUrl, body, config);
 				break;
 			case ApiMethod.PUT:
-				reqObservable = this._http.put(apiUrl, data);
+				reqObservable = this._http.put(apiUrl, body, config);
 				break;
 		}
 		response = reqObservable
@@ -63,28 +82,11 @@ export class HttpService {
 					}
 					return resp;
 				}),
-				catchError((err: HttpErrorResponse) => this.handleError(err, this))
+				catchError((err: HttpErrorResponse) => {
+					throw err;
+				})
 			);
 		return response;
-	}
-
-	/**
-	 * Handle any errors that occur during the request
-	 * @param error {HttpErrorResponse}
-	 * @param self {HttpService}
-	 * @returns {Observable<never>}
-	 */
-	handleError(error: HttpErrorResponse, self: HttpService) {
-		if (error.error instanceof ErrorEvent) {
-			// console.error(`An error occurred: ${error.error.message}`);
-			Logger.error(error.error.message, error);
-		} else {
-			if (error.status === 401) {
-				this._router.navigate(['/auth/login']);
-			}
-			Logger.error(error.message, error);
-			return this._error.handleRequestError(error.status, error.error.message, error.error);
-		}
 	}
 
 	/**

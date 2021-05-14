@@ -1,5 +1,4 @@
 import {TestBed} from '@angular/core/testing';
-import {LoggerService} from '@core/services/logger/logger.service';
 import {NotificationService} from '@core/services/notification/notification.service';
 import {SnackBarRef} from '@shared/components/snack-bar/snack-bar.ref';
 import {MockUiService} from 'src/app/testing/mock-services';
@@ -13,7 +12,6 @@ describe('ErrorService', () => {
 		TestBed.configureTestingModule({
 			providers: [
 				{provide: NotificationService, useClass: MockUiService},
-				LoggerService,
 				SnackBarRef
 			]
 		});

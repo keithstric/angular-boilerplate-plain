@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {CachableRoutePatterns} from '@core/interfaces/api.interface';
 import {LocalStorageTypes} from '@core/interfaces/local-storage.interface';
 import {LocalStorageService} from '@core/services/local-storage/local-storage.service';
+import {Logger} from '@core/services/logger/logger';
 import * as Route from 'route-parser';
 
 abstract class HttpCache {
@@ -18,7 +19,7 @@ export class HttpCacheService implements HttpCache {
 	cachableRoutes = CachableRoutePatterns;
 
 	constructor() {
-		console.info(`HttpCacheService constructed for ${Object.keys(this.cachableRoutes).join(',\n')}`);
+		Logger.debug(`HttpCacheService constructed for ${Object.keys(this.cachableRoutes).join(',\n')}`);
 	}
 
 	get(req: HttpRequest<any>): HttpResponse<any> {
@@ -61,8 +62,13 @@ export class HttpCacheService implements HttpCache {
 			const routeMatch = route.match(urlWithParams);
 			if (routeMatch) {
 				shouldCache = !!routeMatch;
+			}else {
+				if (pattern === urlWithParams) {
+					shouldCache = true;
+				}
 			}
 		});
+		console.log('shouldCache=', shouldCache);
 		return shouldCache;
 	}
 

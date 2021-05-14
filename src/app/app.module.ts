@@ -31,7 +31,17 @@ import { SharedModule } from '@shared/shared.module';
 })
 
 export class AppModule {
+	/**
+	 * Update the ServiceLocator to provide the injector to static methods, properties and pojo items
+	 * @param _injector
+	 */
 	constructor(private _injector: Injector) {
-		ServiceLocator.injector = _injector;
+		const injectorListener = ServiceLocator.observableInjector.subscribe((injector) => {
+			ServiceLocator.injector = injector;
+			if (ServiceLocator.injector) {
+				injectorListener.unsubscribe();
+			}
+		});
+		ServiceLocator.observableInjector.next(_injector);
 	}
 }

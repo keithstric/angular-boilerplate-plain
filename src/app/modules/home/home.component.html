@@ -1,2 +1,11 @@
-<p>Home works!</p>
-<button (click)="showSnackbar()">Snackbar</button>
+<div class="home-container flex-column">
+	<div class="section">
+		<h2>Snackbar demo</h2>
+		<button (click)="showSnackbar()">Show a Snackbar</button>
+	</div>
+	<div class="section">
+		<h2>Loading spinner and cache demo</h2>
+		<p>Watch your console and click the getRandomData twice to see cache results.</p>
+		<button (click)="getRandomData()">Get random data</button>
+	</div>
+</div>

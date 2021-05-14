@@ -36,8 +36,6 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.listenToFooter();
 		this.listenToSidebar();
 		this.listenToLoading();
-		this._layout.setHeader(SiteHeaderComponent);
-		this._layout.setFooter(SiteFooterComponent);
 	}
 
 	ngOnDestroy() {

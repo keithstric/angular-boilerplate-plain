@@ -1,4 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import {ApiMethod} from '@core/interfaces/api.interface';
+import {HttpService} from '@core/services/http/http.service';
 import {Logger} from '@core/services/logger/logger';
 import {NotificationService} from '@core/services/notification/notification.service';
 import {SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.interface';
@@ -10,16 +12,11 @@ import {SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.inter
 })
 export class HomeComponent implements OnInit {
 
-	constructor() {}
+	constructor(
+		private _http: HttpService
+	) {}
 
 	ngOnInit(): void {
-		/*for (let i = 1; i <= 4; i++) {
-			const config = {
-				messageType: SnackbarMessageTypes.SUCCESS,
-				message: `snackbar #${i}`
-			};
-			this._notify.showSnackbar(config);
-		}*/
 		NotificationService.showSnackbar({
 			message: 'Welcome to angular-boilerplate-plain!',
 			messageType: SnackbarMessageTypes.SUCCESS
@@ -29,9 +26,16 @@ export class HomeComponent implements OnInit {
 
 	showSnackbar() {
 		NotificationService.showSnackbar({
-			message: 'foo bar baz',
+			message: 'Some random snackbar "warning" message',
 			messageType: SnackbarMessageTypes.WARNING
 		});
+	}
+
+	getRandomData() {
+		this._http.doRequest('https://pokeapi.co/api/v2/pokemon', ApiMethod.GET)
+			.subscribe((response) => {
+				Logger.info('response from https://pokeapi.co/api/v2/pokemon', response);
+			});
 	}
 
 }

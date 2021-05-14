@@ -1,7 +1,6 @@
 import {LogLevel, SnackbarMessageLoggingMap} from '@core/interfaces/logger.interface';
 import {AbstractTransport} from '@core/services/logger/abstract-transport';
 import {ConsoleTransport} from '@core/services/logger/console-transport';
-import {HttpTransport} from '@core/services/logger/http-transport';
 import {LogEntry} from '@core/services/logger/log-entry';
 import {NotificationService} from '@core/services/notification/notification.service';
 import {environment, LOG_LEVEL} from 'src/environments/environment';
@@ -31,7 +30,7 @@ export class Logger {
 	 * might need
 	 */
 	static transports: AbstractTransport[] = environment.production
-		? [new HttpTransport(Logger.level)]
+		? [new ConsoleTransport(Logger.level, true)]
 		: [new ConsoleTransport(Logger.level)];
 
 	static error(message, ...optionalParams: any[]) {
@@ -70,10 +69,7 @@ export class Logger {
 	 */
 	static writeToLog(level: LogLevel, message: string, ...optionalParams: any[]) {
 		if (Logger.shouldLog(level)) {
-			let logEntry = new LogEntry(level, message);
-			if (optionalParams) {
-				logEntry = new LogEntry(level, message, ...optionalParams);
-			}
+			const logEntry = new LogEntry(level, message, ...optionalParams);
 			Logger.transports.forEach((transport) => {
 				const loggedEntry = transport.logMessage(logEntry);
 				if (loggedEntry.shouldNotifyUser) {

@@ -5,9 +5,10 @@ import {
 	HttpEvent,
 	HttpResponse, HttpErrorResponse
 } from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {HttpCacheService} from '@core/services/http-cache/http-cache.service';
+import {Logger} from '@core/services/logger/logger';
+import {Observable, of} from 'rxjs';
 import {catchError, finalize, tap} from 'rxjs/operators';
-import {AppErrorHandler} from '@core/services/error-handler/error-handler.service';
 import {LoadingService} from '@layout/services/loading/loading.service';
 
 /**
@@ -19,8 +20,8 @@ export class HttpRequestInterceptor implements HttpRequestInterceptor {
 
 	constructor(
 		private _loading: LoadingService,
-		private _error: AppErrorHandler
-	) { }
+		private _cache: HttpCacheService
+	) {}
 
 	/**
 	 * When an http request starts, set loading to true. When the request is finished, set loading to false.
@@ -31,17 +32,29 @@ export class HttpRequestInterceptor implements HttpRequestInterceptor {
 	 */
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		this._loading.setLoading(true, request);
+		if (request.method === 'GET') {
+			const cachedResponse = this._cache.get(request);
+			if (cachedResponse) {
+				Logger.debug(`Response from cache for ${request.urlWithParams}`, cachedResponse);
+				this._loading.setLoading(false, request);
+				return of(cachedResponse);
+			}
+		}else if (request.method === 'POST' || request.method === 'PUT' || request.method === 'PATCH' || request.method === 'DELETE') {
+			const removedFromCache = this._cache.delete(request);
+			if (removedFromCache) {
+				Logger.debug(`Cleared ${request.urlWithParams} from the cache`);
+			}
+		}
 		return next.handle(request)
 			.pipe(
 				tap<HttpEvent<any>>((httpEvent: HttpEvent<any>) => {
 					if (httpEvent instanceof HttpResponse) {
-						this._loading.setLoading(false, request);
+						this._cache.put(request, httpEvent);
 					}
 					return httpEvent;
 				}),
 				catchError((err: HttpErrorResponse) => {
-					this._loading.setLoading(false, request);
-					return this._error.handleResponseError(err);
+					throw err;
 				}),
 				finalize(() => {
 					this._loading.setLoading(false, request);

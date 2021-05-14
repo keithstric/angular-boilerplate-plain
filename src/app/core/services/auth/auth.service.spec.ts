@@ -4,7 +4,6 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {AppErrorHandler} from '@core/services/error-handler/error-handler.service';
 import {HttpService} from '@core/services/http/http.service';
 import {LocalStorageService} from '@core/services/local-storage/local-storage.service';
-import {LoggerService} from '@core/services/logger/logger.service';
 import {NotificationService} from '@core/services/notification/notification.service';
 import {SnackBarRef} from '@shared/components/snack-bar/snack-bar.ref';
 import {MockErrorService, MockHttpService, MockLocalStorageService} from 'src/app/testing/mock-services';
@@ -24,7 +23,6 @@ describe('AuthService', () => {
 				{provide: HttpService, useClass: MockHttpService},
 				{provide: LocalStorageService, useClass: MockLocalStorageService},
 				{provide: AppErrorHandler, useClass: MockErrorService},
-				LoggerService,
 				NotificationService,
 				SnackBarRef
 			]

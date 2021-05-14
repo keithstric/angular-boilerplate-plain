@@ -33,6 +33,7 @@ The folder structure of this project was inspired by [this video](https://www.yo
 * Testing infrastructure
 * Global Error Handling
 * Lazy loading of feature modules
+* HTTP Route cache
 * [compodoc](https://compodoc.app/) implementation
 * [Storybook 6.1.10](https://storybook.js.org) already setup and working
 
@@ -68,7 +69,7 @@ Be sure to remove the .git directory and add it to your source control.
 Upon first configuration you may want to change all or some of the following items:
 
 * `package.json` - The name field. This is used to drive the site title, header title and localStorage/sessionStorage prefix. If you create your project from the template on GitHub, this step may not be required.
-* `src/app/core/interfaces/api.interface.ts` - Update the `ApiEndpoints` enum and `ApiRouteToClass` constant to match your routes
+* `src/app/core/interfaces/api.interface.ts` - Update the `ApiEndpoints` enum, `CachableRoutePatters` and `ApiRouteToClass` constants to match your routes
 * Modify `proxy.conf.json` to match your backend api location and port. You can delete this file if there is no need to proxy routes. Be sure to update `angular.json` if you delete this file
 * If not using Breadcrumbs delete: `src/app/layout/components/breadcrumbs`, `src/app/layout/components/page-breadcrumb-header` and `src/app/layout/services/breadcrumb`
 * Modify `src/scss/theme.scss` to meet your theming needs
@@ -135,5 +136,7 @@ const layoutComponents = [SiteHeaderComponent];
 * Where should individual components reside in context to a feature/module? My observations so far are:
     1) Some companies use something like `src/app/modules/some-feature/pages/some-page` for parent components and then all components specifically for that feature are stored in `src/app/modules/some-feature/components` - _I feel this would be the easiest way to find code_
     2) Some companies use something like `src/app/modules/some-feature/components/some-page` for parent components and then all components  specifically for that feature are stored in `src/app/modules/some-feature/components/some-page/some-component` and that is carried on for an undetermined depth - _I think this makes it difficult to find code_
-* How should the loading spinner be controlled? All in-progress http requests? Manually by the developer? Or, a combination of both? If both, how do you prevent the http request from showing the spinner?
 
+## Contributing
+
+If you would like to contribute to this project just send a pull request. Please ensure you create tests to represent your change and keep to the code styles defined in `.editorconfig`.

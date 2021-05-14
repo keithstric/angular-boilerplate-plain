@@ -1,3 +1,4 @@
+import {HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {SetLoadingAction} from '@core/root-store/loading/loading.action';
 import {Store} from '@ngrx/store';
@@ -11,7 +12,7 @@ import {BehaviorSubject} from 'rxjs';
 })
 export class LoadingService {
 	loadingSub: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-	loadingMap: Map<string, boolean> = new Map<string, boolean>();
+	loadingMap: Map<HttpRequest<any>, boolean> = new Map<HttpRequest<any>, boolean>();
 
 	constructor(
 		private store: Store<{loading: boolean}>
@@ -20,15 +21,15 @@ export class LoadingService {
 	/**
 	 * This method is only called from the @link(HttpRequestInterceptor)
 	 * @param loading {boolean}
-	 * @param url {string}
+	 * @param request {string}
 	 */
-	setLoading(loading: boolean, url: string) {
+	setLoading(loading: boolean, request: HttpRequest<any>) {
 		if (loading === true) {
-			this.loadingMap.set(url, loading);
+			this.loadingMap.set(request, loading);
 			this.loadingSub.next(true);
 			this.store.dispatch(new SetLoadingAction(true));
-		} else if (loading === false && this.loadingMap.has(url)) {
-			this.loadingMap.delete(url);
+		} else if (loading === false && this.loadingMap.has(request)) {
+			this.loadingMap.delete(request);
 			if (this.loadingMap.size === 0) {
 				this.loadingSub.next(false);
 				this.store.dispatch(new SetLoadingAction(false));

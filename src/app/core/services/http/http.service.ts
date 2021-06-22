@@ -2,6 +2,7 @@ import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse} fr
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {ApiMethod, ApiRouteToClass} from '@core/interfaces/api.interface';
+import {HttpRequestConfig} from '@core/services/http/http.interface';
 import {Logger} from '@core/services/logger/logger';
 import {Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
@@ -31,18 +32,7 @@ export class HttpService {
 	 * @param config
 	 * @returns {Observable<any>}
 	 */
-	doRequest(apiUrl: string, method: ApiMethod, body?: any, config?: {
-		headers?: HttpHeaders | {
-			[header: string]: string | string[];
-		};
-		observe?: 'body';
-		params?: HttpParams | {
-			[param: string]: string | string[];
-		};
-		reportProgress?: boolean;
-		responseType?: 'json';
-		withCredentials?: boolean;
-	}) {
+	doRequest(apiUrl: string, method: ApiMethod, body?: any, config?: HttpRequestConfig) {
 		let response: Observable<any>;
 		let reqObservable: Observable<any>;
 		if (method === ApiMethod.GET || method === ApiMethod.DELETE) {

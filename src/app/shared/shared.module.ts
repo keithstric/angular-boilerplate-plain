@@ -3,6 +3,7 @@ import {NgModule} from '@angular/core';
 import {FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SnackBarRef} from '@shared/components/snack-bar/snack-bar.ref';
 import {UserAvatarComponent} from '@shared/components/user-avatar/user-avatar.component';
+import {FileDnDDirective} from '@shared/directives/file-dn-d.directive';
 import {SafeHtmlPipe} from '@shared/pipes/safe-html.pipe';
 import { CardComponent } from './components/card/card.component';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
@@ -15,9 +16,14 @@ const sharedComponents = [
 	SnackBarComponent
 ];
 
+const sharedDirectives = [
+	FileDnDDirective
+];
+
 @NgModule({
 	declarations: [
 		...sharedComponents,
+		...sharedDirectives,
 		SafeHtmlPipe
 	],
 	imports: [

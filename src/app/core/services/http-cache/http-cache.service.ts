@@ -9,6 +9,7 @@ import * as Route from 'route-parser';
 abstract class HttpCache {
 	abstract get(req: HttpRequest<any>): HttpResponse<any> | null;
 	abstract put(req: HttpRequest<any>, res: HttpResponse<any>): void;
+	abstract delete(req: HttpRequest<any>): boolean;
 }
 
 @Injectable({
@@ -22,6 +23,10 @@ export class HttpCacheService implements HttpCache {
 		Logger.debug(`HttpCacheService constructed for ${Object.keys(this.cachableRoutes).join(',\n')}`);
 	}
 
+	/**
+	 * Get an item from the cache
+	 * @param req
+	 */
 	get(req: HttpRequest<any>): HttpResponse<any> {
 		const cachedItem = this.shouldCacheToSessionStorage(req.urlWithParams)
 			? LocalStorageService.getItem(LocalStorageTypes.SESSION, req.urlWithParams)
@@ -31,6 +36,11 @@ export class HttpCacheService implements HttpCache {
 		}
 	}
 
+	/**
+	 * Put an item in the cache
+	 * @param req
+	 * @param res
+	 */
 	put(req: HttpRequest<any>, res: HttpResponse<any>): void {
 		const shouldCache = this.shouldCache(req.urlWithParams);
 		const shouldCacheToSessionStorage = this.shouldCacheToSessionStorage(req.urlWithParams);
@@ -41,6 +51,10 @@ export class HttpCacheService implements HttpCache {
 		}
 	}
 
+	/**
+	 * Delete an item from the cache
+	 * @param req
+	 */
 	delete(req: HttpRequest<any>): boolean {
 		const cachedRequest = this.get(req);
 		const shouldCacheToSessionStorage = this.shouldCacheToSessionStorage(req.urlWithParams);
@@ -55,6 +69,12 @@ export class HttpCacheService implements HttpCache {
 		return returnVal;
 	}
 
+	/**
+	 * Determine if a url SHOULD be cached or not. It must match a route pattern provided in
+	 * @link(CachableRoutePatterns)
+	 *
+	 * @param urlWithParams
+	 */
 	shouldCache(urlWithParams: string) {
 		let shouldCache = false;
 		Object.keys(this.cachableRoutes).forEach((pattern) => {
@@ -62,24 +82,44 @@ export class HttpCacheService implements HttpCache {
 			const routeMatch = route.match(urlWithParams);
 			if (routeMatch) {
 				shouldCache = !!routeMatch;
-			}else {
-				if (pattern === urlWithParams) {
-					shouldCache = true;
-				}
 			}
 		});
-		console.log('shouldCache=', shouldCache);
 		return shouldCache;
 	}
 
+	/**
+	 * Determine if a url SHOUlD be placed in sessionStorage or not. It must match a route pattern provided in
+	 * @link(CachableRoutePatterns) AND the item in CachableRoutePatterns must have a value of `true`
+	 *
+	 * @param urlWithParams
+	 */
 	shouldCacheToSessionStorage(urlWithParams: string) {
-		return this.cachableRoutes[urlWithParams] === true;
+		let shouldCache = false;
+		Object.keys(this.cachableRoutes).forEach((pattern) => {
+			const route = new Route(pattern);
+			const routeMatch = route.match(urlWithParams);
+			if (routeMatch && this.cachableRoutes[pattern] === true) {
+				shouldCache = !!routeMatch;
+			}
+		});
+		return shouldCache;
 	}
 
+	/**
+	 * Place the response in the local `cache` variable
+	 *
+	 * @param urlWithParams
+	 * @param res
+	 */
 	cacheToLocal(urlWithParams: string, res: HttpResponse<any>) {
 		this.cache[urlWithParams] = res;
 	}
 
+	/**
+	 * Place the response in sessionStorage
+	 * @param urlWithParams
+	 * @param res
+	 */
 	cacheToSessionStorage(urlWithParams: string, res: HttpResponse<any>) {
 		LocalStorageService.setItem(LocalStorageTypes.SESSION, urlWithParams, res);
 	}

@@ -38,4 +38,11 @@ export class HomeComponent implements OnInit {
 			});
 	}
 
+	getSingleData() {
+		this._http.doRequest('https://pokeapi.co/api/v2/pokemon/1/', ApiMethod.GET)
+			.subscribe((response) => {
+				Logger.info('response from https://pokeapi.co/api/v2/pokemon/1', response);
+			});
+	}
+
 }

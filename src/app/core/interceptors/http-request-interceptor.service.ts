@@ -32,12 +32,11 @@ export class HttpRequestInterceptor implements HttpRequestInterceptor {
 	 */
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		this._loading.setLoading(true, request);
+		let cachedResponse;
 		if (request.method === 'GET') {
-			const cachedResponse = this._cache.get(request);
+			cachedResponse = this._cache.get(request);
 			if (cachedResponse) {
 				Logger.debug(`Response from cache for ${request.urlWithParams}`, cachedResponse);
-				this._loading.setLoading(false, request);
-				return of(cachedResponse);
 			}
 		}else if (request.method === 'POST' || request.method === 'PUT' || request.method === 'PATCH' || request.method === 'DELETE') {
 			const removedFromCache = this._cache.delete(request);
@@ -51,7 +50,7 @@ export class HttpRequestInterceptor implements HttpRequestInterceptor {
 					if (httpEvent instanceof HttpResponse) {
 						this._cache.put(request, httpEvent);
 					}
-					return httpEvent;
+					return cachedResponse ? cachedResponse : httpEvent;
 				}),
 				catchError((err: HttpErrorResponse) => {
 					throw err;

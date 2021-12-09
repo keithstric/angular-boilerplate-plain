@@ -44,7 +44,7 @@
     "@angular/compiler-cli": "~13.0.3",
     "@angular/language-service": "^13.0.3",
     "@babel/core": "^7.10.3",
-    "@compodoc/compodoc": "^1.1.11",
+    "@compodoc/compodoc": "^1.1.16",
     "@storybook/addon-essentials": "^6.4.9",
     "@storybook/addon-storysource": "^6.4.9",
     "@storybook/addons": "^6.4.9",

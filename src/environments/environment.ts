@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 import {LogLevel} from '@core/interfaces/logger.interface';
-import {version, name} from '../../package.json';
+import packageInfo from '../../package.json';
 
 export const environment = {
 	production: false
@@ -13,13 +13,13 @@ export const environment = {
  * App version from package.json
  * @type {string}
  */
-export const PROJECT_VERSION = version;
+export const PROJECT_VERSION = packageInfo.version;
 
 /**
  * App name from package.json
  * @type {string}
  */
-export const PROJECT_NAME = name;
+export const PROJECT_NAME = packageInfo.name;
 
 /**
  * Set to true for error dialogs to be shown

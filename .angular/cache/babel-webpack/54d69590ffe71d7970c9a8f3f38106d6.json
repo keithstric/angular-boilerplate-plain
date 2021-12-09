@@ -1,0 +1,1 @@
+{"ast":null,"code":"export const serialMetadataKey = Symbol();\nexport const internalMetadataKey = Symbol();\nexport const rawKeyMetadataKey = Symbol();\nexport const modelKeyMetadataKey = Symbol();","map":null,"metadata":{},"sourceType":"module"}

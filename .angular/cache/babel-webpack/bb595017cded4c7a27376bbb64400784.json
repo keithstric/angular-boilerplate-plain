@@ -1,0 +1,1 @@
+{"ast":null,"code":"/**\n * @module route/parser\n */\n'use strict';\n/** Wrap the compiled parser with the context to create node objects */\n\nvar parser = require('./compiled-grammar').parser;\n\nparser.yy = require('./nodes');\nmodule.exports = parser;","map":null,"metadata":{},"sourceType":"script"}

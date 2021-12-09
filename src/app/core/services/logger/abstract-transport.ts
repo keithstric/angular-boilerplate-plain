@@ -14,17 +14,17 @@ export abstract class AbstractTransport {
 	/**
 	 * Set to true to include the date in the logging message
 	 */
-	abstract readonly logWithDate: boolean = true;
+	abstract readonly logWithDate: boolean;
 
 	/**
 	 * Set to true if entries should be persisted to db
 	 */
-	abstract readonly shouldPersist: boolean = false;
+	abstract readonly shouldPersist: boolean;
 
 	/**
 	 * Set to true if entries should notify the user
 	 */
-	abstract readonly shouldNotifyUser: boolean = false;
+	abstract readonly shouldNotifyUser: boolean;
 
 	protected constructor(public level: LogLevel) {}
 

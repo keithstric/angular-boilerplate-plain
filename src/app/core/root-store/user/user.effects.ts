@@ -17,15 +17,15 @@ import {
 	UserActionTypes
 } from '@core/root-store/user/user.action';
 import {AuthService} from '@core/services/auth/auth.service';
-import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {of} from 'rxjs';
 import {catchError, map, mergeMap} from 'rxjs/operators';
 
 @Injectable()
 export class UserEffects {
 
-	@Effect()
-	loginUser = this.actions
+	
+	loginUser = createEffect(() => this.actions
 		.pipe(
 			ofType<LoginUserAction>(UserActionTypes.LOGIN_USER),
 			mergeMap(action => this._auth.login(action.payload)
@@ -34,10 +34,10 @@ export class UserEffects {
 					catchError(err => of(new LoginUserFailureAction(err)))
 				)
 			)
-		);
+		));
 
-	@Effect()
-	logoutUser = this.actions
+	
+	logoutUser = createEffect(() => this.actions
 		.pipe(
 			ofType<LogOutUserAction>(UserActionTypes.LOGOUT_USER),
 			mergeMap(action => this._auth.logout()
@@ -46,10 +46,10 @@ export class UserEffects {
 					catchError(err => of(new LogOutUserFailureAction(err)))
 				)
 			)
-		);
+		));
 
-	@Effect()
-	registerUser = this.actions
+	
+	registerUser = createEffect(() => this.actions
 		.pipe(
 			ofType<RegisterUserAction>(UserActionTypes.REGISTER_USER),
 			mergeMap(action => this._auth.register(action.payload)
@@ -58,10 +58,10 @@ export class UserEffects {
 					catchError(err => of(new RegisterUserFailureAction(err)))
 				)
 			)
-		);
+		));
 
-	@Effect()
-	changePw = this.actions
+	
+	changePw = createEffect(() => this.actions
 		.pipe(
 			ofType<ChangeUserPasswordAction>(UserActionTypes.CHANGE_PASSWORD),
 			mergeMap(action => this._auth.changePassword(action.payload)
@@ -70,10 +70,10 @@ export class UserEffects {
 					catchError(err => of(new ChangeUserPasswordFailureAction(err)))
 				)
 			)
-		);
+		));
 
-	@Effect()
-	forgotPw = this.actions
+	
+	forgotPw = createEffect(() => this.actions
 		.pipe(
 			ofType<ForgotUserPasswordAction>(UserActionTypes.FORGOT_PASSWORD),
 			mergeMap(action => this._auth.forgotPassword(action.payload)
@@ -82,7 +82,7 @@ export class UserEffects {
 					catchError(err => of(new ForgotUserPasswordFailureAction(err)))
 				)
 			)
-		);
+		));
 
 	constructor(
 		private actions: Actions,

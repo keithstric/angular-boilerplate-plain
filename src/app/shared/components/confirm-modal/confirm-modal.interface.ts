@@ -1,4 +1,4 @@
-import {TemplateRef} from '@angular/core';
+import {TemplateRef, Type} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 
 export interface ConfirmModalConfig {
@@ -37,11 +37,19 @@ export interface ConfirmModalConfig {
 	/**
 	 * A component to display in the body
 	 */
-	modalComponentContent?: any;
+	modalComponentContent?: Type<any>;
+	/**
+	 * The initial state of the modalComponentContent component
+	 */
+	modalComponentContentInitialState?: any;
 	/**
 	 * True to hide the cancel button
 	 */
 	hideCancelButton?: boolean;
+	/**
+	 * True to hide the confirm button
+	 */
+	hideConfirmButton?: boolean;
 	/**
 	 * The label for the cancel button
 	 */
@@ -59,11 +67,23 @@ export interface ConfirmModalConfig {
 	 */
 	formGroup?: FormGroup;
 	/**
+	 * true to close after confirm handler has been run. Default true
+	 */
+	closeOnConfirm?: boolean;
+	/**
+	 * true to close after cancel handler has been run. Default true
+	 */
+	closeOnCancel?: boolean;
+	/**
 	 * Handler function to run when the cancel button is clicked
 	 */
 	cancelHandler?(): void;
 	/**
 	 * Handler function to run when the confirm button is clicked
 	 */
-	confirmHandler(): void;
+	confirmHandler?(): void;
+	/**
+	 * handler function to run when the modal's close button is clicked
+	 */
+	closeHandler?(): void;
 }

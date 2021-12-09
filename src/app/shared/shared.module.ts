@@ -8,6 +8,7 @@ import {SafeHtmlPipe} from '@shared/pipes/safe-html.pipe';
 import { CardComponent } from './components/card/card.component';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
 import { SnackBarComponent } from './components/snack-bar/snack-bar.component';
+import { ViewRefDirective } from './directives/view-ref.directive';
 
 const sharedComponents = [
 	CardComponent,
@@ -24,7 +25,8 @@ const sharedDirectives = [
 	declarations: [
 		...sharedComponents,
 		...sharedDirectives,
-		SafeHtmlPipe
+		SafeHtmlPipe,
+		ViewRefDirective
 	],
 	imports: [
 		CommonModule,

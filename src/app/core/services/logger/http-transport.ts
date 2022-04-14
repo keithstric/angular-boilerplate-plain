@@ -1,8 +1,12 @@
 import {HttpClient} from '@angular/common/http';
-import {LogLevel} from '@core/interfaces/logger.interface';
+import {ApiMethod} from '@core/interfaces/api.interface';
+import {AppState} from '@core/root-store/models/app-state.model';
+import {HttpService} from '@core/services/http/http.service';
+import {LogLevel} from '@core/services/logger/logger.interface';
 import {AbstractTransport} from '@core/services/logger/abstract-transport';
 import {LogEntry} from '@core/services/logger/log-entry';
 import {ServiceLocator} from '@core/services/service-locator';
+import {Store} from '@ngrx/store';
 import {BehaviorSubject, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
@@ -36,6 +40,12 @@ export class HttpTransport extends AbstractTransport {
 	 * The interval method so we can clear/stop the interval
 	 */
 	flushInterval: any;
+	/**
+	 * The application state when the error occurred
+	 * @private
+	 */
+	private appState;
+	private storeListener;
 
 	constructor(level: LogLevel) {
 		super(level);
@@ -44,6 +54,25 @@ export class HttpTransport extends AbstractTransport {
 		this.flushInterval = setInterval(() => {
 			this.flush();
 		}, this.flushIntervalMs);
+	}
+
+	/**
+	 * Listen to the ngrx-store application state. Anytime it changes
+	 * update the local appState property. This is to include the application
+	 * state in error messages
+	 * @private
+	 */
+	private _listenToStore() {
+		ServiceLocator.observableInjector
+			.subscribe((injector) => {
+				if (injector && !this.storeListener) {
+					const store = injector.get(Store);
+					this.storeListener = store.select((appState: AppState) => appState)
+						.subscribe((appState) => {
+							this.appState = {...appState};
+						});
+				}
+			});
 	}
 
 	/**
@@ -66,11 +95,9 @@ export class HttpTransport extends AbstractTransport {
 	 * @returns {LogEntry}
 	 */
 	log(logEntry: LogEntry) {
-		// todo: causes circular dependencies - fix may be to just add the user info server side?
-		// const authService = ServiceLocator.injector.get(AuthService);
-		// logEntry.user = authService.getUser();
 		const currentLogs = this.logs.value;
 		if (logEntry.shouldPersist) {
+			logEntry.params.push(this.appState);
 			const newLogs = [...currentLogs, logEntry];
 			this.logs.next(newLogs);
 		}
@@ -83,8 +110,8 @@ export class HttpTransport extends AbstractTransport {
 	flush() {
 		const logs = Array.from(this.logs.value);
 		if (logs.length > 0) {
-			const httpService: HttpClient = ServiceLocator.injector.get(HttpClient);
-			httpService.post('/api/logs', logs)
+			const httpService = ServiceLocator.injector.get(HttpService);
+			httpService.doRequest('/api/logs', ApiMethod.POST, logs)
 				.pipe(catchError((err) => {
 					return throwError(err);
 				}))

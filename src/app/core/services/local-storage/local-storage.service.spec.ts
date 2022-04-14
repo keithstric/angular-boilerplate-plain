@@ -1,5 +1,5 @@
 import {TestBed} from '@angular/core/testing';
-import {LocalStorageTypes} from '@core/interfaces/local-storage.interface';
+import {LocalStorageTypes} from '@core/services/local-storage/local-storage.interface';
 import {LocalStorageService} from '@core/services/local-storage/local-storage.service';
 
 describe('LocalStorageService', () => {

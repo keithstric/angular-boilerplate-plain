@@ -1,9 +1,10 @@
-import {LogLevel, SnackbarMessageLoggingMap} from '@core/interfaces/logger.interface';
+import {LogLevel, SnackbarMessageLoggingMap} from '@core/services/logger/logger.interface';
 import {AbstractTransport} from '@core/services/logger/abstract-transport';
 import {ConsoleTransport} from '@core/services/logger/console-transport';
 import {LogEntry} from '@core/services/logger/log-entry';
 import {NotificationService} from '@core/services/notification/notification.service';
 import {environment, LOG_LEVEL} from 'src/environments/environment';
+
 
 /**
  * The application logger. This is not a service and does not need to be injected in the constructor but can
@@ -26,12 +27,27 @@ export class Logger {
 	 */
 	static level: LogLevel = LOG_LEVEL;
 	/**
+	 * Define the log levels which should be sent to BigQuery
+	 * @private
+	 */
+	private static httpTransportPersistLevels = [LogLevel.error];
+	/**
 	 * Array of transports. There should be a transport for every logging type you
 	 * might need
 	 */
 	static transports: AbstractTransport[] = environment.production
 		? [new ConsoleTransport(Logger.level, true)]
 		: [new ConsoleTransport(Logger.level)];
+
+	private static getLogEntryOptions(transport: AbstractTransport, level: LogLevel, message: string, ...optionalParams: any[]): LogEntry {
+		const logEntry = new LogEntry(level, message, ...optionalParams);
+		if (transport.shouldPersist && Logger.httpTransportPersistLevels.includes(level)) {
+			logEntry.shouldPersist = true;
+		}
+		logEntry.shouldNotifyUser = transport.shouldNotifyUser;
+		logEntry.logWithDate = transport.logWithDate;
+		return logEntry;
+	}
 
 	static error(message, ...optionalParams: any[]) {
 		Logger.writeToLog(LogLevel.error, message, optionalParams);
@@ -69,8 +85,8 @@ export class Logger {
 	 */
 	static writeToLog(level: LogLevel, message: string, ...optionalParams: any[]) {
 		if (Logger.shouldLog(level)) {
-			const logEntry = new LogEntry(level, message, ...optionalParams);
 			Logger.transports.forEach((transport) => {
+				const logEntry = Logger.getLogEntryOptions(transport, level, message, ...optionalParams);
 				const loggedEntry = transport.logMessage(logEntry);
 				if (loggedEntry.shouldNotifyUser) {
 					NotificationService.showSnackbar({
@@ -88,10 +104,6 @@ export class Logger {
 	 * @returns {boolean}
 	 */
 	static shouldLog(level: LogLevel) {
-		let returnVal = false;
-		if (level <= Logger.level) {
-			returnVal = true;
-		}
-		return returnVal;
+		return level <= Logger.level;
 	}
 }

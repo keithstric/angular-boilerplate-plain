@@ -65,7 +65,8 @@
               "serviceWorker": true,
               "ngswConfigPath": "ngsw-config.json"
             }
-          }
+          },
+					"defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -76,8 +77,11 @@
           "configurations": {
             "production": {
               "browserTarget": "angular-boilerplate:build:production"
-            }
-          }
+            },
+						"local": {
+							"browserTarget": "angular-boilerplate:build:local"
+						}
+					}
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

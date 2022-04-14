@@ -4,5 +4,5 @@ import {Directive, ViewContainerRef} from '@angular/core';
 	selector: '[appViewRef]'
 })
 export class ViewRefDirective {
-	constructor(public viewContainerRef: ViewContainerRef) {}
+	constructor(public viewContainerRef?: ViewContainerRef) {}
 }

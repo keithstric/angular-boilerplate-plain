@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {LocalStorageTypes} from '@core/interfaces/local-storage.interface';
+import {LocalStorageTypes} from '@core/services/local-storage/local-storage.interface';
 import {PROJECT_NAME} from 'src/environments/environment';
 
 @Injectable({

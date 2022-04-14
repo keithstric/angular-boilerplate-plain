@@ -1,4 +1,4 @@
-import {LogLevel, LogLevelNameMap} from '@core/interfaces/logger.interface';
+import {LogLevel, LogLevelNameMap} from '@core/services/logger/logger.interface';
 import {AppState} from '@core/root-store/models/app-state.model';
 import {AbstractTransport} from '@core/services/logger/abstract-transport';
 import {LogEntry} from '@core/services/logger/log-entry';

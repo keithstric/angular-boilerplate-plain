@@ -1,4 +1,4 @@
-import {LogLevel} from '@core/interfaces/logger.interface';
+import {LogLevel} from '@core/services/logger/logger.interface';
 import {User} from '@core/models/user.model';
 
 export class LogEntry {

@@ -1,4 +1,4 @@
-import {LocalStorageTypes} from '@core/interfaces/local-storage.interface';
+import {LocalStorageTypes} from '@core/services/local-storage/local-storage.interface';
 import {iUserState} from '@core/root-store/models/app-state.model';
 import {UserAction, UserActionTypes} from '@core/root-store/user/user.action';
 import {LocalStorageService} from '@core/services/local-storage/local-storage.service';

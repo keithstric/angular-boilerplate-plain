@@ -53,31 +53,23 @@ export class AppErrorHandler extends ErrorHandler {
 	 * @param err {Error}
 	 */
 	handleError(err: Error) {
+		let message = err?.message || '[AppErrorHandler.handleError] Unknown error';
 		if (err instanceof EvalError) {
-			// console.log('Error Type=EvalError');
-			Logger.error(err.message, err);
+			message = err.message;
 		}else if (err instanceof RangeError) {
-			// console.log('Error Type=RangeError');
-			Logger.error(err.message, err);
+			message = err.message;
 		}else if (err instanceof ReferenceError) {
-			// console.log('Error Type=ReferenceError');
-			Logger.error(err.message, err);
+			message = err.message;
 		}else if (err instanceof SyntaxError) {
-			// console.log('Error Type=SyntaxError');
-			Logger.error(err.message, err);
+			message = err.message;
 		}else if (err instanceof TypeError) {
-			// console.log('Error Type=TypeError');
-			Logger.error(err.message, err);
+			message = err.message;
 		}else if (err instanceof URIError) {
-			// console.log('Error Type=URIError');
-			Logger.error(err.message, err);
+			message = err.message;
 		}else if (err instanceof ErrorEvent) {
-			// console.log('Error Type=ErrorEvent');
-			Logger.error(err.error.message, err);
-		}else {
-			// console.log('Error Type=Unknown');
-			Logger.error(err.message, err);
+			message = err.error.message;
 		}
+		Logger.error(message, err);
 		this.errorEvent.next(err);
 	}
 }

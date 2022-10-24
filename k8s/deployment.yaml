@@ -16,11 +16,5 @@ spec:
     spec:
       containers:
         - name: angular-boilerplate
-          image: nginx:1.17.1-alpine
+          image: nginx:alpine
           imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 80
-          args:
-            - npm
-            - run
-            - start-dist-server

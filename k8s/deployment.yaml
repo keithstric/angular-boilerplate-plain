@@ -6,6 +6,7 @@ metadata:
   labels:
     app: angular-boilerplate
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: angular-boilerplate
@@ -26,10 +27,10 @@ spec:
             httpGet:
               path: /
               port: 8080
-              initialDelaySeconds: 5
-              periodSeconds: 10
-              timeoutSeconds: 1
-              failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 3
           readinessProbe:
             httpGet:
               path: /

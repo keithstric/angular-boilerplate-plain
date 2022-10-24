@@ -17,7 +17,7 @@ spec:
       containers:
         - name: angular-boilerplate
           image: nginx:1.17.1-alpine
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
           args:

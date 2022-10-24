@@ -12,7 +12,7 @@ WORKDIR /app
 COPY . ./
 
 # Install dependencies
-RUN npm set progress=false && npm install
+RUN npm install
 
 # build for environment
 RUN npm run build

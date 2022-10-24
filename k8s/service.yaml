@@ -6,7 +6,7 @@ metadata:
 spec:
   selector:
     app: angular-boilerplate
-  type: NodePort
+  type: ClusterIP
   ports:
     - name: angular-boilerplate-port
       protocol: TCP

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: angular-boilerplate
+  labels:
+    app: angular-boilerplate
+spec:
+  selector:
+    matchLabels:
+      app: angular-boilerplate
+  template:
+    metadata:
+      labels:
+        app: angular-boilerplate
+    spec:
+      containers:
+        - name: angular-boilerplate
+          image: angular-boilerplate-plain
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          args:
+            - npm
+            - run
+            - start-dist-server

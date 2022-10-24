@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: angular-boilerplate
+  namespace: angular-boilerplate
   labels:
     app: angular-boilerplate
 spec:
@@ -15,7 +16,7 @@ spec:
     spec:
       containers:
         - name: angular-boilerplate
-          image: angular-boilerplate-plain
+          image: nginx:1.17.1-alpine
           imagePullPolicy: Never
           ports:
             - containerPort: 80

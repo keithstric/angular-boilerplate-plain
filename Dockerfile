@@ -41,7 +41,7 @@ FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*
 
 # From node 'builder' copy website to default nginx public folder
-COPY --from=builder /app/dist/gis-ui /usr/share/nginx/html
+COPY --from=builder /app/dist/angular-boilerplate/ /usr/share/nginx/html/
 COPY --from=builder /app/nginx.conf /etc/nginx/conf.d/default.conf
 
 # expose port 80

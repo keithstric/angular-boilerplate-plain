@@ -18,3 +18,20 @@ spec:
         - name: angular-boilerplate
           image: nginx:alpine
           imagePullPolicy: IfNotPresent
+          startupProbe:
+            httpGet:
+              path: /
+              port: 8080
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+              initialDelaySeconds: 5
+              periodSeconds: 10
+              timeoutSeconds: 1
+              failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            successThreshold: 3

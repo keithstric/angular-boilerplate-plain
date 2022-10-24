@@ -6,7 +6,6 @@ metadata:
   labels:
     app: angular-boilerplate
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: angular-boilerplate

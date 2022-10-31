@@ -20,7 +20,7 @@ spec:
     - host: "devops.home"
       http:
         paths:
-          - path: /
+          - path: /angular-boilerplate
             pathType: Prefix
             backend:
               service:

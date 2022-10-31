@@ -15,5 +15,5 @@ spec:
     spec:
       containers:
         - name: angular-boilerplate
-          image: keithstric/projects:latest
+          image: keithstric/angular-boilerplate:latest
           imagePullPolicy: Always

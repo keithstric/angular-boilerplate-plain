@@ -5,7 +5,7 @@ metadata:
 spec:
   selector:
     app: angular-boilerplate
-  type: LoadBalancer
+  type: NodePort
   ports:
     - name: angular-boilerplate-port
       protocol: TCP

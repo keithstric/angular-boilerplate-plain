@@ -16,4 +16,4 @@ spec:
       containers:
         - name: angular-boilerplate
           image: keithstric/projects:latest
-          imagePullPolicy: Never
+          imagePullPolicy: Always

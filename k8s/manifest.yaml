@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: angular-boilerplate
+  namespace: angular-boilerplate
+  labels:
+    app: angular-boilerplate
+spec:
+  selector:
+    matchLabels:
+      app: angular-boilerplate
+  template:
+    metadata:
+      labels:
+        app: angular-boilerplate
+    spec:
+      containers:
+        - name: angular-boilerplate
+          image: keithstric/angular-boilerplate:latest
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: angular-boilerplate-service
+  namespace: angular-boilerplate
+spec:
+  selector:
+    app: angular-boilerplate
+  type: ClusterIP
+  ports:
+    - name: angular-boilerplate-port
+      protocol: TCP
+      port: 8080
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: angular-boilerplate-ingress
+  namespace: angular-boilerplate
+spec:
+  rules:
+    - host: "devops.home"
+      http:
+        paths:
+          - path: /angular-boilerplate
+            pathType: Prefix
+            backend:
+              service:
+                name: angular-boilerplate-service
+                port:
+                  number: 8080

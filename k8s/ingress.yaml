@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: angular-boilerplate-ingress
   namespace: angular-boilerplate
-  annotations:
+  # annotations:
   # (Optional): Annotations for the Ingress Controller
   # -- ingress class is needed when traefik is not the default
   # kubernetes.io/ingress.class: traefik

@@ -37,6 +37,7 @@
           },
           "configurations": {
             "production": {
+							"baseHref": "/angular-boilerplate/",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",

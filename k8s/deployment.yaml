@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: angular-boilerplate
+  namespace: angular-boilerplate
   labels:
     app: angular-boilerplate
 spec:

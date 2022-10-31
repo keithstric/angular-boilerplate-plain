@@ -5,7 +5,7 @@
     "postinstall": "ngcc",
     "ng": "ng",
     "start": "ng serve -o --port 4201",
-    "build": "ng build --prod",
+    "build": "ng build --configuration production",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",

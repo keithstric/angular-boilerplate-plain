@@ -5,26 +5,34 @@ import {SnackBarRef} from '@shared/components/snack-bar/snack-bar.ref';
 import {UserAvatarComponent} from '@shared/components/user-avatar/user-avatar.component';
 import {FileDnDDirective} from '@shared/directives/file-dn-d.directive';
 import {SafeHtmlPipe} from '@shared/pipes/safe-html.pipe';
+import {FormHelperService} from '@shared/services/form-helper/form-helper.service';
 import { CardComponent } from './components/card/card.component';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
 import { SnackBarComponent } from './components/snack-bar/snack-bar.component';
 import { ViewRefDirective } from './directives/view-ref.directive';
+import { CharacterCounterComponent } from './components/character-counter/character-counter.component';
 
 const sharedComponents = [
 	CardComponent,
-	UserAvatarComponent,
+	CharacterCounterComponent,
 	ConfirmModalComponent,
-	SnackBarComponent
+	SnackBarComponent,
+	UserAvatarComponent,
 ];
 
 const sharedDirectives = [
 	FileDnDDirective
 ];
 
+const sharedPipes = [
+	SafeHtmlPipe
+];
+
 @NgModule({
 	declarations: [
 		...sharedComponents,
 		...sharedDirectives,
+		...sharedPipes,
 		SafeHtmlPipe,
 		ViewRefDirective
 	],
@@ -35,16 +43,16 @@ const sharedDirectives = [
 	],
 	providers: [
 		SnackBarRef,
-		FormBuilder
+		FormBuilder,
+		FormHelperService
 	],
 	exports: [
 		...sharedComponents,
+		...sharedPipes,
 		FormsModule,
 		ReactiveFormsModule
 	],
-	entryComponents: [
-		SnackBarComponent
-	]
+	entryComponents: [SnackBarComponent]
 })
 
 export class SharedModule { }

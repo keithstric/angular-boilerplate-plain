@@ -29,11 +29,16 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
-              "src/scss/theme.scss",
               "src/scss/styles.scss"
             ],
             "scripts": [],
-						"allowedCommonJsDependencies": ["tinycolor2"]
+						"allowedCommonJsDependencies": ["tinycolor2"],
+						"vendorChunk": true,
+						"extractLicenses": false,
+						"buildOptimizer": false,
+						"sourceMap": true,
+						"optimization": false,
+						"namedChunks": true
           },
           "configurations": {
             "production": {

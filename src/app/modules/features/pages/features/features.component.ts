@@ -17,19 +17,19 @@ export class FeaturesComponent implements OnInit {
 	features: Feature[] = [
 		{
 			name: 'Angular',
-			version: '11.0.3',
+			version: '13.0.4',
 			description: 'Modern powerful framework',
 			docsUrl: 'https://angular.io/docs',
 			docsIcon: 'article'
 		}, {
 			name: 'Angular Cli',
-			version: '11.0.3',
+			version: '13.0.4',
 			description: 'Command line interface for angular',
 			docsUrl: 'https://cli.angular.io/',
 			docsIcon: 'article'
 		}, {
-			name: 'NgRx',
-			version: '10.1.0',
+			name: 'NgRx Store',
+			version: '13.0.2',
 			description: 'Redux for angular',
 			docsUrl: 'https://ngrx.io',
 			docsIcon: 'article'
@@ -41,7 +41,7 @@ export class FeaturesComponent implements OnInit {
 			docsIcon: 'article'
 		}, {
 			name: 'Typescript',
-			version: '4.0.5',
+			version: '4.4.4',
 			description: 'Superset of JavaScript',
 			docsUrl: 'https://www.typescriptlang.org',
 			docsIcon: 'article'
@@ -59,21 +59,33 @@ export class FeaturesComponent implements OnInit {
 			docsIcon: 'article'
 		}, {
 			name: 'Compodoc',
-			version: '1.1.11',
+			version: '1.1.16',
 			description: 'Detailed documentation for your project',
 			docsUrl: 'https://compodoc.app/',
 			docsIcon: 'article'
 		}, {
-			name: 'Storybook',
-			version: '6.1.10',
-			description: 'A component library for developing components in isolation',
-			docsUrl: 'https://storybook.js.org/',
-			docsIcon: 'article'
-		}, {
 			name: 'route-parser',
-			version: '0.0.5',
+			version: '1.0.0',
 			description: 'Library for parsing route patterns',
 			docsUrl: 'https://github.com/rcs/route-parser',
+			docsIcon: 'article'
+		}, {
+			name: 'Included Logger',
+			version: '1.0.0',
+			description: 'Logging infrastructure already put in place with support for uploading log entries to upstream api',
+			docsUrl: '',
+			docsIcon: 'article'
+		}, {
+			name: 'Components',
+			description: 'Included components: card, character-counter, user-avatar, snack-bar/toaster',
+			version: '0.0.0',
+			docsUrl: '',
+			docsIcon: 'article'
+		}, {
+			name: 'Form Utils',
+			description: 'Includes form utilities for converting JavaScript objects to form elements',
+			version: '1.0.0',
+			docsUrl: '',
 			docsIcon: 'article'
 		}];
 

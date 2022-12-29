@@ -1,9 +1,12 @@
 import {Component, OnInit} from '@angular/core';
+import {FormGroup, Validators} from '@angular/forms';
 import {ApiMethod} from '@core/interfaces/api.interface';
 import {HttpService} from '@core/services/http/http.service';
 import {Logger} from '@core/services/logger/logger';
 import {NotificationService} from '@core/services/notification/notification.service';
 import {SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.interface';
+import {FormHelperService} from '@shared/services/form-helper/form-helper.service';
+
 
 @Component({
 	selector: 'app-home',
@@ -11,12 +14,25 @@ import {SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.inter
 	styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
+	charCounterForm: FormGroup;
 	constructor(
 		private _http: HttpService
 	) {}
 
 	ngOnInit(): void {
+		this.charCounterForm = FormHelperService.convertObjToFormGroup({
+			up: '',
+			down: ''
+		}, {
+			up: {
+				validators: [Validators.maxLength(10)],
+				updateOn: 'change'
+			},
+			down: {
+				validators: [Validators.maxLength(10)],
+				updateOn: 'change'
+			}
+		});
 		NotificationService.showSnackbar({
 			message: 'Welcome to angular-boilerplate-plain!',
 			messageType: SnackbarMessageTypes.SUCCESS

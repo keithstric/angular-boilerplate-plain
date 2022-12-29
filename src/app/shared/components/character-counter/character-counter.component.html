@@ -1,0 +1,10 @@
+<div *ngIf="!hidden" class="character-counter-container">
+	<div
+		class="text-container"
+		[class.flex-row]="counterType === 'down'">
+		<span class="prefix">{{prefixText}}</span>
+		<span *ngIf="counterType === 'up'" class="count">{{currentCount}}</span>
+		<span *ngIf="counterType === 'down'" class="count">{{remainingCount}}</span>
+		<span class="postfix">{{suffixText}}</span>
+	</div>
+</div>

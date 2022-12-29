@@ -9,4 +9,38 @@
 		<button (click)="getRandomData()">Cache to Object</button>
 		<button (click)="getSingleData()">Cache to Session Storage</button>
 	</div>
+	<div class="section">
+		<h2>Character Counter Demo</h2>
+		<form [formGroup]="charCounterForm">
+			<div class="form-field">
+				<label>"Up" Character Counter</label>
+				<input
+					type="text"
+					class="form-control"
+					[class.error]="charCounterForm.get('up').invalid"
+					formControlName="up" />
+				<app-character-counter
+					prefixText="Prefix"
+					suffixText="Suffix"
+					counterType="up"
+					[control]="charCounterForm.get('up')">
+				</app-character-counter>
+			</div>
+			<div class="form-field">
+				<label>"Down" Character Counter</label>
+				<input
+					type="text"
+					class="form-control"
+					[class.error]="charCounterForm.get('down').invalid"
+					formControlName="down" />
+				<app-character-counter
+					max="10"
+					prefixText="Prefix"
+					suffixText="Suffix"
+					counterType="down"
+					[control]="charCounterForm.get('down')">
+				</app-character-counter>
+			</div>
+		</form>
+	</div>
 </div>

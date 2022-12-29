@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FormHelperService } from './form-helper.service';
+import { FormHelperService } from '@shared/services/form-helper/form-helper.service';
 
 describe('FormHelperService', () => {
   let service: FormHelperService;

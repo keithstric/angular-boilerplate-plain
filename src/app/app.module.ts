@@ -23,8 +23,7 @@ import { SharedModule } from '@shared/shared.module';
 		BrowserModule,
 		CoreModule,
 		LayoutModule,
-		ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
-		SharedModule,
+		ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production})
 	],
 	providers: [],
 	bootstrap: [AppComponent]

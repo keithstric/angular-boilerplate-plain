@@ -24,18 +24,23 @@ a {
 .form-field {
 	margin-bottom: 10px;
 
-	.label {
+	label, .label {
+		display: block;
 		margin-bottom: 3px;
 	}
 
-	.input {
+	input, .input {
 		border: 1px solid #afafaf;
 		border-radius: 5px;
-		height: 32px;
-		line-height: 32px;
-		padding: 5px;
+		height: 26px;
+		line-height: 1rem;
 		font-family: inherit;
 		font-size: inherit;
+
+		&.error {
+			border-color: $error;
+			background-color: rgba($error, 0.1);
+		}
 	}
 }
 

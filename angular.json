@@ -38,6 +38,10 @@
           "configurations": {
             "production": {
 							"baseHref": "/angular-boilerplate/",
+							"index": {
+								"input": "src/index.prod.html",
+								"output": "index.html"
+							},
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",

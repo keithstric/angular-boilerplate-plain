@@ -918,6 +918,66 @@
             "methods": []
         },
         {
+            "name": "InvalidControl",
+            "id": "interface-InvalidControl-8e733561551c8dcdb9061134cf3da6801e1e2aa163fb4c220f44d6ed0c337daeb68948b067e3e295596773c6e69758397ed3912f7803f84c8b480eca1ee6e1a5",
+            "file": "src/app/shared/services/form-helper.service.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import {Injectable} from '@angular/core';\nimport {\n\tAbstractControl,\n\tAbstractControlOptions,\n\tFormArray,\n\tFormBuilder,\n\tFormControl,\n\tFormGroup,\n\tValidationErrors,\n\tValidatorFn\n} from '@angular/forms';\nimport {Logger} from '@core/services/logger/logger';\nimport {ServiceLocator} from '@core/services/service-locator';\n\n/** Interface for an invalid control */\nexport interface InvalidControl {\n\tfieldName: string;\n\tcontrol: AbstractControl;\n}\n/** Interface for invalid control with errors included */\nexport interface InvalidControlErrors extends InvalidControl {\n\terrors: ValidationErrors;\n}\n/** Interface for a ValidatorConfig object, used in setFormGroupValidators */\nexport interface ValidatorConfig {\n\tfieldName: string;\n\tvalidators: ValidatorFn[];\n}\n\nexport type FormGroupConfig = AbstractControlOptions | FormGroupObjectConfig;\nexport type FormGroupObject = {[key: string]: any};\n/**\n * Key must exist in FormGroupObject. The value of that key will be\n * an AbstractControlOptions object which will be applied to a FormControl\n */\nexport type FormGroupObjectConfig = {[key in keyof FormGroupObject]: FormGroupConfig};\nexport type FormControlType = 'FormGroup' | 'FormArray' | 'FormControl';\nexport type FormControlStatus = 'VALID' | 'INVALID' | 'DISABLED' | 'PENDING';\n\n/**\n * This is a class of static methods to assist working with Reactive Forms\n */\n@Injectable({\n\tprovidedIn: 'root'\n})\nexport class FormHelperService {\n\n\tconstructor() {}\n\n\t/**\n\t * Take an object with values and build a FormGroup from it. If that object contains\n\t * array values a FormArray will be created. If the obj contains a property that is an object\n\t * another FormGroup will be created.\n\t *\n\t * The biggest draw back to using this method is you will have to manually create validators\n\t * @param obj\n\t * @param objConfig\n\t * @example\n\t *\n\t * const someObj = {foo: 'bar', bar: 'baz', baz: [1,2], boo: {abc: 123}}\n\t * const someObjFormGroup = FormBuilderService.convertObjToFormGroup(someObj);\n\t * console.log('someObjFormGroup.controls=', someObjFormGroup.controls);\n\t * {\n\t *   foo: FormControl,\n\t *   bar: FormControl,\n\t *   baz: FormArray (controls: {0: 1 (FormControl), 1: 2 (FormControl)}),\n\t *   boo: FormGroup (controls: {abc: 123 (FormControl)})\n\t * }\n\t *\n\t * // with options\n\t * const someObj = {foo: 'bar', bar: 'baz', baz: [1,2], boo: {abc: 123}}\n\t * const someObjOptions = {foo: {updateOn: 'blur'}}\n\t * const someObjFormGroup = FormBuilderService.convertObjToFormGroup(someObj, someObjOptions);\n\t * console.log('someObjFormGroup.controls=', someObjFormGroup.controls);\n\t * {\n\t *   foo: FormControl,\n\t *   bar: FormControl,\n\t *   baz: FormArray (controls: {0: 1 (FormControl), 1: 2 (FormControl)}),\n\t *   boo: FormGroup (controls: {abc: 123 (FormControl)})\n\t * }\n\t */\n\tstatic convertObjToFormGroup(obj: FormGroupObject, objConfig?: FormGroupObjectConfig): FormGroup {\n\t\tif (obj !== null && obj !== undefined && typeof obj !== 'boolean') {\n\t\t\tlet fb = ServiceLocator.injector?.get(FormBuilder);\n\t\t\tif (!fb) {\n\t\t\t\tfb = new FormBuilder();\n\t\t\t}\n\t\t\tif (fb) {\n\t\t\t\tconst group = fb.group({});\n\t\t\t\tObject.keys(obj).forEach((key) => {\n\t\t\t\t\tconst controlConfig = objConfig ? objConfig[key] : undefined;\n\t\t\t\t\tconst keyVal = obj[key];\n\t\t\t\t\tif (Array.isArray(keyVal)) {\n\t\t\t\t\t\tconst formArr = this.convertArrayToFormArray(keyVal);\n\t\t\t\t\t\tgroup.addControl(key, formArr);\n\t\t\t\t\t} else if (keyVal instanceof Date) {\n\t\t\t\t\t\tconst dateCtl = fb.control(keyVal, controlConfig);\n\t\t\t\t\t\tgroup.addControl(key, dateCtl);\n\t\t\t\t\t} else if (keyVal !== null && typeof keyVal === 'object') { // typeof null = 'object' so take that into account\n\t\t\t\t\t\tconst childGrp = this.convertObjToFormGroup(keyVal, controlConfig as any);\n\t\t\t\t\t\tgroup.addControl(key, childGrp);\n\t\t\t\t\t} else if (typeof keyVal === 'string' || typeof keyVal === 'number' || typeof keyVal === 'boolean') {\n\t\t\t\t\t\tconst ctrl = fb.control(keyVal, controlConfig);\n\t\t\t\t\t\tgroup.addControl(key, ctrl);\n\t\t\t\t\t} else {\n\t\t\t\t\t\tconst emptyCtl = fb.control(keyVal, controlConfig);\n\t\t\t\t\t\tgroup.addControl(key, emptyCtl);\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t\treturn group;\n\t\t\t}\n\t\t}\n\t\t// throw new Error('Nothing provided to convertObjToFormGroup');\n\t\tLogger.warn('Nothing provided to convertObjToFormGroup', obj);\n\t}\n\n\t/**\n\t * Take an array of items and convert them to a FormArray. This is for an array of objects,\n\t * array of boolean will not work\n\t * @param arr\n\t * @param forCheckboxes\n\t */\n\tstatic convertArrayToFormArray(arr: any[], forCheckboxes: boolean = false): FormArray {\n\t\tlet fb = ServiceLocator.injector?.get(FormBuilder);\n\t\tif (!fb) {\n\t\t\tfb = new FormBuilder();\n\t\t}\n\t\tif (fb && !forCheckboxes) {\n\t\t\tlet valArr = [];\n\t\t\tif (arr?.length) {\n\t\t\t\tvalArr = arr.map((obj) => {\n\t\t\t\t\tif (typeof obj === 'boolean' || typeof obj === 'string' || typeof obj === 'number' || obj instanceof Date) {\n\t\t\t\t\t\treturn new FormControl(obj);\n\t\t\t\t\t} else if (obj !== null && typeof obj === 'object') {\n\t\t\t\t\t\treturn FormHelperService.convertObjToFormGroup(obj);\n\t\t\t\t\t} else if (Array.isArray(obj)) {\n\t\t\t\t\t\treturn FormHelperService.convertArrayToFormArray(obj);\n\t\t\t\t\t} else {\n\t\t\t\t\t\treturn new FormControl(obj);\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t}\n\t\t\treturn fb.array(valArr);\n\t\t} else {\n\t\t\t// todo: implement a checkbox solution to prevent ending up with an array of booleans instead of an array of objects\n\t\t}\n\t}\n\n\t/**\n\t * Get the controls in a form group as an array (not a FormArray) in order to loop through them\n\t * and do something to the individual controls. FormGroup.controls normally returns an object.\n\t * @param formGroup\n\t */\n\tstatic formGroupControlsToArray(formGroup: FormGroup): AbstractControl[] {\n\t\tconst returnVal = [];\n\t\tif (formGroup?.controls) {\n\t\t\tObject.keys(formGroup.controls).forEach((key) => {\n\t\t\t\treturnVal.push(formGroup.get(key));\n\t\t\t});\n\t\t}\n\t\treturn returnVal;\n\t}\n\n\t/**\n\t * returns just the invalid children of the provided FormGroup. If a child is an invalid FormGroup or FormArray will return\n\t * the FormGroup/FormArray and NOT it's invalid FormControls\n\t * @param formGroup\n\t */\n\tstatic getInvalidFormGroupControls(formGroup: FormGroup): InvalidControl[] {\n\t\tconst returnVal = [];\n\t\tif (formGroup?.controls) {\n\t\t\tObject.keys(formGroup.controls).forEach((key) => {\n\t\t\t\tconst ctrl = formGroup.get(key);\n\t\t\t\tif (ctrl.invalid) {\n\t\t\t\t\treturnVal.push({fieldName: key, control: ctrl});\n\t\t\t\t}\n\t\t\t});\n\t\t}\n\t\treturn returnVal;\n\t}\n\n\t/**\n\t * Sets validators on a FormGroup based on the ValidatorConfig. If\n\t * validatorConfigs is an empty array, will remove all validators for each\n\t * control in the formGroup.\n\t *\n\t * NOTE: If your formGroup contains formGroups or FormArrays, will not recursively add validators\n\t * to child FormGroups, only top level controls\n\t *\n\t * @param validatorConfigs\n\t * @param formGroup\n\t * @example\n\t *\n\t * const fg = FormBuilderService.convertObjToFormGroup({firstName: 'foo'});\n\t * const validators: ValidatorConfig[] = [\n\t * \t{fieldName: 'firstName', validators: [Validators.required]}\n\t * ];\n\t * FormBuilderService.setFormGroupValidators(validators, fg);\n\t */\n\tstatic setFormGroupValidators(validatorConfigs: ValidatorConfig[], formGroup: FormGroup) {\n\t\tconst formGroupKeys = Object.keys(formGroup?.controls || {});\n\t\tif (validatorConfigs && formGroupKeys.length) {\n\t\t\tformGroupKeys.forEach((ctrlFieldName) => {\n\t\t\t\tconst fgControl = formGroup.get(ctrlFieldName);\n\t\t\t\tconst controlValidators = validatorConfigs.find(validator => validator.fieldName === ctrlFieldName)?.validators;\n\t\t\t\tif (controlValidators?.length) {\n\t\t\t\t\tfgControl.setValidators(controlValidators);\n\t\t\t\t} else {\n\t\t\t\t\tfgControl.clearValidators();\n\t\t\t\t}\n\t\t\t});\n\t\t}else if (!validatorConfigs || !formGroup) {\n\t\t\tconst missing = !validatorConfigs\n\t\t\t\t? {arg: 'validatorConfigs', value: validatorConfigs}\n\t\t\t\t: !formGroup\n\t\t\t\t\t? {arg: 'formGroup', value: formGroup}\n\t\t\t\t\t: !validatorConfigs && !formGroup\n\t\t\t\t\t\t? {arg: 'both', value: [validatorConfigs, formGroup]}\n\t\t\t\t\t\t: {arg: 'nothing', value: undefined};\n\t\t\tconsole.warn(`[FormBuilderService.setFormGroupValidators] Missing arguments ${missing.arg} (${missing.value})`);\n\t\t}else if (!formGroupKeys.length) {\n\t\t\tconsole.warn('[FormBuilderService.setFormGroupValidators] FormGroup contain 0 controls',\n\t\t\t\tvalidatorConfigs, formGroup);\n\t\t}\n\t}\n\n\t/**\n\t * returns the invalid FormControls only. Will not return invalid FormGroups or FormArrays\n\t * @param formControl\n\t */\n\tstatic getInvalidControls(formControl: AbstractControl): InvalidControlErrors[] {\n\t\t// tslint:disable-next-line:max-line-length\n\t\t// console.log(`getInvalidControls, ${FormBuilderService.getControlName(formControl)} - ${FormBuilderService.getControlType(formControl)}`);\n\t\tlet invalidControls: InvalidControlErrors[] = [];\n\t\tif (formControl) {\n\t\t\tif ((formControl instanceof FormGroup || formControl instanceof FormArray) && formControl.invalid) {\n\t\t\t\tObject.keys(formControl.controls).forEach((key) => {\n\t\t\t\t\tconst childCtrl = formControl.get(key);\n\t\t\t\t\tconst grpInvalidControls = FormHelperService.getInvalidControls(childCtrl);\n\t\t\t\t\tinvalidControls = [...invalidControls, ...grpInvalidControls];\n\t\t\t\t});\n\t\t\t} else if (formControl.invalid) {\n\t\t\t\tinvalidControls.push({\n\t\t\t\t\tfieldName: FormHelperService.getControlName(formControl),\n\t\t\t\t\tcontrol: formControl,\n\t\t\t\t\terrors: formControl.errors\n\t\t\t\t});\n\t\t\t}\n\t\t}\n\t\treturn invalidControls;\n\t}\n\n\t/**\n\t * Get the name of an AbstractControl (i.e. FormGroup, FormArray, FormControl). If we've reached\n\t * the top of the tree (meaning the very first form control) return 'TopControl'\n\t * @param control\n\t */\n\tstatic getControlName(control: AbstractControl): string {\n\t\tconst parentControls = control.parent?.controls;\n\t\tif (parentControls) {\n\t\t\treturn Object.keys(parentControls).find(name => control === parentControls[name]);\n\t\t} else {\n\t\t\treturn 'TopControl';\n\t\t}\n\t}\n\n\t/**\n\t * Get the full path of a control from the top of the FormGroup/FormArray\n\t * @param control\n\t * @example\n\t *\n\t * // Normally you would just have the control and probably not know the path.\n\t * // This makes this example a little silly, because you already have the path\n\t * // but I think it at least shows the concept of using the function\n\t * const fg = FormHelperService.convertObjToFormGroup({foo: {bar: { baz: [{boom: 'bam'}]}}};\n\t * const ctrl = fg.get('foo.bar.baz.0.boom');\n\t * const fullPath = FormHelperService.getFullControlPath(ctrl); // ==> '.foo.bar.baz.0.bada'\n\t */\n\tstatic getFullControlPath(control: AbstractControl): string {\n\t\tlet pathItems: string[] = [FormHelperService.getControlName(control)];\n\t\tlet ancestorCtrl = control.parent;\n\t\twhile (ancestorCtrl) {\n\t\t\tpathItems.push(FormHelperService.getControlName(ancestorCtrl));\n\t\t\tancestorCtrl = ancestorCtrl.parent;\n\t\t}\n\t\tpathItems = pathItems.reverse();\n\t\tif (pathItems[0] === 'TopControl') {\n\t\t\tpathItems.shift();\n\t\t}\n\t\treturn pathItems.join('.');\n\t}\n\n\t/**\n\t * Get the type of control\n\t * @param control\n\t */\n\tstatic getControlType(control: AbstractControl): FormControlType {\n\t\tif (control instanceof FormGroup) {\n\t\t\treturn 'FormGroup';\n\t\t} else if (control instanceof FormArray) {\n\t\t\treturn 'FormArray';\n\t\t} else {\n\t\t\treturn 'FormControl';\n\t\t}\n\t}\n\n\t/**\n\t * Clones an abstract control and its validators.\n\t * Credit: https://stackoverflow.com/questions/48308414/deep-copy-of-angular-reactive-form\n\t * @param control\n\t */\n\tstatic cloneAbstractControl<T extends AbstractControl>(control: T): T {\n\t\tlet newControl: T;\n\t\tif (control instanceof FormGroup) {\n\t\t\tconst formGroup = new FormGroup({}, control.validator, control.asyncValidator);\n\t\t\tconst controls = control.controls;\n\t\t\tObject.keys(controls).forEach(key => {\n\t\t\t\tformGroup.addControl(key, FormHelperService.cloneAbstractControl(controls[key]));\n\t\t\t});\n\t\t\tnewControl = formGroup as any;\n\t\t} else if (control instanceof FormArray) {\n\t\t\tconst formArray = new FormArray([], control.validator, control.asyncValidator);\n\t\t\tcontrol.controls.forEach(formControl => formArray.push(FormHelperService.cloneAbstractControl(formControl)));\n\t\t\tnewControl = formArray as any;\n\t\t} else if (control instanceof FormControl) {\n\t\t\tnewControl = new FormControl(control.value, control.validator, control.asyncValidator) as any;\n\t\t} else {\n\t\t\tthrow new Error('Error: unexpected control type');\n\t\t}\n\t\tif (control.disabled) {\n\t\t\tnewControl.disable({emitEvent: false});\n\t\t}\n\t\treturn newControl;\n\t}\n}\n",
+            "properties": [
+                {
+                    "name": "control",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "AbstractControl",
+                    "optional": false,
+                    "description": "",
+                    "line": 18
+                },
+                {
+                    "name": "fieldName",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": false,
+                    "description": "",
+                    "line": 17
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 165,
+            "description": "<p>Interface for an invalid control</p>\n",
+            "rawdescription": "\nInterface for an invalid control",
+            "methods": []
+        },
+        {
+            "name": "InvalidControlErrors",
+            "id": "interface-InvalidControlErrors-8e733561551c8dcdb9061134cf3da6801e1e2aa163fb4c220f44d6ed0c337daeb68948b067e3e295596773c6e69758397ed3912f7803f84c8b480eca1ee6e1a5",
+            "file": "src/app/shared/services/form-helper.service.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import {Injectable} from '@angular/core';\nimport {\n\tAbstractControl,\n\tAbstractControlOptions,\n\tFormArray,\n\tFormBuilder,\n\tFormControl,\n\tFormGroup,\n\tValidationErrors,\n\tValidatorFn\n} from '@angular/forms';\nimport {Logger} from '@core/services/logger/logger';\nimport {ServiceLocator} from '@core/services/service-locator';\n\n/** Interface for an invalid control */\nexport interface InvalidControl {\n\tfieldName: string;\n\tcontrol: AbstractControl;\n}\n/** Interface for invalid control with errors included */\nexport interface InvalidControlErrors extends InvalidControl {\n\terrors: ValidationErrors;\n}\n/** Interface for a ValidatorConfig object, used in setFormGroupValidators */\nexport interface ValidatorConfig {\n\tfieldName: string;\n\tvalidators: ValidatorFn[];\n}\n\nexport type FormGroupConfig = AbstractControlOptions | FormGroupObjectConfig;\nexport type FormGroupObject = {[key: string]: any};\n/**\n * Key must exist in FormGroupObject. The value of that key will be\n * an AbstractControlOptions object which will be applied to a FormControl\n */\nexport type FormGroupObjectConfig = {[key in keyof FormGroupObject]: FormGroupConfig};\nexport type FormControlType = 'FormGroup' | 'FormArray' | 'FormControl';\nexport type FormControlStatus = 'VALID' | 'INVALID' | 'DISABLED' | 'PENDING';\n\n/**\n * This is a class of static methods to assist working with Reactive Forms\n */\n@Injectable({\n\tprovidedIn: 'root'\n})\nexport class FormHelperService {\n\n\tconstructor() {}\n\n\t/**\n\t * Take an object with values and build a FormGroup from it. If that object contains\n\t * array values a FormArray will be created. If the obj contains a property that is an object\n\t * another FormGroup will be created.\n\t *\n\t * The biggest draw back to using this method is you will have to manually create validators\n\t * @param obj\n\t * @param objConfig\n\t * @example\n\t *\n\t * const someObj = {foo: 'bar', bar: 'baz', baz: [1,2], boo: {abc: 123}}\n\t * const someObjFormGroup = FormBuilderService.convertObjToFormGroup(someObj);\n\t * console.log('someObjFormGroup.controls=', someObjFormGroup.controls);\n\t * {\n\t *   foo: FormControl,\n\t *   bar: FormControl,\n\t *   baz: FormArray (controls: {0: 1 (FormControl), 1: 2 (FormControl)}),\n\t *   boo: FormGroup (controls: {abc: 123 (FormControl)})\n\t * }\n\t *\n\t * // with options\n\t * const someObj = {foo: 'bar', bar: 'baz', baz: [1,2], boo: {abc: 123}}\n\t * const someObjOptions = {foo: {updateOn: 'blur'}}\n\t * const someObjFormGroup = FormBuilderService.convertObjToFormGroup(someObj, someObjOptions);\n\t * console.log('someObjFormGroup.controls=', someObjFormGroup.controls);\n\t * {\n\t *   foo: FormControl,\n\t *   bar: FormControl,\n\t *   baz: FormArray (controls: {0: 1 (FormControl), 1: 2 (FormControl)}),\n\t *   boo: FormGroup (controls: {abc: 123 (FormControl)})\n\t * }\n\t */\n\tstatic convertObjToFormGroup(obj: FormGroupObject, objConfig?: FormGroupObjectConfig): FormGroup {\n\t\tif (obj !== null && obj !== undefined && typeof obj !== 'boolean') {\n\t\t\tlet fb = ServiceLocator.injector?.get(FormBuilder);\n\t\t\tif (!fb) {\n\t\t\t\tfb = new FormBuilder();\n\t\t\t}\n\t\t\tif (fb) {\n\t\t\t\tconst group = fb.group({});\n\t\t\t\tObject.keys(obj).forEach((key) => {\n\t\t\t\t\tconst controlConfig = objConfig ? objConfig[key] : undefined;\n\t\t\t\t\tconst keyVal = obj[key];\n\t\t\t\t\tif (Array.isArray(keyVal)) {\n\t\t\t\t\t\tconst formArr = this.convertArrayToFormArray(keyVal);\n\t\t\t\t\t\tgroup.addControl(key, formArr);\n\t\t\t\t\t} else if (keyVal instanceof Date) {\n\t\t\t\t\t\tconst dateCtl = fb.control(keyVal, controlConfig);\n\t\t\t\t\t\tgroup.addControl(key, dateCtl);\n\t\t\t\t\t} else if (keyVal !== null && typeof keyVal === 'object') { // typeof null = 'object' so take that into account\n\t\t\t\t\t\tconst childGrp = this.convertObjToFormGroup(keyVal, controlConfig as any);\n\t\t\t\t\t\tgroup.addControl(key, childGrp);\n\t\t\t\t\t} else if (typeof keyVal === 'string' || typeof keyVal === 'number' || typeof keyVal === 'boolean') {\n\t\t\t\t\t\tconst ctrl = fb.control(keyVal, controlConfig);\n\t\t\t\t\t\tgroup.addControl(key, ctrl);\n\t\t\t\t\t} else {\n\t\t\t\t\t\tconst emptyCtl = fb.control(keyVal, controlConfig);\n\t\t\t\t\t\tgroup.addControl(key, emptyCtl);\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t\treturn group;\n\t\t\t}\n\t\t}\n\t\t// throw new Error('Nothing provided to convertObjToFormGroup');\n\t\tLogger.warn('Nothing provided to convertObjToFormGroup', obj);\n\t}\n\n\t/**\n\t * Take an array of items and convert them to a FormArray. This is for an array of objects,\n\t * array of boolean will not work\n\t * @param arr\n\t * @param forCheckboxes\n\t */\n\tstatic convertArrayToFormArray(arr: any[], forCheckboxes: boolean = false): FormArray {\n\t\tlet fb = ServiceLocator.injector?.get(FormBuilder);\n\t\tif (!fb) {\n\t\t\tfb = new FormBuilder();\n\t\t}\n\t\tif (fb && !forCheckboxes) {\n\t\t\tlet valArr = [];\n\t\t\tif (arr?.length) {\n\t\t\t\tvalArr = arr.map((obj) => {\n\t\t\t\t\tif (typeof obj === 'boolean' || typeof obj === 'string' || typeof obj === 'number' || obj instanceof Date) {\n\t\t\t\t\t\treturn new FormControl(obj);\n\t\t\t\t\t} else if (obj !== null && typeof obj === 'object') {\n\t\t\t\t\t\treturn FormHelperService.convertObjToFormGroup(obj);\n\t\t\t\t\t} else if (Array.isArray(obj)) {\n\t\t\t\t\t\treturn FormHelperService.convertArrayToFormArray(obj);\n\t\t\t\t\t} else {\n\t\t\t\t\t\treturn new FormControl(obj);\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t}\n\t\t\treturn fb.array(valArr);\n\t\t} else {\n\t\t\t// todo: implement a checkbox solution to prevent ending up with an array of booleans instead of an array of objects\n\t\t}\n\t}\n\n\t/**\n\t * Get the controls in a form group as an array (not a FormArray) in order to loop through them\n\t * and do something to the individual controls. FormGroup.controls normally returns an object.\n\t * @param formGroup\n\t */\n\tstatic formGroupControlsToArray(formGroup: FormGroup): AbstractControl[] {\n\t\tconst returnVal = [];\n\t\tif (formGroup?.controls) {\n\t\t\tObject.keys(formGroup.controls).forEach((key) => {\n\t\t\t\treturnVal.push(formGroup.get(key));\n\t\t\t});\n\t\t}\n\t\treturn returnVal;\n\t}\n\n\t/**\n\t * returns just the invalid children of the provided FormGroup. If a child is an invalid FormGroup or FormArray will return\n\t * the FormGroup/FormArray and NOT it's invalid FormControls\n\t * @param formGroup\n\t */\n\tstatic getInvalidFormGroupControls(formGroup: FormGroup): InvalidControl[] {\n\t\tconst returnVal = [];\n\t\tif (formGroup?.controls) {\n\t\t\tObject.keys(formGroup.controls).forEach((key) => {\n\t\t\t\tconst ctrl = formGroup.get(key);\n\t\t\t\tif (ctrl.invalid) {\n\t\t\t\t\treturnVal.push({fieldName: key, control: ctrl});\n\t\t\t\t}\n\t\t\t});\n\t\t}\n\t\treturn returnVal;\n\t}\n\n\t/**\n\t * Sets validators on a FormGroup based on the ValidatorConfig. If\n\t * validatorConfigs is an empty array, will remove all validators for each\n\t * control in the formGroup.\n\t *\n\t * NOTE: If your formGroup contains formGroups or FormArrays, will not recursively add validators\n\t * to child FormGroups, only top level controls\n\t *\n\t * @param validatorConfigs\n\t * @param formGroup\n\t * @example\n\t *\n\t * const fg = FormBuilderService.convertObjToFormGroup({firstName: 'foo'});\n\t * const validators: ValidatorConfig[] = [\n\t * \t{fieldName: 'firstName', validators: [Validators.required]}\n\t * ];\n\t * FormBuilderService.setFormGroupValidators(validators, fg);\n\t */\n\tstatic setFormGroupValidators(validatorConfigs: ValidatorConfig[], formGroup: FormGroup) {\n\t\tconst formGroupKeys = Object.keys(formGroup?.controls || {});\n\t\tif (validatorConfigs && formGroupKeys.length) {\n\t\t\tformGroupKeys.forEach((ctrlFieldName) => {\n\t\t\t\tconst fgControl = formGroup.get(ctrlFieldName);\n\t\t\t\tconst controlValidators = validatorConfigs.find(validator => validator.fieldName === ctrlFieldName)?.validators;\n\t\t\t\tif (controlValidators?.length) {\n\t\t\t\t\tfgControl.setValidators(controlValidators);\n\t\t\t\t} else {\n\t\t\t\t\tfgControl.clearValidators();\n\t\t\t\t}\n\t\t\t});\n\t\t}else if (!validatorConfigs || !formGroup) {\n\t\t\tconst missing = !validatorConfigs\n\t\t\t\t? {arg: 'validatorConfigs', value: validatorConfigs}\n\t\t\t\t: !formGroup\n\t\t\t\t\t? {arg: 'formGroup', value: formGroup}\n\t\t\t\t\t: !validatorConfigs && !formGroup\n\t\t\t\t\t\t? {arg: 'both', value: [validatorConfigs, formGroup]}\n\t\t\t\t\t\t: {arg: 'nothing', value: undefined};\n\t\t\tconsole.warn(`[FormBuilderService.setFormGroupValidators] Missing arguments ${missing.arg} (${missing.value})`);\n\t\t}else if (!formGroupKeys.length) {\n\t\t\tconsole.warn('[FormBuilderService.setFormGroupValidators] FormGroup contain 0 controls',\n\t\t\t\tvalidatorConfigs, formGroup);\n\t\t}\n\t}\n\n\t/**\n\t * returns the invalid FormControls only. Will not return invalid FormGroups or FormArrays\n\t * @param formControl\n\t */\n\tstatic getInvalidControls(formControl: AbstractControl): InvalidControlErrors[] {\n\t\t// tslint:disable-next-line:max-line-length\n\t\t// console.log(`getInvalidControls, ${FormBuilderService.getControlName(formControl)} - ${FormBuilderService.getControlType(formControl)}`);\n\t\tlet invalidControls: InvalidControlErrors[] = [];\n\t\tif (formControl) {\n\t\t\tif ((formControl instanceof FormGroup || formControl instanceof FormArray) && formControl.invalid) {\n\t\t\t\tObject.keys(formControl.controls).forEach((key) => {\n\t\t\t\t\tconst childCtrl = formControl.get(key);\n\t\t\t\t\tconst grpInvalidControls = FormHelperService.getInvalidControls(childCtrl);\n\t\t\t\t\tinvalidControls = [...invalidControls, ...grpInvalidControls];\n\t\t\t\t});\n\t\t\t} else if (formControl.invalid) {\n\t\t\t\tinvalidControls.push({\n\t\t\t\t\tfieldName: FormHelperService.getControlName(formControl),\n\t\t\t\t\tcontrol: formControl,\n\t\t\t\t\terrors: formControl.errors\n\t\t\t\t});\n\t\t\t}\n\t\t}\n\t\treturn invalidControls;\n\t}\n\n\t/**\n\t * Get the name of an AbstractControl (i.e. FormGroup, FormArray, FormControl). If we've reached\n\t * the top of the tree (meaning the very first form control) return 'TopControl'\n\t * @param control\n\t */\n\tstatic getControlName(control: AbstractControl): string {\n\t\tconst parentControls = control.parent?.controls;\n\t\tif (parentControls) {\n\t\t\treturn Object.keys(parentControls).find(name => control === parentControls[name]);\n\t\t} else {\n\t\t\treturn 'TopControl';\n\t\t}\n\t}\n\n\t/**\n\t * Get the full path of a control from the top of the FormGroup/FormArray\n\t * @param control\n\t * @example\n\t *\n\t * // Normally you would just have the control and probably not know the path.\n\t * // This makes this example a little silly, because you already have the path\n\t * // but I think it at least shows the concept of using the function\n\t * const fg = FormHelperService.convertObjToFormGroup({foo: {bar: { baz: [{boom: 'bam'}]}}};\n\t * const ctrl = fg.get('foo.bar.baz.0.boom');\n\t * const fullPath = FormHelperService.getFullControlPath(ctrl); // ==> '.foo.bar.baz.0.bada'\n\t */\n\tstatic getFullControlPath(control: AbstractControl): string {\n\t\tlet pathItems: string[] = [FormHelperService.getControlName(control)];\n\t\tlet ancestorCtrl = control.parent;\n\t\twhile (ancestorCtrl) {\n\t\t\tpathItems.push(FormHelperService.getControlName(ancestorCtrl));\n\t\t\tancestorCtrl = ancestorCtrl.parent;\n\t\t}\n\t\tpathItems = pathItems.reverse();\n\t\tif (pathItems[0] === 'TopControl') {\n\t\t\tpathItems.shift();\n\t\t}\n\t\treturn pathItems.join('.');\n\t}\n\n\t/**\n\t * Get the type of control\n\t * @param control\n\t */\n\tstatic getControlType(control: AbstractControl): FormControlType {\n\t\tif (control instanceof FormGroup) {\n\t\t\treturn 'FormGroup';\n\t\t} else if (control instanceof FormArray) {\n\t\t\treturn 'FormArray';\n\t\t} else {\n\t\t\treturn 'FormControl';\n\t\t}\n\t}\n\n\t/**\n\t * Clones an abstract control and its validators.\n\t * Credit: https://stackoverflow.com/questions/48308414/deep-copy-of-angular-reactive-form\n\t * @param control\n\t */\n\tstatic cloneAbstractControl<T extends AbstractControl>(control: T): T {\n\t\tlet newControl: T;\n\t\tif (control instanceof FormGroup) {\n\t\t\tconst formGroup = new FormGroup({}, control.validator, control.asyncValidator);\n\t\t\tconst controls = control.controls;\n\t\t\tObject.keys(controls).forEach(key => {\n\t\t\t\tformGroup.addControl(key, FormHelperService.cloneAbstractControl(controls[key]));\n\t\t\t});\n\t\t\tnewControl = formGroup as any;\n\t\t} else if (control instanceof FormArray) {\n\t\t\tconst formArray = new FormArray([], control.validator, control.asyncValidator);\n\t\t\tcontrol.controls.forEach(formControl => formArray.push(FormHelperService.cloneAbstractControl(formControl)));\n\t\t\tnewControl = formArray as any;\n\t\t} else if (control instanceof FormControl) {\n\t\t\tnewControl = new FormControl(control.value, control.validator, control.asyncValidator) as any;\n\t\t} else {\n\t\t\tthrow new Error('Error: unexpected control type');\n\t\t}\n\t\tif (control.disabled) {\n\t\t\tnewControl.disable({emitEvent: false});\n\t\t}\n\t\treturn newControl;\n\t}\n}\n",
+            "properties": [
+                {
+                    "name": "errors",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ValidationErrors",
+                    "optional": false,
+                    "description": "",
+                    "line": 22
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 165,
+            "description": "<p>Interface for invalid control with errors included</p>\n",
+            "rawdescription": "\nInterface for invalid control with errors included",
+            "methods": [],
+            "extends": "InvalidControl"
+        },
+        {
             "name": "iStateItem",
             "id": "interface-iStateItem-f6656967327ea0930f5592cf4669e674a29bfa960e135887be8ce9d3de39a2a1b0af09fcc534bb1afa76c0aa2baaa55d02b97b3a51910a460e8a6c29a8870597",
             "file": "src/app/core/root-store/models/app-state.model.ts",
@@ -1584,12 +1644,46 @@
             "indexSignatures": [],
             "kind": 165,
             "methods": []
+        },
+        {
+            "name": "ValidatorConfig",
+            "id": "interface-ValidatorConfig-8e733561551c8dcdb9061134cf3da6801e1e2aa163fb4c220f44d6ed0c337daeb68948b067e3e295596773c6e69758397ed3912f7803f84c8b480eca1ee6e1a5",
+            "file": "src/app/shared/services/form-helper.service.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import {Injectable} from '@angular/core';\nimport {\n\tAbstractControl,\n\tAbstractControlOptions,\n\tFormArray,\n\tFormBuilder,\n\tFormControl,\n\tFormGroup,\n\tValidationErrors,\n\tValidatorFn\n} from '@angular/forms';\nimport {Logger} from '@core/services/logger/logger';\nimport {ServiceLocator} from '@core/services/service-locator';\n\n/** Interface for an invalid control */\nexport interface InvalidControl {\n\tfieldName: string;\n\tcontrol: AbstractControl;\n}\n/** Interface for invalid control with errors included */\nexport interface InvalidControlErrors extends InvalidControl {\n\terrors: ValidationErrors;\n}\n/** Interface for a ValidatorConfig object, used in setFormGroupValidators */\nexport interface ValidatorConfig {\n\tfieldName: string;\n\tvalidators: ValidatorFn[];\n}\n\nexport type FormGroupConfig = AbstractControlOptions | FormGroupObjectConfig;\nexport type FormGroupObject = {[key: string]: any};\n/**\n * Key must exist in FormGroupObject. The value of that key will be\n * an AbstractControlOptions object which will be applied to a FormControl\n */\nexport type FormGroupObjectConfig = {[key in keyof FormGroupObject]: FormGroupConfig};\nexport type FormControlType = 'FormGroup' | 'FormArray' | 'FormControl';\nexport type FormControlStatus = 'VALID' | 'INVALID' | 'DISABLED' | 'PENDING';\n\n/**\n * This is a class of static methods to assist working with Reactive Forms\n */\n@Injectable({\n\tprovidedIn: 'root'\n})\nexport class FormHelperService {\n\n\tconstructor() {}\n\n\t/**\n\t * Take an object with values and build a FormGroup from it. If that object contains\n\t * array values a FormArray will be created. If the obj contains a property that is an object\n\t * another FormGroup will be created.\n\t *\n\t * The biggest draw back to using this method is you will have to manually create validators\n\t * @param obj\n\t * @param objConfig\n\t * @example\n\t *\n\t * const someObj = {foo: 'bar', bar: 'baz', baz: [1,2], boo: {abc: 123}}\n\t * const someObjFormGroup = FormBuilderService.convertObjToFormGroup(someObj);\n\t * console.log('someObjFormGroup.controls=', someObjFormGroup.controls);\n\t * {\n\t *   foo: FormControl,\n\t *   bar: FormControl,\n\t *   baz: FormArray (controls: {0: 1 (FormControl), 1: 2 (FormControl)}),\n\t *   boo: FormGroup (controls: {abc: 123 (FormControl)})\n\t * }\n\t *\n\t * // with options\n\t * const someObj = {foo: 'bar', bar: 'baz', baz: [1,2], boo: {abc: 123}}\n\t * const someObjOptions = {foo: {updateOn: 'blur'}}\n\t * const someObjFormGroup = FormBuilderService.convertObjToFormGroup(someObj, someObjOptions);\n\t * console.log('someObjFormGroup.controls=', someObjFormGroup.controls);\n\t * {\n\t *   foo: FormControl,\n\t *   bar: FormControl,\n\t *   baz: FormArray (controls: {0: 1 (FormControl), 1: 2 (FormControl)}),\n\t *   boo: FormGroup (controls: {abc: 123 (FormControl)})\n\t * }\n\t */\n\tstatic convertObjToFormGroup(obj: FormGroupObject, objConfig?: FormGroupObjectConfig): FormGroup {\n\t\tif (obj !== null && obj !== undefined && typeof obj !== 'boolean') {\n\t\t\tlet fb = ServiceLocator.injector?.get(FormBuilder);\n\t\t\tif (!fb) {\n\t\t\t\tfb = new FormBuilder();\n\t\t\t}\n\t\t\tif (fb) {\n\t\t\t\tconst group = fb.group({});\n\t\t\t\tObject.keys(obj).forEach((key) => {\n\t\t\t\t\tconst controlConfig = objConfig ? objConfig[key] : undefined;\n\t\t\t\t\tconst keyVal = obj[key];\n\t\t\t\t\tif (Array.isArray(keyVal)) {\n\t\t\t\t\t\tconst formArr = this.convertArrayToFormArray(keyVal);\n\t\t\t\t\t\tgroup.addControl(key, formArr);\n\t\t\t\t\t} else if (keyVal instanceof Date) {\n\t\t\t\t\t\tconst dateCtl = fb.control(keyVal, controlConfig);\n\t\t\t\t\t\tgroup.addControl(key, dateCtl);\n\t\t\t\t\t} else if (keyVal !== null && typeof keyVal === 'object') { // typeof null = 'object' so take that into account\n\t\t\t\t\t\tconst childGrp = this.convertObjToFormGroup(keyVal, controlConfig as any);\n\t\t\t\t\t\tgroup.addControl(key, childGrp);\n\t\t\t\t\t} else if (typeof keyVal === 'string' || typeof keyVal === 'number' || typeof keyVal === 'boolean') {\n\t\t\t\t\t\tconst ctrl = fb.control(keyVal, controlConfig);\n\t\t\t\t\t\tgroup.addControl(key, ctrl);\n\t\t\t\t\t} else {\n\t\t\t\t\t\tconst emptyCtl = fb.control(keyVal, controlConfig);\n\t\t\t\t\t\tgroup.addControl(key, emptyCtl);\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t\treturn group;\n\t\t\t}\n\t\t}\n\t\t// throw new Error('Nothing provided to convertObjToFormGroup');\n\t\tLogger.warn('Nothing provided to convertObjToFormGroup', obj);\n\t}\n\n\t/**\n\t * Take an array of items and convert them to a FormArray. This is for an array of objects,\n\t * array of boolean will not work\n\t * @param arr\n\t * @param forCheckboxes\n\t */\n\tstatic convertArrayToFormArray(arr: any[], forCheckboxes: boolean = false): FormArray {\n\t\tlet fb = ServiceLocator.injector?.get(FormBuilder);\n\t\tif (!fb) {\n\t\t\tfb = new FormBuilder();\n\t\t}\n\t\tif (fb && !forCheckboxes) {\n\t\t\tlet valArr = [];\n\t\t\tif (arr?.length) {\n\t\t\t\tvalArr = arr.map((obj) => {\n\t\t\t\t\tif (typeof obj === 'boolean' || typeof obj === 'string' || typeof obj === 'number' || obj instanceof Date) {\n\t\t\t\t\t\treturn new FormControl(obj);\n\t\t\t\t\t} else if (obj !== null && typeof obj === 'object') {\n\t\t\t\t\t\treturn FormHelperService.convertObjToFormGroup(obj);\n\t\t\t\t\t} else if (Array.isArray(obj)) {\n\t\t\t\t\t\treturn FormHelperService.convertArrayToFormArray(obj);\n\t\t\t\t\t} else {\n\t\t\t\t\t\treturn new FormControl(obj);\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t}\n\t\t\treturn fb.array(valArr);\n\t\t} else {\n\t\t\t// todo: implement a checkbox solution to prevent ending up with an array of booleans instead of an array of objects\n\t\t}\n\t}\n\n\t/**\n\t * Get the controls in a form group as an array (not a FormArray) in order to loop through them\n\t * and do something to the individual controls. FormGroup.controls normally returns an object.\n\t * @param formGroup\n\t */\n\tstatic formGroupControlsToArray(formGroup: FormGroup): AbstractControl[] {\n\t\tconst returnVal = [];\n\t\tif (formGroup?.controls) {\n\t\t\tObject.keys(formGroup.controls).forEach((key) => {\n\t\t\t\treturnVal.push(formGroup.get(key));\n\t\t\t});\n\t\t}\n\t\treturn returnVal;\n\t}\n\n\t/**\n\t * returns just the invalid children of the provided FormGroup. If a child is an invalid FormGroup or FormArray will return\n\t * the FormGroup/FormArray and NOT it's invalid FormControls\n\t * @param formGroup\n\t */\n\tstatic getInvalidFormGroupControls(formGroup: FormGroup): InvalidControl[] {\n\t\tconst returnVal = [];\n\t\tif (formGroup?.controls) {\n\t\t\tObject.keys(formGroup.controls).forEach((key) => {\n\t\t\t\tconst ctrl = formGroup.get(key);\n\t\t\t\tif (ctrl.invalid) {\n\t\t\t\t\treturnVal.push({fieldName: key, control: ctrl});\n\t\t\t\t}\n\t\t\t});\n\t\t}\n\t\treturn returnVal;\n\t}\n\n\t/**\n\t * Sets validators on a FormGroup based on the ValidatorConfig. If\n\t * validatorConfigs is an empty array, will remove all validators for each\n\t * control in the formGroup.\n\t *\n\t * NOTE: If your formGroup contains formGroups or FormArrays, will not recursively add validators\n\t * to child FormGroups, only top level controls\n\t *\n\t * @param validatorConfigs\n\t * @param formGroup\n\t * @example\n\t *\n\t * const fg = FormBuilderService.convertObjToFormGroup({firstName: 'foo'});\n\t * const validators: ValidatorConfig[] = [\n\t * \t{fieldName: 'firstName', validators: [Validators.required]}\n\t * ];\n\t * FormBuilderService.setFormGroupValidators(validators, fg);\n\t */\n\tstatic setFormGroupValidators(validatorConfigs: ValidatorConfig[], formGroup: FormGroup) {\n\t\tconst formGroupKeys = Object.keys(formGroup?.controls || {});\n\t\tif (validatorConfigs && formGroupKeys.length) {\n\t\t\tformGroupKeys.forEach((ctrlFieldName) => {\n\t\t\t\tconst fgControl = formGroup.get(ctrlFieldName);\n\t\t\t\tconst controlValidators = validatorConfigs.find(validator => validator.fieldName === ctrlFieldName)?.validators;\n\t\t\t\tif (controlValidators?.length) {\n\t\t\t\t\tfgControl.setValidators(controlValidators);\n\t\t\t\t} else {\n\t\t\t\t\tfgControl.clearValidators();\n\t\t\t\t}\n\t\t\t});\n\t\t}else if (!validatorConfigs || !formGroup) {\n\t\t\tconst missing = !validatorConfigs\n\t\t\t\t? {arg: 'validatorConfigs', value: validatorConfigs}\n\t\t\t\t: !formGroup\n\t\t\t\t\t? {arg: 'formGroup', value: formGroup}\n\t\t\t\t\t: !validatorConfigs && !formGroup\n\t\t\t\t\t\t? {arg: 'both', value: [validatorConfigs, formGroup]}\n\t\t\t\t\t\t: {arg: 'nothing', value: undefined};\n\t\t\tconsole.warn(`[FormBuilderService.setFormGroupValidators] Missing arguments ${missing.arg} (${missing.value})`);\n\t\t}else if (!formGroupKeys.length) {\n\t\t\tconsole.warn('[FormBuilderService.setFormGroupValidators] FormGroup contain 0 controls',\n\t\t\t\tvalidatorConfigs, formGroup);\n\t\t}\n\t}\n\n\t/**\n\t * returns the invalid FormControls only. Will not return invalid FormGroups or FormArrays\n\t * @param formControl\n\t */\n\tstatic getInvalidControls(formControl: AbstractControl): InvalidControlErrors[] {\n\t\t// tslint:disable-next-line:max-line-length\n\t\t// console.log(`getInvalidControls, ${FormBuilderService.getControlName(formControl)} - ${FormBuilderService.getControlType(formControl)}`);\n\t\tlet invalidControls: InvalidControlErrors[] = [];\n\t\tif (formControl) {\n\t\t\tif ((formControl instanceof FormGroup || formControl instanceof FormArray) && formControl.invalid) {\n\t\t\t\tObject.keys(formControl.controls).forEach((key) => {\n\t\t\t\t\tconst childCtrl = formControl.get(key);\n\t\t\t\t\tconst grpInvalidControls = FormHelperService.getInvalidControls(childCtrl);\n\t\t\t\t\tinvalidControls = [...invalidControls, ...grpInvalidControls];\n\t\t\t\t});\n\t\t\t} else if (formControl.invalid) {\n\t\t\t\tinvalidControls.push({\n\t\t\t\t\tfieldName: FormHelperService.getControlName(formControl),\n\t\t\t\t\tcontrol: formControl,\n\t\t\t\t\terrors: formControl.errors\n\t\t\t\t});\n\t\t\t}\n\t\t}\n\t\treturn invalidControls;\n\t}\n\n\t/**\n\t * Get the name of an AbstractControl (i.e. FormGroup, FormArray, FormControl). If we've reached\n\t * the top of the tree (meaning the very first form control) return 'TopControl'\n\t * @param control\n\t */\n\tstatic getControlName(control: AbstractControl): string {\n\t\tconst parentControls = control.parent?.controls;\n\t\tif (parentControls) {\n\t\t\treturn Object.keys(parentControls).find(name => control === parentControls[name]);\n\t\t} else {\n\t\t\treturn 'TopControl';\n\t\t}\n\t}\n\n\t/**\n\t * Get the full path of a control from the top of the FormGroup/FormArray\n\t * @param control\n\t * @example\n\t *\n\t * // Normally you would just have the control and probably not know the path.\n\t * // This makes this example a little silly, because you already have the path\n\t * // but I think it at least shows the concept of using the function\n\t * const fg = FormHelperService.convertObjToFormGroup({foo: {bar: { baz: [{boom: 'bam'}]}}};\n\t * const ctrl = fg.get('foo.bar.baz.0.boom');\n\t * const fullPath = FormHelperService.getFullControlPath(ctrl); // ==> '.foo.bar.baz.0.bada'\n\t */\n\tstatic getFullControlPath(control: AbstractControl): string {\n\t\tlet pathItems: string[] = [FormHelperService.getControlName(control)];\n\t\tlet ancestorCtrl = control.parent;\n\t\twhile (ancestorCtrl) {\n\t\t\tpathItems.push(FormHelperService.getControlName(ancestorCtrl));\n\t\t\tancestorCtrl = ancestorCtrl.parent;\n\t\t}\n\t\tpathItems = pathItems.reverse();\n\t\tif (pathItems[0] === 'TopControl') {\n\t\t\tpathItems.shift();\n\t\t}\n\t\treturn pathItems.join('.');\n\t}\n\n\t/**\n\t * Get the type of control\n\t * @param control\n\t */\n\tstatic getControlType(control: AbstractControl): FormControlType {\n\t\tif (control instanceof FormGroup) {\n\t\t\treturn 'FormGroup';\n\t\t} else if (control instanceof FormArray) {\n\t\t\treturn 'FormArray';\n\t\t} else {\n\t\t\treturn 'FormControl';\n\t\t}\n\t}\n\n\t/**\n\t * Clones an abstract control and its validators.\n\t * Credit: https://stackoverflow.com/questions/48308414/deep-copy-of-angular-reactive-form\n\t * @param control\n\t */\n\tstatic cloneAbstractControl<T extends AbstractControl>(control: T): T {\n\t\tlet newControl: T;\n\t\tif (control instanceof FormGroup) {\n\t\t\tconst formGroup = new FormGroup({}, control.validator, control.asyncValidator);\n\t\t\tconst controls = control.controls;\n\t\t\tObject.keys(controls).forEach(key => {\n\t\t\t\tformGroup.addControl(key, FormHelperService.cloneAbstractControl(controls[key]));\n\t\t\t});\n\t\t\tnewControl = formGroup as any;\n\t\t} else if (control instanceof FormArray) {\n\t\t\tconst formArray = new FormArray([], control.validator, control.asyncValidator);\n\t\t\tcontrol.controls.forEach(formControl => formArray.push(FormHelperService.cloneAbstractControl(formControl)));\n\t\t\tnewControl = formArray as any;\n\t\t} else if (control instanceof FormControl) {\n\t\t\tnewControl = new FormControl(control.value, control.validator, control.asyncValidator) as any;\n\t\t} else {\n\t\t\tthrow new Error('Error: unexpected control type');\n\t\t}\n\t\tif (control.disabled) {\n\t\t\tnewControl.disable({emitEvent: false});\n\t\t}\n\t\treturn newControl;\n\t}\n}\n",
+            "properties": [
+                {
+                    "name": "fieldName",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "optional": false,
+                    "description": "",
+                    "line": 26
+                },
+                {
+                    "name": "validators",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ValidatorFn[]",
+                    "optional": false,
+                    "description": "",
+                    "line": 27
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 165,
+            "description": "<p>Interface for a ValidatorConfig object, used in setFormGroupValidators</p>\n",
+            "rawdescription": "\nInterface for a ValidatorConfig object, used in setFormGroupValidators",
+            "methods": []
         }
     ],
     "injectables": [
         {
             "name": "AppErrorHandler",
-            "id": "injectable-AppErrorHandler-fbd559e9635e403d5bd359e045ca4eb25c2f8791438ff9d161402957399fbd7abfb4459b893d74b299331befc1ef68696a19dcf633b08243b805b1cfbc6667b3",
+            "id": "injectable-AppErrorHandler-59671614ed35ebf9648b0e09ea148c2465462d464aacac076fe6c871e7261d0add1a99c232e22f4aa7acd3b26e9b9e671946d73dcce6cb498589f46de3c55892",
             "file": "src/app/core/services/error-handler/error-handler.service.ts",
             "properties": [
                 {
@@ -1789,7 +1883,7 @@
             "deprecationMessage": "",
             "description": "<p>This service is for surfacing errors in the UI. By default, we&#39;ll notify the user with a snackbar (toast) message.\nYou should only need to include this service if you need to surface errors in the ui or need to notify the user\nof errors.</p>\n",
             "rawdescription": "\n\nThis service is for surfacing errors in the UI. By default, we'll notify the user with a snackbar (toast) message.\nYou should only need to include this service if you need to surface errors in the ui or need to notify the user\nof errors.\n",
-            "sourceCode": "import {HttpErrorResponse} from '@angular/common/http';\nimport {ErrorHandler, Injectable} from '@angular/core';\nimport {Logger} from '@core/services/logger/logger';\nimport {NotificationService} from '@core/services/notification/notification.service';\nimport {SnackbarConfig, SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.interface';\nimport {Subject, throwError} from 'rxjs';\n\n/**\n * This service is for surfacing errors in the UI. By default, we'll notify the user with a snackbar (toast) message.\n * You should only need to include this service if you need to surface errors in the ui or need to notify the user\n * of errors.\n */\n@Injectable({\n\tprovidedIn: 'root'\n})\nexport class AppErrorHandler extends ErrorHandler {\n\tpublic errorEvent: Subject<Error> = new Subject<any>();\n\n\tconstructor() {\n\t\tsuper();\n\t}\n\n\t/**\n\t * Create a snackbar notification\n\t * @param {number} notificationCode - An error code or Http Status\n\t * @param {string} notification - The notification message\n\t */\n\tnotifyUserSnackbar(notificationCode: number, notification: string) {\n\t\tconst snackbarConfig: SnackbarConfig = {\n\t\t\tmessage: `${notificationCode}: ${notification}`,\n\t\t\tduration: 5000,\n\t\t\tmessageType: SnackbarMessageTypes.DANGER\n\t\t};\n\t\tNotificationService.showSnackbar(snackbarConfig);\n\t}\n\n\t/**\n\t * This function is a global javascript error handler. It will catch all javascript errors\n\t * produced within the application. The docs at https://angular.io/api/core/ErrorHandler say\n\t * that err has a type of any. I'm assuming the \"any\" type is so you can pass it a custom error\n\t * or error event. console logging the err argument just outputs the stack trace.\n\t *\n\t * If an error occurs within a try/catch block, this will not be fired unless you\n\t * throw the error within the catch block.\n\t *\n\t * I understand I've got repeated code below, but this is merely a placeholder so that\n\t * custom logic can be introduced based on the error type (err.name). You probably don't\n\t * want to break it down to that level but instead send to a DB, throw a dialog\n\t * for debugging, etc.\n\t *\n\t * Definition is in @see{src/app/core/core.module.ts}\n\t *\n\t * @param err {Error}\n\t */\n\thandleError(err: Error) {\n\t\tif (err instanceof EvalError) {\n\t\t\t// console.log('Error Type=EvalError');\n\t\t\tLogger.error(err.message, err);\n\t\t}else if (err instanceof RangeError) {\n\t\t\t// console.log('Error Type=RangeError');\n\t\t\tLogger.error(err.message, err);\n\t\t}else if (err instanceof ReferenceError) {\n\t\t\t// console.log('Error Type=ReferenceError');\n\t\t\tLogger.error(err.message, err);\n\t\t}else if (err instanceof SyntaxError) {\n\t\t\t// console.log('Error Type=SyntaxError');\n\t\t\tLogger.error(err.message, err);\n\t\t}else if (err instanceof TypeError) {\n\t\t\t// console.log('Error Type=TypeError');\n\t\t\tLogger.error(err.message, err);\n\t\t}else if (err instanceof URIError) {\n\t\t\t// console.log('Error Type=URIError');\n\t\t\tLogger.error(err.message, err);\n\t\t}else if (err instanceof ErrorEvent) {\n\t\t\t// console.log('Error Type=ErrorEvent');\n\t\t\tLogger.error(err.error.message, err);\n\t\t}else {\n\t\t\t// console.log('Error Type=Unknown');\n\t\t\tLogger.error(err.message, err);\n\t\t}\n\t\tthis.errorEvent.next(err);\n\t}\n}\n",
+            "sourceCode": "import {HttpErrorResponse} from '@angular/common/http';\nimport {ErrorHandler, Injectable} from '@angular/core';\nimport {Logger} from '@core/services/logger/logger';\nimport {NotificationService} from '@core/services/notification/notification.service';\nimport {SnackbarConfig, SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.interface';\nimport {Subject, throwError} from 'rxjs';\n\n/**\n * This service is for surfacing errors in the UI. By default, we'll notify the user with a snackbar (toast) message.\n * You should only need to include this service if you need to surface errors in the ui or need to notify the user\n * of errors.\n */\n@Injectable({\n\tprovidedIn: 'root'\n})\nexport class AppErrorHandler extends ErrorHandler {\n\tpublic errorEvent: Subject<Error> = new Subject<any>();\n\n\tconstructor() {\n\t\tsuper();\n\t}\n\n\t/**\n\t * Create a snackbar notification\n\t * @param {number} notificationCode - An error code or Http Status\n\t * @param {string} notification - The notification message\n\t */\n\tnotifyUserSnackbar(notificationCode: number, notification: string) {\n\t\tconst snackbarConfig: SnackbarConfig = {\n\t\t\tmessage: `${notificationCode}: ${notification}`,\n\t\t\tduration: 5000,\n\t\t\tmessageType: SnackbarMessageTypes.DANGER\n\t\t};\n\t\tNotificationService.showSnackbar(snackbarConfig);\n\t}\n\n\t/**\n\t * This function is a global javascript error handler. It will catch all javascript errors\n\t * produced within the application. The docs at https://angular.io/api/core/ErrorHandler say\n\t * that err has a type of any. I'm assuming the \"any\" type is so you can pass it a custom error\n\t * or error event. console logging the err argument just outputs the stack trace.\n\t *\n\t * If an error occurs within a try/catch block, this will not be fired unless you\n\t * throw the error within the catch block.\n\t *\n\t * I understand I've got repeated code below, but this is merely a placeholder so that\n\t * custom logic can be introduced based on the error type (err.name). You probably don't\n\t * want to break it down to that level but instead send to a DB, throw a dialog\n\t * for debugging, etc.\n\t *\n\t * Definition is in @see{src/app/core/core.module.ts}\n\t *\n\t * @param err {Error}\n\t */\n\thandleError(err: Error) {\n\t\tlet message = err?.message || '[AppErrorHandler.handleError] Unknown error';\n\t\tif (err instanceof EvalError) {\n\t\t\tmessage = err.message;\n\t\t}else if (err instanceof RangeError) {\n\t\t\tmessage = err.message;\n\t\t}else if (err instanceof ReferenceError) {\n\t\t\tmessage = err.message;\n\t\t}else if (err instanceof SyntaxError) {\n\t\t\tmessage = err.message;\n\t\t}else if (err instanceof TypeError) {\n\t\t\tmessage = err.message;\n\t\t}else if (err instanceof URIError) {\n\t\t\tmessage = err.message;\n\t\t}else if (err instanceof ErrorEvent) {\n\t\t\tmessage = err.error.message;\n\t\t}\n\t\tLogger.error(message, err);\n\t\tthis.errorEvent.next(err);\n\t}\n}\n",
             "constructorObj": {
                 "name": "constructor",
                 "description": "",
@@ -2987,6 +3081,640 @@
                         }
                     }
                 ]
+            },
+            "type": "injectable"
+        },
+        {
+            "name": "FormHelperService",
+            "id": "injectable-FormHelperService-8e733561551c8dcdb9061134cf3da6801e1e2aa163fb4c220f44d6ed0c337daeb68948b067e3e295596773c6e69758397ed3912f7803f84c8b480eca1ee6e1a5",
+            "file": "src/app/shared/services/form-helper.service.ts",
+            "properties": [],
+            "methods": [
+                {
+                    "name": "cloneAbstractControl",
+                    "args": [
+                        {
+                            "name": "control",
+                            "type": "T",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "T",
+                    "typeParameters": [
+                        "T"
+                    ],
+                    "line": 312,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\n\nClones an abstract control and its validators.\nCredit: https://stackoverflow.com/questions/48308414/deep-copy-of-angular-reactive-form\n",
+                    "description": "<p>Clones an abstract control and its validators.\nCredit: <a href=\"https://stackoverflow.com/questions/48308414/deep-copy-of-angular-reactive-form\">https://stackoverflow.com/questions/48308414/deep-copy-of-angular-reactive-form</a></p>\n",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": {
+                                "pos": 11210,
+                                "end": 11217,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "control"
+                            },
+                            "type": "T",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "pos": 11204,
+                                "end": 11209,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "param"
+                            },
+                            "comment": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "convertArrayToFormArray",
+                    "args": [
+                        {
+                            "name": "arr",
+                            "type": "any[]",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "forCheckboxes",
+                            "type": "boolean",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "defaultValue": "false"
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "FormArray",
+                    "typeParameters": [],
+                    "line": 123,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\n\nTake an array of items and convert them to a FormArray. This is for an array of objects,\narray of boolean will not work\n",
+                    "description": "<p>Take an array of items and convert them to a FormArray. This is for an array of objects,\narray of boolean will not work</p>\n",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": {
+                                "pos": 4356,
+                                "end": 4359,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "arr"
+                            },
+                            "type": "any[]",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "pos": 4350,
+                                "end": 4355,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "param"
+                            },
+                            "comment": ""
+                        },
+                        {
+                            "name": {
+                                "pos": 4371,
+                                "end": 4384,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "forCheckboxes"
+                            },
+                            "type": "boolean",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "defaultValue": "false",
+                            "tagName": {
+                                "pos": 4365,
+                                "end": 4370,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "param"
+                            },
+                            "comment": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "convertObjToFormGroup",
+                    "args": [
+                        {
+                            "name": "obj",
+                            "type": "FormGroupObject",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "objConfig",
+                            "type": "FormGroupObjectConfig",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "optional": true
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "FormGroup",
+                    "typeParameters": [],
+                    "line": 82,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\n\nTake an object with values and build a FormGroup from it. If that object contains\narray values a FormArray will be created. If the obj contains a property that is an object\nanother FormGroup will be created.\n\nThe biggest draw back to using this method is you will have to manually create validators\n\nconst someObj = {foo: 'bar', bar: 'baz', baz: [1,2], boo: {abc: 123}}\nconst someObjFormGroup = FormBuilderService.convertObjToFormGroup(someObj);\nconsole.log('someObjFormGroup.controls=', someObjFormGroup.controls);\n{\n  foo: FormControl,\n  bar: FormControl,\n  baz: FormArray (controls: {0: 1 (FormControl), 1: 2 (FormControl)}),\n  boo: FormGroup (controls: {abc: 123 (FormControl)})\n}\n\n// with options\nconst someObj = {foo: 'bar', bar: 'baz', baz: [1,2], boo: {abc: 123}}\nconst someObjOptions = {foo: {updateOn: 'blur'}}\nconst someObjFormGroup = FormBuilderService.convertObjToFormGroup(someObj, someObjOptions);\nconsole.log('someObjFormGroup.controls=', someObjFormGroup.controls);\n{\n  foo: FormControl,\n  bar: FormControl,\n  baz: FormArray (controls: {0: 1 (FormControl), 1: 2 (FormControl)}),\n  boo: FormGroup (controls: {abc: 123 (FormControl)})\n}\n",
+                    "description": "<p>Take an object with values and build a FormGroup from it. If that object contains\narray values a FormArray will be created. If the obj contains a property that is an object\nanother FormGroup will be created.</p>\n<p>The biggest draw back to using this method is you will have to manually create validators</p>\n<p>const someObj = {foo: &#39;bar&#39;, bar: &#39;baz&#39;, baz: [1,2], boo: {abc: 123}}\nconst someObjFormGroup = FormBuilderService.convertObjToFormGroup(someObj);\nconsole.log(&#39;someObjFormGroup.controls=&#39;, someObjFormGroup.controls);\n{\n  foo: FormControl,\n  bar: FormControl,\n  baz: FormArray (controls: {0: 1 (FormControl), 1: 2 (FormControl)}),\n  boo: FormGroup (controls: {abc: 123 (FormControl)})\n}</p>\n<p>// with options\nconst someObj = {foo: &#39;bar&#39;, bar: &#39;baz&#39;, baz: [1,2], boo: {abc: 123}}\nconst someObjOptions = {foo: {updateOn: &#39;blur&#39;}}\nconst someObjFormGroup = FormBuilderService.convertObjToFormGroup(someObj, someObjOptions);\nconsole.log(&#39;someObjFormGroup.controls=&#39;, someObjFormGroup.controls);\n{\n  foo: FormControl,\n  bar: FormControl,\n  baz: FormArray (controls: {0: 1 (FormControl), 1: 2 (FormControl)}),\n  boo: FormGroup (controls: {abc: 123 (FormControl)})\n}</p>\n",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": {
+                                "pos": 1784,
+                                "end": 1787,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "obj"
+                            },
+                            "type": "FormGroupObject",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "pos": 1778,
+                                "end": 1783,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "param"
+                            },
+                            "comment": ""
+                        },
+                        {
+                            "name": {
+                                "pos": 1799,
+                                "end": 1808,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "objConfig"
+                            },
+                            "type": "FormGroupObjectConfig",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "optional": true,
+                            "tagName": {
+                                "pos": 1793,
+                                "end": 1798,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "param"
+                            },
+                            "comment": ""
+                        },
+                        {
+                            "tagName": {
+                                "pos": 1814,
+                                "end": 1821,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "example"
+                            },
+                            "comment": "<p>const someObj = {foo: &#39;bar&#39;, bar: &#39;baz&#39;, baz: [1,2], boo: {abc: 123}}\nconst someObjFormGroup = FormBuilderService.convertObjToFormGroup(someObj);\nconsole.log(&#39;someObjFormGroup.controls=&#39;, someObjFormGroup.controls);\n{\n  foo: FormControl,\n  bar: FormControl,\n  baz: FormArray (controls: {0: 1 (FormControl), 1: 2 (FormControl)}),\n  boo: FormGroup (controls: {abc: 123 (FormControl)})\n}</p>\n<p>// with options\nconst someObj = {foo: &#39;bar&#39;, bar: &#39;baz&#39;, baz: [1,2], boo: {abc: 123}}\nconst someObjOptions = {foo: {updateOn: &#39;blur&#39;}}\nconst someObjFormGroup = FormBuilderService.convertObjToFormGroup(someObj, someObjOptions);\nconsole.log(&#39;someObjFormGroup.controls=&#39;, someObjFormGroup.controls);\n{\n  foo: FormControl,\n  bar: FormControl,\n  baz: FormArray (controls: {0: 1 (FormControl), 1: 2 (FormControl)}),\n  boo: FormGroup (controls: {abc: 123 (FormControl)})\n}</p>\n"
+                        }
+                    ]
+                },
+                {
+                    "name": "formGroupControlsToArray",
+                    "args": [
+                        {
+                            "name": "formGroup",
+                            "type": "FormGroup",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "AbstractControl[]",
+                    "typeParameters": [],
+                    "line": 154,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\n\nGet the controls in a form group as an array (not a FormArray) in order to loop through them\nand do something to the individual controls. FormGroup.controls normally returns an object.\n",
+                    "description": "<p>Get the controls in a form group as an array (not a FormArray) in order to loop through them\nand do something to the individual controls. FormGroup.controls normally returns an object.</p>\n",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": {
+                                "pos": 5492,
+                                "end": 5501,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "formGroup"
+                            },
+                            "type": "FormGroup",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "pos": 5486,
+                                "end": 5491,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "param"
+                            },
+                            "comment": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "getControlName",
+                    "args": [
+                        {
+                            "name": "control",
+                            "type": "AbstractControl",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "string",
+                    "typeParameters": [],
+                    "line": 258,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\n\nGet the name of an AbstractControl (i.e. FormGroup, FormArray, FormControl). If we've reached\nthe top of the tree (meaning the very first form control) return 'TopControl'\n",
+                    "description": "<p>Get the name of an AbstractControl (i.e. FormGroup, FormArray, FormControl). If we&#39;ve reached\nthe top of the tree (meaning the very first form control) return &#39;TopControl&#39;</p>\n",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": {
+                                "pos": 9447,
+                                "end": 9454,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "control"
+                            },
+                            "type": "AbstractControl",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "pos": 9441,
+                                "end": 9446,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "param"
+                            },
+                            "comment": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "getControlType",
+                    "args": [
+                        {
+                            "name": "control",
+                            "type": "AbstractControl",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "FormControlType",
+                    "typeParameters": [],
+                    "line": 297,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\n\nGet the type of control\n",
+                    "description": "<p>Get the type of control</p>\n",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": {
+                                "pos": 10797,
+                                "end": 10804,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "control"
+                            },
+                            "type": "AbstractControl",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "pos": 10791,
+                                "end": 10796,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "param"
+                            },
+                            "comment": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "getFullControlPath",
+                    "args": [
+                        {
+                            "name": "control",
+                            "type": "AbstractControl",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "string",
+                    "typeParameters": [],
+                    "line": 279,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\n\nGet the full path of a control from the top of the FormGroup/FormArray\n\n// Normally you would just have the control and probably not know the path.\n// This makes this example a little silly, because you already have the path\n// but I think it at least shows the concept of using the function\nconst fg = FormHelperService.convertObjToFormGroup({foo: {bar: { baz: [{boom: 'bam'}]}}};\nconst ctrl = fg.get('foo.bar.baz.0.boom');\nconst fullPath = FormHelperService.getFullControlPath(ctrl); // ==> '.foo.bar.baz.0.bada'\n",
+                    "description": "<p>Get the full path of a control from the top of the FormGroup/FormArray</p>\n<p>// Normally you would just have the control and probably not know the path.\n// This makes this example a little silly, because you already have the path\n// but I think it at least shows the concept of using the function\nconst fg = FormHelperService.convertObjToFormGroup({foo: {bar: { baz: [{boom: &#39;bam&#39;}]}}};\nconst ctrl = fg.get(&#39;foo.bar.baz.0.boom&#39;);\nconst fullPath = FormHelperService.getFullControlPath(ctrl); // ==&gt; &#39;.foo.bar.baz.0.bada&#39;</p>\n",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": {
+                                "pos": 9814,
+                                "end": 9821,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "control"
+                            },
+                            "type": "AbstractControl",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "pos": 9808,
+                                "end": 9813,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "param"
+                            },
+                            "comment": ""
+                        },
+                        {
+                            "tagName": {
+                                "pos": 9827,
+                                "end": 9834,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "example"
+                            },
+                            "comment": "<p>// Normally you would just have the control and probably not know the path.\n// This makes this example a little silly, because you already have the path\n// but I think it at least shows the concept of using the function\nconst fg = FormHelperService.convertObjToFormGroup({foo: {bar: { baz: [{boom: &#39;bam&#39;}]}}};\nconst ctrl = fg.get(&#39;foo.bar.baz.0.boom&#39;);\nconst fullPath = FormHelperService.getFullControlPath(ctrl); // ==&gt; &#39;.foo.bar.baz.0.bada&#39;</p>\n"
+                        }
+                    ]
+                },
+                {
+                    "name": "getInvalidControls",
+                    "args": [
+                        {
+                            "name": "formControl",
+                            "type": "AbstractControl",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "InvalidControlErrors[]",
+                    "typeParameters": [],
+                    "line": 231,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\n\nreturns the invalid FormControls only. Will not return invalid FormGroups or FormArrays\n",
+                    "description": "<p>returns the invalid FormControls only. Will not return invalid FormGroups or FormArrays</p>\n",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": {
+                                "pos": 8293,
+                                "end": 8304,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "formControl"
+                            },
+                            "type": "AbstractControl",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "pos": 8287,
+                                "end": 8292,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "param"
+                            },
+                            "comment": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "getInvalidFormGroupControls",
+                    "args": [
+                        {
+                            "name": "formGroup",
+                            "type": "FormGroup",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "InvalidControl[]",
+                    "typeParameters": [],
+                    "line": 169,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\n\nreturns just the invalid children of the provided FormGroup. If a child is an invalid FormGroup or FormArray will return\nthe FormGroup/FormArray and NOT it's invalid FormControls\n",
+                    "description": "<p>returns just the invalid children of the provided FormGroup. If a child is an invalid FormGroup or FormArray will return\nthe FormGroup/FormArray and NOT it&#39;s invalid FormControls</p>\n",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": {
+                                "pos": 5968,
+                                "end": 5977,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "formGroup"
+                            },
+                            "type": "FormGroup",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "pos": 5962,
+                                "end": 5967,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "param"
+                            },
+                            "comment": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "setFormGroupValidators",
+                    "args": [
+                        {
+                            "name": "validatorConfigs",
+                            "type": "ValidatorConfig[]",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "formGroup",
+                            "type": "FormGroup",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 200,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\n\nSets validators on a FormGroup based on the ValidatorConfig. If\nvalidatorConfigs is an empty array, will remove all validators for each\ncontrol in the formGroup.\n\nNOTE: If your formGroup contains formGroups or FormArrays, will not recursively add validators\nto child FormGroups, only top level controls\n\n\nconst fg = FormBuilderService.convertObjToFormGroup({firstName: 'foo'});\nconst validators: ValidatorConfig[] = [\n\t{fieldName: 'firstName', validators: [Validators.required]}\n];\nFormBuilderService.setFormGroupValidators(validators, fg);\n",
+                    "description": "<p>Sets validators on a FormGroup based on the ValidatorConfig. If\nvalidatorConfigs is an empty array, will remove all validators for each\ncontrol in the formGroup.</p>\n<p>NOTE: If your formGroup contains formGroups or FormArrays, will not recursively add validators\nto child FormGroups, only top level controls</p>\n<p>const fg = FormBuilderService.convertObjToFormGroup({firstName: &#39;foo&#39;});\nconst validators: ValidatorConfig[] = [\n    {fieldName: &#39;firstName&#39;, validators: [Validators.required]}\n];\nFormBuilderService.setFormGroupValidators(validators, fg);</p>\n",
+                    "modifierKind": [
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": {
+                                "pos": 6670,
+                                "end": 6686,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "validatorConfigs"
+                            },
+                            "type": "ValidatorConfig[]",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "pos": 6664,
+                                "end": 6669,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "param"
+                            },
+                            "comment": ""
+                        },
+                        {
+                            "name": {
+                                "pos": 6698,
+                                "end": 6707,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "formGroup"
+                            },
+                            "type": "FormGroup",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "pos": 6692,
+                                "end": 6697,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "param"
+                            },
+                            "comment": ""
+                        },
+                        {
+                            "tagName": {
+                                "pos": 6713,
+                                "end": 6720,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "escapedText": "example"
+                            },
+                            "comment": "<p>const fg = FormBuilderService.convertObjToFormGroup({firstName: &#39;foo&#39;});\nconst validators: ValidatorConfig[] = [\n    {fieldName: &#39;firstName&#39;, validators: [Validators.required]}\n];\nFormBuilderService.setFormGroupValidators(validators, fg);</p>\n"
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "description": "<p>This is a class of static methods to assist working with Reactive Forms</p>\n",
+            "rawdescription": "\n\nThis is a class of static methods to assist working with Reactive Forms\n",
+            "sourceCode": "import {Injectable} from '@angular/core';\nimport {\n\tAbstractControl,\n\tAbstractControlOptions,\n\tFormArray,\n\tFormBuilder,\n\tFormControl,\n\tFormGroup,\n\tValidationErrors,\n\tValidatorFn\n} from '@angular/forms';\nimport {Logger} from '@core/services/logger/logger';\nimport {ServiceLocator} from '@core/services/service-locator';\n\n/** Interface for an invalid control */\nexport interface InvalidControl {\n\tfieldName: string;\n\tcontrol: AbstractControl;\n}\n/** Interface for invalid control with errors included */\nexport interface InvalidControlErrors extends InvalidControl {\n\terrors: ValidationErrors;\n}\n/** Interface for a ValidatorConfig object, used in setFormGroupValidators */\nexport interface ValidatorConfig {\n\tfieldName: string;\n\tvalidators: ValidatorFn[];\n}\n\nexport type FormGroupConfig = AbstractControlOptions | FormGroupObjectConfig;\nexport type FormGroupObject = {[key: string]: any};\n/**\n * Key must exist in FormGroupObject. The value of that key will be\n * an AbstractControlOptions object which will be applied to a FormControl\n */\nexport type FormGroupObjectConfig = {[key in keyof FormGroupObject]: FormGroupConfig};\nexport type FormControlType = 'FormGroup' | 'FormArray' | 'FormControl';\nexport type FormControlStatus = 'VALID' | 'INVALID' | 'DISABLED' | 'PENDING';\n\n/**\n * This is a class of static methods to assist working with Reactive Forms\n */\n@Injectable({\n\tprovidedIn: 'root'\n})\nexport class FormHelperService {\n\n\tconstructor() {}\n\n\t/**\n\t * Take an object with values and build a FormGroup from it. If that object contains\n\t * array values a FormArray will be created. If the obj contains a property that is an object\n\t * another FormGroup will be created.\n\t *\n\t * The biggest draw back to using this method is you will have to manually create validators\n\t * @param obj\n\t * @param objConfig\n\t * @example\n\t *\n\t * const someObj = {foo: 'bar', bar: 'baz', baz: [1,2], boo: {abc: 123}}\n\t * const someObjFormGroup = FormBuilderService.convertObjToFormGroup(someObj);\n\t * console.log('someObjFormGroup.controls=', someObjFormGroup.controls);\n\t * {\n\t *   foo: FormControl,\n\t *   bar: FormControl,\n\t *   baz: FormArray (controls: {0: 1 (FormControl), 1: 2 (FormControl)}),\n\t *   boo: FormGroup (controls: {abc: 123 (FormControl)})\n\t * }\n\t *\n\t * // with options\n\t * const someObj = {foo: 'bar', bar: 'baz', baz: [1,2], boo: {abc: 123}}\n\t * const someObjOptions = {foo: {updateOn: 'blur'}}\n\t * const someObjFormGroup = FormBuilderService.convertObjToFormGroup(someObj, someObjOptions);\n\t * console.log('someObjFormGroup.controls=', someObjFormGroup.controls);\n\t * {\n\t *   foo: FormControl,\n\t *   bar: FormControl,\n\t *   baz: FormArray (controls: {0: 1 (FormControl), 1: 2 (FormControl)}),\n\t *   boo: FormGroup (controls: {abc: 123 (FormControl)})\n\t * }\n\t */\n\tstatic convertObjToFormGroup(obj: FormGroupObject, objConfig?: FormGroupObjectConfig): FormGroup {\n\t\tif (obj !== null && obj !== undefined && typeof obj !== 'boolean') {\n\t\t\tlet fb = ServiceLocator.injector?.get(FormBuilder);\n\t\t\tif (!fb) {\n\t\t\t\tfb = new FormBuilder();\n\t\t\t}\n\t\t\tif (fb) {\n\t\t\t\tconst group = fb.group({});\n\t\t\t\tObject.keys(obj).forEach((key) => {\n\t\t\t\t\tconst controlConfig = objConfig ? objConfig[key] : undefined;\n\t\t\t\t\tconst keyVal = obj[key];\n\t\t\t\t\tif (Array.isArray(keyVal)) {\n\t\t\t\t\t\tconst formArr = this.convertArrayToFormArray(keyVal);\n\t\t\t\t\t\tgroup.addControl(key, formArr);\n\t\t\t\t\t} else if (keyVal instanceof Date) {\n\t\t\t\t\t\tconst dateCtl = fb.control(keyVal, controlConfig);\n\t\t\t\t\t\tgroup.addControl(key, dateCtl);\n\t\t\t\t\t} else if (keyVal !== null && typeof keyVal === 'object') { // typeof null = 'object' so take that into account\n\t\t\t\t\t\tconst childGrp = this.convertObjToFormGroup(keyVal, controlConfig as any);\n\t\t\t\t\t\tgroup.addControl(key, childGrp);\n\t\t\t\t\t} else if (typeof keyVal === 'string' || typeof keyVal === 'number' || typeof keyVal === 'boolean') {\n\t\t\t\t\t\tconst ctrl = fb.control(keyVal, controlConfig);\n\t\t\t\t\t\tgroup.addControl(key, ctrl);\n\t\t\t\t\t} else {\n\t\t\t\t\t\tconst emptyCtl = fb.control(keyVal, controlConfig);\n\t\t\t\t\t\tgroup.addControl(key, emptyCtl);\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t\treturn group;\n\t\t\t}\n\t\t}\n\t\t// throw new Error('Nothing provided to convertObjToFormGroup');\n\t\tLogger.warn('Nothing provided to convertObjToFormGroup', obj);\n\t}\n\n\t/**\n\t * Take an array of items and convert them to a FormArray. This is for an array of objects,\n\t * array of boolean will not work\n\t * @param arr\n\t * @param forCheckboxes\n\t */\n\tstatic convertArrayToFormArray(arr: any[], forCheckboxes: boolean = false): FormArray {\n\t\tlet fb = ServiceLocator.injector?.get(FormBuilder);\n\t\tif (!fb) {\n\t\t\tfb = new FormBuilder();\n\t\t}\n\t\tif (fb && !forCheckboxes) {\n\t\t\tlet valArr = [];\n\t\t\tif (arr?.length) {\n\t\t\t\tvalArr = arr.map((obj) => {\n\t\t\t\t\tif (typeof obj === 'boolean' || typeof obj === 'string' || typeof obj === 'number' || obj instanceof Date) {\n\t\t\t\t\t\treturn new FormControl(obj);\n\t\t\t\t\t} else if (obj !== null && typeof obj === 'object') {\n\t\t\t\t\t\treturn FormHelperService.convertObjToFormGroup(obj);\n\t\t\t\t\t} else if (Array.isArray(obj)) {\n\t\t\t\t\t\treturn FormHelperService.convertArrayToFormArray(obj);\n\t\t\t\t\t} else {\n\t\t\t\t\t\treturn new FormControl(obj);\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t}\n\t\t\treturn fb.array(valArr);\n\t\t} else {\n\t\t\t// todo: implement a checkbox solution to prevent ending up with an array of booleans instead of an array of objects\n\t\t}\n\t}\n\n\t/**\n\t * Get the controls in a form group as an array (not a FormArray) in order to loop through them\n\t * and do something to the individual controls. FormGroup.controls normally returns an object.\n\t * @param formGroup\n\t */\n\tstatic formGroupControlsToArray(formGroup: FormGroup): AbstractControl[] {\n\t\tconst returnVal = [];\n\t\tif (formGroup?.controls) {\n\t\t\tObject.keys(formGroup.controls).forEach((key) => {\n\t\t\t\treturnVal.push(formGroup.get(key));\n\t\t\t});\n\t\t}\n\t\treturn returnVal;\n\t}\n\n\t/**\n\t * returns just the invalid children of the provided FormGroup. If a child is an invalid FormGroup or FormArray will return\n\t * the FormGroup/FormArray and NOT it's invalid FormControls\n\t * @param formGroup\n\t */\n\tstatic getInvalidFormGroupControls(formGroup: FormGroup): InvalidControl[] {\n\t\tconst returnVal = [];\n\t\tif (formGroup?.controls) {\n\t\t\tObject.keys(formGroup.controls).forEach((key) => {\n\t\t\t\tconst ctrl = formGroup.get(key);\n\t\t\t\tif (ctrl.invalid) {\n\t\t\t\t\treturnVal.push({fieldName: key, control: ctrl});\n\t\t\t\t}\n\t\t\t});\n\t\t}\n\t\treturn returnVal;\n\t}\n\n\t/**\n\t * Sets validators on a FormGroup based on the ValidatorConfig. If\n\t * validatorConfigs is an empty array, will remove all validators for each\n\t * control in the formGroup.\n\t *\n\t * NOTE: If your formGroup contains formGroups or FormArrays, will not recursively add validators\n\t * to child FormGroups, only top level controls\n\t *\n\t * @param validatorConfigs\n\t * @param formGroup\n\t * @example\n\t *\n\t * const fg = FormBuilderService.convertObjToFormGroup({firstName: 'foo'});\n\t * const validators: ValidatorConfig[] = [\n\t * \t{fieldName: 'firstName', validators: [Validators.required]}\n\t * ];\n\t * FormBuilderService.setFormGroupValidators(validators, fg);\n\t */\n\tstatic setFormGroupValidators(validatorConfigs: ValidatorConfig[], formGroup: FormGroup) {\n\t\tconst formGroupKeys = Object.keys(formGroup?.controls || {});\n\t\tif (validatorConfigs && formGroupKeys.length) {\n\t\t\tformGroupKeys.forEach((ctrlFieldName) => {\n\t\t\t\tconst fgControl = formGroup.get(ctrlFieldName);\n\t\t\t\tconst controlValidators = validatorConfigs.find(validator => validator.fieldName === ctrlFieldName)?.validators;\n\t\t\t\tif (controlValidators?.length) {\n\t\t\t\t\tfgControl.setValidators(controlValidators);\n\t\t\t\t} else {\n\t\t\t\t\tfgControl.clearValidators();\n\t\t\t\t}\n\t\t\t});\n\t\t}else if (!validatorConfigs || !formGroup) {\n\t\t\tconst missing = !validatorConfigs\n\t\t\t\t? {arg: 'validatorConfigs', value: validatorConfigs}\n\t\t\t\t: !formGroup\n\t\t\t\t\t? {arg: 'formGroup', value: formGroup}\n\t\t\t\t\t: !validatorConfigs && !formGroup\n\t\t\t\t\t\t? {arg: 'both', value: [validatorConfigs, formGroup]}\n\t\t\t\t\t\t: {arg: 'nothing', value: undefined};\n\t\t\tconsole.warn(`[FormBuilderService.setFormGroupValidators] Missing arguments ${missing.arg} (${missing.value})`);\n\t\t}else if (!formGroupKeys.length) {\n\t\t\tconsole.warn('[FormBuilderService.setFormGroupValidators] FormGroup contain 0 controls',\n\t\t\t\tvalidatorConfigs, formGroup);\n\t\t}\n\t}\n\n\t/**\n\t * returns the invalid FormControls only. Will not return invalid FormGroups or FormArrays\n\t * @param formControl\n\t */\n\tstatic getInvalidControls(formControl: AbstractControl): InvalidControlErrors[] {\n\t\t// tslint:disable-next-line:max-line-length\n\t\t// console.log(`getInvalidControls, ${FormBuilderService.getControlName(formControl)} - ${FormBuilderService.getControlType(formControl)}`);\n\t\tlet invalidControls: InvalidControlErrors[] = [];\n\t\tif (formControl) {\n\t\t\tif ((formControl instanceof FormGroup || formControl instanceof FormArray) && formControl.invalid) {\n\t\t\t\tObject.keys(formControl.controls).forEach((key) => {\n\t\t\t\t\tconst childCtrl = formControl.get(key);\n\t\t\t\t\tconst grpInvalidControls = FormHelperService.getInvalidControls(childCtrl);\n\t\t\t\t\tinvalidControls = [...invalidControls, ...grpInvalidControls];\n\t\t\t\t});\n\t\t\t} else if (formControl.invalid) {\n\t\t\t\tinvalidControls.push({\n\t\t\t\t\tfieldName: FormHelperService.getControlName(formControl),\n\t\t\t\t\tcontrol: formControl,\n\t\t\t\t\terrors: formControl.errors\n\t\t\t\t});\n\t\t\t}\n\t\t}\n\t\treturn invalidControls;\n\t}\n\n\t/**\n\t * Get the name of an AbstractControl (i.e. FormGroup, FormArray, FormControl). If we've reached\n\t * the top of the tree (meaning the very first form control) return 'TopControl'\n\t * @param control\n\t */\n\tstatic getControlName(control: AbstractControl): string {\n\t\tconst parentControls = control.parent?.controls;\n\t\tif (parentControls) {\n\t\t\treturn Object.keys(parentControls).find(name => control === parentControls[name]);\n\t\t} else {\n\t\t\treturn 'TopControl';\n\t\t}\n\t}\n\n\t/**\n\t * Get the full path of a control from the top of the FormGroup/FormArray\n\t * @param control\n\t * @example\n\t *\n\t * // Normally you would just have the control and probably not know the path.\n\t * // This makes this example a little silly, because you already have the path\n\t * // but I think it at least shows the concept of using the function\n\t * const fg = FormHelperService.convertObjToFormGroup({foo: {bar: { baz: [{boom: 'bam'}]}}};\n\t * const ctrl = fg.get('foo.bar.baz.0.boom');\n\t * const fullPath = FormHelperService.getFullControlPath(ctrl); // ==> '.foo.bar.baz.0.bada'\n\t */\n\tstatic getFullControlPath(control: AbstractControl): string {\n\t\tlet pathItems: string[] = [FormHelperService.getControlName(control)];\n\t\tlet ancestorCtrl = control.parent;\n\t\twhile (ancestorCtrl) {\n\t\t\tpathItems.push(FormHelperService.getControlName(ancestorCtrl));\n\t\t\tancestorCtrl = ancestorCtrl.parent;\n\t\t}\n\t\tpathItems = pathItems.reverse();\n\t\tif (pathItems[0] === 'TopControl') {\n\t\t\tpathItems.shift();\n\t\t}\n\t\treturn pathItems.join('.');\n\t}\n\n\t/**\n\t * Get the type of control\n\t * @param control\n\t */\n\tstatic getControlType(control: AbstractControl): FormControlType {\n\t\tif (control instanceof FormGroup) {\n\t\t\treturn 'FormGroup';\n\t\t} else if (control instanceof FormArray) {\n\t\t\treturn 'FormArray';\n\t\t} else {\n\t\t\treturn 'FormControl';\n\t\t}\n\t}\n\n\t/**\n\t * Clones an abstract control and its validators.\n\t * Credit: https://stackoverflow.com/questions/48308414/deep-copy-of-angular-reactive-form\n\t * @param control\n\t */\n\tstatic cloneAbstractControl<T extends AbstractControl>(control: T): T {\n\t\tlet newControl: T;\n\t\tif (control instanceof FormGroup) {\n\t\t\tconst formGroup = new FormGroup({}, control.validator, control.asyncValidator);\n\t\t\tconst controls = control.controls;\n\t\t\tObject.keys(controls).forEach(key => {\n\t\t\t\tformGroup.addControl(key, FormHelperService.cloneAbstractControl(controls[key]));\n\t\t\t});\n\t\t\tnewControl = formGroup as any;\n\t\t} else if (control instanceof FormArray) {\n\t\t\tconst formArray = new FormArray([], control.validator, control.asyncValidator);\n\t\t\tcontrol.controls.forEach(formControl => formArray.push(FormHelperService.cloneAbstractControl(formControl)));\n\t\t\tnewControl = formArray as any;\n\t\t} else if (control instanceof FormControl) {\n\t\t\tnewControl = new FormControl(control.value, control.validator, control.asyncValidator) as any;\n\t\t} else {\n\t\t\tthrow new Error('Error: unexpected control type');\n\t\t}\n\t\tif (control.disabled) {\n\t\t\tnewControl.disable({emitEvent: false});\n\t\t}\n\t\treturn newControl;\n\t}\n}\n",
+            "constructorObj": {
+                "name": "constructor",
+                "description": "",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "args": [],
+                "line": 46
             },
             "type": "injectable"
         },
@@ -7675,12 +8403,12 @@
         },
         {
             "name": "HttpTransport",
-            "id": "class-HttpTransport-2cd74b35802bb26b8681acc98e06de6d345ad82090df939acc71e49455fb5af126283c5fe4cd71cd9c2035623112690dfbedc52f79d99c6dfcd70d2dc84ef491",
+            "id": "class-HttpTransport-4d68b9ff1d153b050569181643db198f8cf9df91174539f60438a47b4ef874963d0dfb9045e7cf97ed1b70697e8b9bc485c3482393ba31de6c6a84e08639d436",
             "file": "src/app/core/services/logger/http-transport.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "class",
-            "sourceCode": "import {HttpClient} from '@angular/common/http';\nimport {LogLevel} from '@core/services/logger/logger.interface';\nimport {AbstractTransport} from '@core/services/logger/abstract-transport';\nimport {LogEntry} from '@core/services/logger/log-entry';\nimport {ServiceLocator} from '@core/services/service-locator';\nimport {BehaviorSubject, throwError} from 'rxjs';\nimport {catchError} from 'rxjs/operators';\n\nexport class HttpTransport extends AbstractTransport {\n\t/**\n\t * Set to true to include the date in the logging message\n\t */\n\treadonly logWithDate = true;\n\t/**\n\t * Set to true if entries should be persisted to db\n\t */\n\treadonly shouldPersist = true;\n\t/**\n\t * Set to true if entries should notify the user\n\t */\n\treadonly shouldNotifyUser = false;\n\t/**\n\t * The log entries that will be sent to the server\n\t */\n\tlogs: BehaviorSubject<LogEntry[]> = new BehaviorSubject<LogEntry[]>([]);\n\t/**\n\t * The number of logs to hold before sending to the server\n\t */\n\tflushThreshold: number = 10;\n\t/**\n\t * The interval to flush the logs. If we never reach the flushThreshold this will\n\t * ensure the logs are sent\n\t */\n\tflushIntervalMs: number = 60000;\n\t/**\n\t * The interval method so we can clear/stop the interval\n\t */\n\tflushInterval: any;\n\n\tconstructor(level: LogLevel) {\n\t\tsuper(level);\n\t\tthis.listenToLogs();\n\t\t// Setup an interval to flush every 10 minutes (600000ms)(flushIntervalMs)\n\t\tthis.flushInterval = setInterval(() => {\n\t\t\tthis.flush();\n\t\t}, this.flushIntervalMs);\n\t}\n\n\t/**\n\t * Listen to the logs array. If we get a certain amount or reach a time\n\t * threshold then send the log entries to the backend to be persisted and\n\t * clear the array\n\t */\n\tlistenToLogs() {\n\t\tthis.logs\n\t\t\t.subscribe((logs) => {\n\t\t\t\tif (logs && logs.length && logs.length === this.flushThreshold) {\n\t\t\t\t\tthis.flush();\n\t\t\t\t}\n\t\t\t});\n\t}\n\n\t/**\n\t * Just adds the log entry to the logs array\n\t * @param logEntry\n\t * @returns {LogEntry}\n\t */\n\tlog(logEntry: LogEntry) {\n\t\t// todo: causes circular dependencies - fix may be to just add the user info server side?\n\t\t// const authService = ServiceLocator.injector.get(AuthService);\n\t\t// logEntry.user = authService.getUser();\n\t\tconst currentLogs = this.logs.value;\n\t\tif (logEntry.shouldPersist) {\n\t\t\tconst newLogs = [...currentLogs, logEntry];\n\t\t\tthis.logs.next(newLogs);\n\t\t}\n\t\treturn logEntry;\n\t}\n\n\t/**\n\t * Sends the logs array to the server\n\t */\n\tflush() {\n\t\tconst logs = Array.from(this.logs.value);\n\t\tif (logs.length > 0) {\n\t\t\tconst httpService: HttpClient = ServiceLocator.injector.get(HttpClient);\n\t\t\thttpService.post('/api/logs', logs)\n\t\t\t\t.pipe(catchError((err) => {\n\t\t\t\t\treturn throwError(err);\n\t\t\t\t}))\n\t\t\t\t.subscribe((response) => {\n\t\t\t\t\tthis.logs.next([]);\n\t\t\t\t});\n\t\t}\n\t}\n}\n",
+            "sourceCode": "import {HttpClient} from '@angular/common/http';\nimport {ApiMethod} from '@core/interfaces/api.interface';\nimport {AppState} from '@core/root-store/models/app-state.model';\nimport {HttpService} from '@core/services/http/http.service';\nimport {LogLevel} from '@core/services/logger/logger.interface';\nimport {AbstractTransport} from '@core/services/logger/abstract-transport';\nimport {LogEntry} from '@core/services/logger/log-entry';\nimport {ServiceLocator} from '@core/services/service-locator';\nimport {Store} from '@ngrx/store';\nimport {BehaviorSubject, throwError} from 'rxjs';\nimport {catchError} from 'rxjs/operators';\n\nexport class HttpTransport extends AbstractTransport {\n\t/**\n\t * Set to true to include the date in the logging message\n\t */\n\treadonly logWithDate = true;\n\t/**\n\t * Set to true if entries should be persisted to db\n\t */\n\treadonly shouldPersist = true;\n\t/**\n\t * Set to true if entries should notify the user\n\t */\n\treadonly shouldNotifyUser = false;\n\t/**\n\t * The log entries that will be sent to the server\n\t */\n\tlogs: BehaviorSubject<LogEntry[]> = new BehaviorSubject<LogEntry[]>([]);\n\t/**\n\t * The number of logs to hold before sending to the server\n\t */\n\tflushThreshold: number = 10;\n\t/**\n\t * The interval to flush the logs. If we never reach the flushThreshold this will\n\t * ensure the logs are sent\n\t */\n\tflushIntervalMs: number = 60000;\n\t/**\n\t * The interval method so we can clear/stop the interval\n\t */\n\tflushInterval: any;\n\t/**\n\t * The application state when the error occurred\n\t * @private\n\t */\n\tprivate appState;\n\tprivate storeListener;\n\n\tconstructor(level: LogLevel) {\n\t\tsuper(level);\n\t\tthis.listenToLogs();\n\t\t// Setup an interval to flush every 10 minutes (600000ms)(flushIntervalMs)\n\t\tthis.flushInterval = setInterval(() => {\n\t\t\tthis.flush();\n\t\t}, this.flushIntervalMs);\n\t}\n\n\t/**\n\t * Listen to the ngrx-store application state. Anytime it changes\n\t * update the local appState property. This is to include the application\n\t * state in error messages\n\t * @private\n\t */\n\tprivate _listenToStore() {\n\t\tServiceLocator.observableInjector\n\t\t\t.subscribe((injector) => {\n\t\t\t\tif (injector && !this.storeListener) {\n\t\t\t\t\tconst store = injector.get(Store);\n\t\t\t\t\tthis.storeListener = store.select((appState: AppState) => appState)\n\t\t\t\t\t\t.subscribe((appState) => {\n\t\t\t\t\t\t\tthis.appState = {...appState};\n\t\t\t\t\t\t});\n\t\t\t\t}\n\t\t\t});\n\t}\n\n\t/**\n\t * Listen to the logs array. If we get a certain amount or reach a time\n\t * threshold then send the log entries to the backend to be persisted and\n\t * clear the array\n\t */\n\tlistenToLogs() {\n\t\tthis.logs\n\t\t\t.subscribe((logs) => {\n\t\t\t\tif (logs && logs.length && logs.length === this.flushThreshold) {\n\t\t\t\t\tthis.flush();\n\t\t\t\t}\n\t\t\t});\n\t}\n\n\t/**\n\t * Just adds the log entry to the logs array\n\t * @param logEntry\n\t * @returns {LogEntry}\n\t */\n\tlog(logEntry: LogEntry) {\n\t\tconst currentLogs = this.logs.value;\n\t\tif (logEntry.shouldPersist) {\n\t\t\tlogEntry.params.push(this.appState);\n\t\t\tconst newLogs = [...currentLogs, logEntry];\n\t\t\tthis.logs.next(newLogs);\n\t\t}\n\t\treturn logEntry;\n\t}\n\n\t/**\n\t * Sends the logs array to the server\n\t */\n\tflush() {\n\t\tconst logs = Array.from(this.logs.value);\n\t\tif (logs.length > 0) {\n\t\t\tconst httpService = ServiceLocator.injector.get(HttpService);\n\t\t\thttpService.doRequest('/api/logs', ApiMethod.POST, logs)\n\t\t\t\t.pipe(catchError((err) => {\n\t\t\t\t\treturn throwError(err);\n\t\t\t\t}))\n\t\t\t\t.subscribe((response) => {\n\t\t\t\t\tthis.logs.next([]);\n\t\t\t\t});\n\t\t}\n\t}\n}\n",
             "constructorObj": {
                 "name": "constructor",
                 "description": "",
@@ -7694,7 +8422,7 @@
                         "deprecationMessage": ""
                     }
                 ],
-                "line": 38,
+                "line": 48,
                 "jsdoctags": [
                     {
                         "name": "level",
@@ -7709,13 +8437,47 @@
             },
             "properties": [
                 {
+                    "name": "appState",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "<p>The application state when the error occurred</p>\n",
+                    "line": 47,
+                    "rawdescription": "\n\nThe application state when the error occurred\n",
+                    "modifierKind": [
+                        121
+                    ],
+                    "jsdoctags": [
+                        {
+                            "pos": 1511,
+                            "end": 1522,
+                            "flags": 4227072,
+                            "modifierFlagsCache": 0,
+                            "transformFlags": 0,
+                            "kind": 332,
+                            "tagName": {
+                                "pos": 1512,
+                                "end": 1519,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "originalKeywordKind": 121,
+                                "escapedText": "private"
+                            },
+                            "comment": ""
+                        }
+                    ]
+                },
+                {
                     "name": "flushInterval",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "any",
                     "optional": false,
                     "description": "<p>The interval method so we can clear/stop the interval</p>\n",
-                    "line": 38,
+                    "line": 42,
                     "rawdescription": "\n\nThe interval method so we can clear/stop the interval\n"
                 },
                 {
@@ -7726,7 +8488,7 @@
                     "type": "number",
                     "optional": false,
                     "description": "<p>The interval to flush the logs. If we never reach the flushThreshold this will\nensure the logs are sent</p>\n",
-                    "line": 34,
+                    "line": 38,
                     "rawdescription": "\n\nThe interval to flush the logs. If we never reach the flushThreshold this will\nensure the logs are sent\n"
                 },
                 {
@@ -7737,7 +8499,7 @@
                     "type": "number",
                     "optional": false,
                     "description": "<p>The number of logs to hold before sending to the server</p>\n",
-                    "line": 29,
+                    "line": 33,
                     "rawdescription": "\n\nThe number of logs to hold before sending to the server\n"
                 },
                 {
@@ -7748,7 +8510,7 @@
                     "type": "BehaviorSubject<LogEntry[]>",
                     "optional": false,
                     "description": "<p>The log entries that will be sent to the server</p>\n",
-                    "line": 25,
+                    "line": 29,
                     "rawdescription": "\n\nThe log entries that will be sent to the server\n"
                 },
                 {
@@ -7759,7 +8521,7 @@
                     "type": "",
                     "optional": false,
                     "description": "<p>Set to true to include the date in the logging message</p>\n",
-                    "line": 13,
+                    "line": 17,
                     "rawdescription": "\n\nSet to true to include the date in the logging message\n",
                     "modifierKind": [
                         144
@@ -7776,7 +8538,7 @@
                     "type": "",
                     "optional": false,
                     "description": "<p>Set to true if entries should notify the user</p>\n",
-                    "line": 21,
+                    "line": 25,
                     "rawdescription": "\n\nSet to true if entries should notify the user\n",
                     "modifierKind": [
                         144
@@ -7793,7 +8555,7 @@
                     "type": "",
                     "optional": false,
                     "description": "<p>Set to true if entries should be persisted to db</p>\n",
-                    "line": 17,
+                    "line": 21,
                     "rawdescription": "\n\nSet to true if entries should be persisted to db\n",
                     "modifierKind": [
                         144
@@ -7801,6 +8563,18 @@
                     "inheritance": {
                         "file": "AbstractTransport"
                     }
+                },
+                {
+                    "name": "storeListener",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 48,
+                    "modifierKind": [
+                        121
+                    ]
                 },
                 {
                     "name": "level",
@@ -7820,12 +8594,42 @@
             ],
             "methods": [
                 {
+                    "name": "_listenToStore",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 65,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\n\nListen to the ngrx-store application state. Anytime it changes\nupdate the local appState property. This is to include the application\nstate in error messages\n",
+                    "description": "<p>Listen to the ngrx-store application state. Anytime it changes\nupdate the local appState property. This is to include the application\nstate in error messages</p>\n",
+                    "modifierKind": [
+                        121
+                    ],
+                    "jsdoctags": [
+                        {
+                            "tagName": {
+                                "pos": 1989,
+                                "end": 1996,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "originalKeywordKind": 121,
+                                "escapedText": "private"
+                            },
+                            "comment": ""
+                        }
+                    ]
+                },
+                {
                     "name": "flush",
                     "args": [],
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 83,
+                    "line": 110,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "\n\nSends the logs array to the server\n",
@@ -7837,7 +8641,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 54,
+                    "line": 83,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "\n\nListen to the logs array. If we get a certain amount or reach a time\nthreshold then send the log entries to the backend to be persisted and\nclear the array\n",
@@ -7856,7 +8660,7 @@
                     "optional": false,
                     "returnType": "LogEntry",
                     "typeParameters": [],
-                    "line": 68,
+                    "line": 97,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "\n\nJust adds the log entry to the logs array\n",
@@ -7864,8 +8668,8 @@
                     "jsdoctags": [
                         {
                             "name": {
-                                "pos": 1874,
-                                "end": 1882,
+                                "pos": 2752,
+                                "end": 2760,
                                 "flags": 4227072,
                                 "modifierFlagsCache": 0,
                                 "transformFlags": 0,
@@ -7876,8 +8680,8 @@
                             "deprecated": false,
                             "deprecationMessage": "",
                             "tagName": {
-                                "pos": 1868,
-                                "end": 1873,
+                                "pos": 2746,
+                                "end": 2751,
                                 "flags": 4227072,
                                 "modifierFlagsCache": 0,
                                 "transformFlags": 0,
@@ -7888,8 +8692,8 @@
                         },
                         {
                             "tagName": {
-                                "pos": 1888,
-                                "end": 1895,
+                                "pos": 2766,
+                                "end": 2773,
                                 "flags": 4227072,
                                 "modifierFlagsCache": 0,
                                 "transformFlags": 0,
@@ -8485,13 +9289,49 @@
         },
         {
             "name": "Logger",
-            "id": "class-Logger-be949468afd2f428c67c229f9ba2f45bad8bb437e8047fdd12d2ba725f143738223f90590345c3edb9010884afaa929d0ee383a9bcafc190c930fd52fa8e3eac",
+            "id": "class-Logger-f521b77acb0a119309b255aa779af8232151c113e6cff438ee085d1a5e23d14bf00ac5af8273f11d0ce983d21bd8ffe1c15139a0dfc286fefeb27c79dd8984e1",
             "file": "src/app/core/services/logger/logger.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "class",
-            "sourceCode": "import {LogLevel, SnackbarMessageLoggingMap} from '@core/services/logger/logger.interface';\nimport {AbstractTransport} from '@core/services/logger/abstract-transport';\nimport {ConsoleTransport} from '@core/services/logger/console-transport';\nimport {LogEntry} from '@core/services/logger/log-entry';\nimport {NotificationService} from '@core/services/notification/notification.service';\nimport {environment, LOG_LEVEL} from 'src/environments/environment';\n\n/**\n * The application logger. This is not a service and does not need to be injected in the constructor but can\n * be referenced statically.\n *\n * @example\n * Logger.log(LogLevel.debug, 'this is a message', foo);\n * Logger.log(LogLevel.info, 'this is a message');\n * Logger.debug('this is a message', foo);\n * Logger.info('this is a message');\n * Logger.error(err.message, err);\n */\nexport class Logger {\n\t/**\n\t * The application logging level. Set this to the highest logging\n\t * level you want to be used. If you look at the LogLevel enum, each level\n\t * is an integer with silly being 5 and error being 0. So setting the\n\t * LogLevel to info (2) all lower logging levels WILL also be logged (i.e. warn (1) and error (0))\n\t * but verbose (3), debug (4) and silly (5) will NOT be logged.\n\t */\n\tstatic level: LogLevel = LOG_LEVEL;\n\t/**\n\t * Array of transports. There should be a transport for every logging type you\n\t * might need\n\t */\n\tstatic transports: AbstractTransport[] = environment.production\n\t\t? [new ConsoleTransport(Logger.level, true)]\n\t\t: [new ConsoleTransport(Logger.level)];\n\n\tstatic error(message, ...optionalParams: any[]) {\n\t\tLogger.writeToLog(LogLevel.error, message, optionalParams);\n\t}\n\n\tstatic warn(message, ...optionalParams: any[]) {\n\t\tLogger.writeToLog(LogLevel.warn, message, optionalParams);\n\t}\n\n\tstatic info(message, ...optionalParams: any[]) {\n\t\tLogger.writeToLog(LogLevel.info, message, optionalParams);\n\t}\n\n\tstatic verbose(message, ...optionalParams: any[]) {\n\t\tLogger.writeToLog(LogLevel.verbose, message, optionalParams);\n\t}\n\n\tstatic debug(message, ...optionalParams: any[]) {\n\t\tLogger.writeToLog(LogLevel.debug, message, optionalParams);\n\t}\n\n\tstatic silly(message, ...optionalParams: any[]) {\n\t\tLogger.writeToLog(LogLevel.silly, message, optionalParams);\n\t}\n\n\tstatic log(level: LogLevel, message: string, ...optionalParams) {\n\t\tLogger.writeToLog(level, message, optionalParams);\n\t}\n\n\t/**\n\t * Send the log entry off to the transport. Will display or store the log entry\n\t * @param {LogLevel} level\n\t * @param {string} message\n\t * @param {any[]} optionalParams\n\t */\n\tstatic writeToLog(level: LogLevel, message: string, ...optionalParams: any[]) {\n\t\tif (Logger.shouldLog(level)) {\n\t\t\tconst logEntry = new LogEntry(level, message, ...optionalParams);\n\t\t\tLogger.transports.forEach((transport) => {\n\t\t\t\tconst loggedEntry = transport.logMessage(logEntry);\n\t\t\t\tif (loggedEntry.shouldNotifyUser) {\n\t\t\t\t\tNotificationService.showSnackbar({\n\t\t\t\t\t\tmessage: loggedEntry.message,\n\t\t\t\t\t\tmessageType: SnackbarMessageLoggingMap[level]\n\t\t\t\t\t});\n\t\t\t\t}\n\t\t\t});\n\t\t}\n\t}\n\n\t/**\n\t * Determines if a log entry should actually be logged\n\t * @param level\n\t * @returns {boolean}\n\t */\n\tstatic shouldLog(level: LogLevel) {\n\t\tlet returnVal = false;\n\t\tif (level <= Logger.level) {\n\t\t\treturnVal = true;\n\t\t}\n\t\treturn returnVal;\n\t}\n}\n",
+            "sourceCode": "import {LogLevel, SnackbarMessageLoggingMap} from '@core/services/logger/logger.interface';\nimport {AbstractTransport} from '@core/services/logger/abstract-transport';\nimport {ConsoleTransport} from '@core/services/logger/console-transport';\nimport {LogEntry} from '@core/services/logger/log-entry';\nimport {NotificationService} from '@core/services/notification/notification.service';\nimport {environment, LOG_LEVEL} from 'src/environments/environment';\n\n\n/**\n * The application logger. This is not a service and does not need to be injected in the constructor but can\n * be referenced statically.\n *\n * @example\n * Logger.log(LogLevel.debug, 'this is a message', foo);\n * Logger.log(LogLevel.info, 'this is a message');\n * Logger.debug('this is a message', foo);\n * Logger.info('this is a message');\n * Logger.error(err.message, err);\n */\nexport class Logger {\n\t/**\n\t * The application logging level. Set this to the highest logging\n\t * level you want to be used. If you look at the LogLevel enum, each level\n\t * is an integer with silly being 5 and error being 0. So setting the\n\t * LogLevel to info (2) all lower logging levels WILL also be logged (i.e. warn (1) and error (0))\n\t * but verbose (3), debug (4) and silly (5) will NOT be logged.\n\t */\n\tstatic level: LogLevel = LOG_LEVEL;\n\t/**\n\t * Define the log levels which should be sent to BigQuery\n\t * @private\n\t */\n\tprivate static httpTransportPersistLevels = [LogLevel.error];\n\t/**\n\t * Array of transports. There should be a transport for every logging type you\n\t * might need\n\t */\n\tstatic transports: AbstractTransport[] = environment.production\n\t\t? [new ConsoleTransport(Logger.level, true)]\n\t\t: [new ConsoleTransport(Logger.level)];\n\n\tprivate static getLogEntryOptions(transport: AbstractTransport, level: LogLevel, message: string, ...optionalParams: any[]): LogEntry {\n\t\tconst logEntry = new LogEntry(level, message, ...optionalParams);\n\t\tif (transport.shouldPersist && Logger.httpTransportPersistLevels.includes(level)) {\n\t\t\tlogEntry.shouldPersist = true;\n\t\t}\n\t\tlogEntry.shouldNotifyUser = transport.shouldNotifyUser;\n\t\tlogEntry.logWithDate = transport.logWithDate;\n\t\treturn logEntry;\n\t}\n\n\tstatic error(message, ...optionalParams: any[]) {\n\t\tLogger.writeToLog(LogLevel.error, message, optionalParams);\n\t}\n\n\tstatic warn(message, ...optionalParams: any[]) {\n\t\tLogger.writeToLog(LogLevel.warn, message, optionalParams);\n\t}\n\n\tstatic info(message, ...optionalParams: any[]) {\n\t\tLogger.writeToLog(LogLevel.info, message, optionalParams);\n\t}\n\n\tstatic verbose(message, ...optionalParams: any[]) {\n\t\tLogger.writeToLog(LogLevel.verbose, message, optionalParams);\n\t}\n\n\tstatic debug(message, ...optionalParams: any[]) {\n\t\tLogger.writeToLog(LogLevel.debug, message, optionalParams);\n\t}\n\n\tstatic silly(message, ...optionalParams: any[]) {\n\t\tLogger.writeToLog(LogLevel.silly, message, optionalParams);\n\t}\n\n\tstatic log(level: LogLevel, message: string, ...optionalParams) {\n\t\tLogger.writeToLog(level, message, optionalParams);\n\t}\n\n\t/**\n\t * Send the log entry off to the transport. Will display or store the log entry\n\t * @param {LogLevel} level\n\t * @param {string} message\n\t * @param {any[]} optionalParams\n\t */\n\tstatic writeToLog(level: LogLevel, message: string, ...optionalParams: any[]) {\n\t\tif (Logger.shouldLog(level)) {\n\t\t\tLogger.transports.forEach((transport) => {\n\t\t\t\tconst logEntry = Logger.getLogEntryOptions(transport, level, message, ...optionalParams);\n\t\t\t\tconst loggedEntry = transport.logMessage(logEntry);\n\t\t\t\tif (loggedEntry.shouldNotifyUser) {\n\t\t\t\t\tNotificationService.showSnackbar({\n\t\t\t\t\t\tmessage: loggedEntry.message,\n\t\t\t\t\t\tmessageType: SnackbarMessageLoggingMap[level]\n\t\t\t\t\t});\n\t\t\t\t}\n\t\t\t});\n\t\t}\n\t}\n\n\t/**\n\t * Determines if a log entry should actually be logged\n\t * @param level\n\t * @returns {boolean}\n\t */\n\tstatic shouldLog(level: LogLevel) {\n\t\treturn level <= Logger.level;\n\t}\n}\n",
             "properties": [
+                {
+                    "name": "httpTransportPersistLevels",
+                    "defaultValue": "[LogLevel.error]",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "[]",
+                    "optional": false,
+                    "description": "<p>Define the log levels which should be sent to BigQuery</p>\n",
+                    "line": 33,
+                    "rawdescription": "\n\nDefine the log levels which should be sent to BigQuery\n",
+                    "modifierKind": [
+                        121,
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "pos": 1357,
+                            "end": 1368,
+                            "flags": 4227072,
+                            "modifierFlagsCache": 0,
+                            "transformFlags": 0,
+                            "kind": 332,
+                            "tagName": {
+                                "pos": 1358,
+                                "end": 1365,
+                                "flags": 4227072,
+                                "modifierFlagsCache": 0,
+                                "transformFlags": 0,
+                                "kind": 79,
+                                "originalKeywordKind": 121,
+                                "escapedText": "private"
+                            },
+                            "comment": ""
+                        }
+                    ]
+                },
                 {
                     "name": "level",
                     "defaultValue": "LOG_LEVEL",
@@ -8500,7 +9340,7 @@
                     "type": "LogLevel",
                     "optional": false,
                     "description": "<p>The application logging level. Set this to the highest logging\nlevel you want to be used. If you look at the LogLevel enum, each level\nis an integer with silly being 5 and error being 0. So setting the\nLogLevel to info (2) all lower logging levels WILL also be logged (i.e. warn (1) and error (0))\nbut verbose (3), debug (4) and silly (5) will NOT be logged.</p>\n",
-                    "line": 27,
+                    "line": 28,
                     "rawdescription": "\n\nThe application logging level. Set this to the highest logging\nlevel you want to be used. If you look at the LogLevel enum, each level\nis an integer with silly being 5 and error being 0. So setting the\nLogLevel to info (2) all lower logging levels WILL also be logged (i.e. warn (1) and error (0))\nbut verbose (3), debug (4) and silly (5) will NOT be logged.\n",
                     "modifierKind": [
                         124
@@ -8514,7 +9354,7 @@
                     "type": "AbstractTransport[]",
                     "optional": false,
                     "description": "<p>Array of transports. There should be a transport for every logging type you\nmight need</p>\n",
-                    "line": 32,
+                    "line": 38,
                     "rawdescription": "\n\nArray of transports. There should be a transport for every logging type you\nmight need\n",
                     "modifierKind": [
                         124
@@ -8544,7 +9384,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 52,
+                    "line": 68,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -8592,7 +9432,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 36,
+                    "line": 52,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -8602,6 +9442,85 @@
                         {
                             "name": "message",
                             "type": "",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "optionalParams",
+                            "type": "any[]",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "dotDotDotToken": true,
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "getLogEntryOptions",
+                    "args": [
+                        {
+                            "name": "transport",
+                            "type": "AbstractTransport",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "level",
+                            "type": "LogLevel",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "message",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        },
+                        {
+                            "name": "optionalParams",
+                            "type": "any[]",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "dotDotDotToken": true
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "LogEntry",
+                    "typeParameters": [],
+                    "line": 42,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        121,
+                        124
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "transport",
+                            "type": "AbstractTransport",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "level",
+                            "type": "LogLevel",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        },
+                        {
+                            "name": "message",
+                            "type": "string",
                             "deprecated": false,
                             "deprecationMessage": "",
                             "tagName": {
@@ -8640,7 +9559,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 44,
+                    "line": 60,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -8694,7 +9613,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 60,
+                    "line": 76,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -8744,7 +9663,7 @@
                     "optional": false,
                     "returnType": "boolean",
                     "typeParameters": [],
-                    "line": 90,
+                    "line": 106,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "\n\nDetermines if a log entry should actually be logged\n",
@@ -8755,8 +9674,8 @@
                     "jsdoctags": [
                         {
                             "name": {
-                                "pos": 3110,
-                                "end": 3115,
+                                "pos": 3739,
+                                "end": 3744,
                                 "flags": 4227072,
                                 "modifierFlagsCache": 0,
                                 "transformFlags": 0,
@@ -8767,8 +9686,8 @@
                             "deprecated": false,
                             "deprecationMessage": "",
                             "tagName": {
-                                "pos": 3104,
-                                "end": 3109,
+                                "pos": 3733,
+                                "end": 3738,
                                 "flags": 4227072,
                                 "modifierFlagsCache": 0,
                                 "transformFlags": 0,
@@ -8779,8 +9698,8 @@
                         },
                         {
                             "tagName": {
-                                "pos": 3121,
-                                "end": 3128,
+                                "pos": 3750,
+                                "end": 3757,
                                 "flags": 4227072,
                                 "modifierFlagsCache": 0,
                                 "transformFlags": 0,
@@ -8812,7 +9731,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 56,
+                    "line": 72,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -8860,7 +9779,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 48,
+                    "line": 64,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -8908,7 +9827,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 40,
+                    "line": 56,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "modifierKind": [
@@ -8962,7 +9881,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 70,
+                    "line": 86,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "\n\nSend the log entry off to the transport. Will display or store the log entry\n",
@@ -8973,8 +9892,8 @@
                     "jsdoctags": [
                         {
                             "name": {
-                                "pos": 2482,
-                                "end": 2487,
+                                "pos": 3086,
+                                "end": 3091,
                                 "flags": 4227072,
                                 "modifierFlagsCache": 0,
                                 "transformFlags": 0,
@@ -8985,8 +9904,8 @@
                             "deprecated": false,
                             "deprecationMessage": "",
                             "tagName": {
-                                "pos": 2465,
-                                "end": 2470,
+                                "pos": 3069,
+                                "end": 3074,
                                 "flags": 4227072,
                                 "modifierFlagsCache": 0,
                                 "transformFlags": 0,
@@ -8995,22 +9914,22 @@
                             },
                             "comment": "",
                             "typeExpression": {
-                                "pos": 2471,
-                                "end": 2481,
+                                "pos": 3075,
+                                "end": 3085,
                                 "flags": 4227072,
                                 "modifierFlagsCache": 0,
                                 "transformFlags": 0,
                                 "kind": 307,
                                 "type": {
-                                    "pos": 2472,
-                                    "end": 2480,
+                                    "pos": 3076,
+                                    "end": 3084,
                                     "flags": 4194304,
                                     "modifierFlagsCache": 0,
                                     "transformFlags": 1,
                                     "kind": 177,
                                     "typeName": {
-                                        "pos": 2472,
-                                        "end": 2480,
+                                        "pos": 3076,
+                                        "end": 3084,
                                         "flags": 4194304,
                                         "modifierFlagsCache": 0,
                                         "transformFlags": 0,
@@ -9022,8 +9941,8 @@
                         },
                         {
                             "name": {
-                                "pos": 2508,
-                                "end": 2515,
+                                "pos": 3112,
+                                "end": 3119,
                                 "flags": 4227072,
                                 "modifierFlagsCache": 0,
                                 "transformFlags": 0,
@@ -9034,8 +9953,8 @@
                             "deprecated": false,
                             "deprecationMessage": "",
                             "tagName": {
-                                "pos": 2493,
-                                "end": 2498,
+                                "pos": 3097,
+                                "end": 3102,
                                 "flags": 4227072,
                                 "modifierFlagsCache": 0,
                                 "transformFlags": 0,
@@ -9044,15 +9963,15 @@
                             },
                             "comment": "",
                             "typeExpression": {
-                                "pos": 2499,
-                                "end": 2507,
+                                "pos": 3103,
+                                "end": 3111,
                                 "flags": 4227072,
                                 "modifierFlagsCache": 0,
                                 "transformFlags": 0,
                                 "kind": 307,
                                 "type": {
-                                    "pos": 2500,
-                                    "end": 2506,
+                                    "pos": 3104,
+                                    "end": 3110,
                                     "flags": 4194304,
                                     "modifierFlagsCache": 0,
                                     "transformFlags": 1,
@@ -9062,8 +9981,8 @@
                         },
                         {
                             "name": {
-                                "pos": 2535,
-                                "end": 2549,
+                                "pos": 3139,
+                                "end": 3153,
                                 "flags": 4227072,
                                 "modifierFlagsCache": 0,
                                 "transformFlags": 0,
@@ -9075,8 +9994,8 @@
                             "deprecationMessage": "",
                             "dotDotDotToken": true,
                             "tagName": {
-                                "pos": 2521,
-                                "end": 2526,
+                                "pos": 3125,
+                                "end": 3130,
                                 "flags": 4227072,
                                 "modifierFlagsCache": 0,
                                 "transformFlags": 0,
@@ -9085,22 +10004,22 @@
                             },
                             "comment": "",
                             "typeExpression": {
-                                "pos": 2527,
-                                "end": 2534,
+                                "pos": 3131,
+                                "end": 3138,
                                 "flags": 4227072,
                                 "modifierFlagsCache": 0,
                                 "transformFlags": 0,
                                 "kind": 307,
                                 "type": {
-                                    "pos": 2528,
-                                    "end": 2533,
+                                    "pos": 3132,
+                                    "end": 3137,
                                     "flags": 4194304,
                                     "modifierFlagsCache": 0,
                                     "transformFlags": 1,
                                     "kind": 182,
                                     "elementType": {
-                                        "pos": 2528,
-                                        "end": 2531,
+                                        "pos": 3132,
+                                        "end": 3135,
                                         "flags": 4194304,
                                         "modifierFlagsCache": 0,
                                         "transformFlags": 1,
@@ -17187,6 +18106,61 @@
                 "kind": 177
             },
             {
+                "name": "FormControlStatus",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "\"VALID\" | \"INVALID\" | \"DISABLED\" | \"PENDING\"",
+                "file": "src/app/shared/services/form-helper.service.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 186
+            },
+            {
+                "name": "FormControlType",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "\"FormGroup\" | \"FormArray\" | \"FormControl\"",
+                "file": "src/app/shared/services/form-helper.service.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 186
+            },
+            {
+                "name": "FormGroupConfig",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "AbstractControlOptions | FormGroupObjectConfig",
+                "file": "src/app/shared/services/form-helper.service.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 186
+            },
+            {
+                "name": "FormGroupObject",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "literal type",
+                "file": "src/app/shared/services/form-helper.service.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "",
+                "kind": 181
+            },
+            {
+                "name": "FormGroupObjectConfig",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "rawtype": "",
+                "file": "src/app/shared/services/form-helper.service.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "description": "<p>Key must exist in FormGroupObject. The value of that key will be\nan AbstractControlOptions object which will be applied to a FormControl</p>\n",
+                "kind": 194
+            },
+            {
                 "name": "iso_date",
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
@@ -19056,6 +20030,63 @@
                     "kind": 146
                 }
             ],
+            "src/app/shared/services/form-helper.service.ts": [
+                {
+                    "name": "FormControlStatus",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "\"VALID\" | \"INVALID\" | \"DISABLED\" | \"PENDING\"",
+                    "file": "src/app/shared/services/form-helper.service.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 186
+                },
+                {
+                    "name": "FormControlType",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "\"FormGroup\" | \"FormArray\" | \"FormControl\"",
+                    "file": "src/app/shared/services/form-helper.service.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 186
+                },
+                {
+                    "name": "FormGroupConfig",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "AbstractControlOptions | FormGroupObjectConfig",
+                    "file": "src/app/shared/services/form-helper.service.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 186
+                },
+                {
+                    "name": "FormGroupObject",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "literal type",
+                    "file": "src/app/shared/services/form-helper.service.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "",
+                    "kind": 181
+                },
+                {
+                    "name": "FormGroupObjectConfig",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "rawtype": "",
+                    "file": "src/app/shared/services/form-helper.service.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "description": "<p>Key must exist in FormGroupObject. The value of that key will be\nan AbstractControlOptions object which will be applied to a FormControl</p>\n",
+                    "kind": 194
+                }
+            ],
             "src/app/core/root-store/loading/loading.action.ts": [
                 {
                     "name": "LoadingAction",
@@ -20181,8 +21212,8 @@
                 "type": "class",
                 "linktype": "classe",
                 "name": "HttpTransport",
-                "coveragePercent": 80,
-                "coverageCount": "12/15",
+                "coveragePercent": 77,
+                "coverageCount": "14/18",
                 "status": "very-good"
             },
             {
@@ -20219,8 +21250,8 @@
                 "type": "class",
                 "linktype": "classe",
                 "name": "Logger",
-                "coveragePercent": 41,
-                "coverageCount": "5/12",
+                "coveragePercent": 42,
+                "coverageCount": "6/14",
                 "status": "medium"
             },
             {
@@ -20693,6 +21724,42 @@
                 "coveragePercent": 100,
                 "coverageCount": "1/1",
                 "status": "very-good"
+            },
+            {
+                "filePath": "src/app/shared/services/form-helper.service.ts",
+                "type": "injectable",
+                "linktype": "injectable",
+                "name": "FormHelperService",
+                "coveragePercent": 91,
+                "coverageCount": "11/12",
+                "status": "very-good"
+            },
+            {
+                "filePath": "src/app/shared/services/form-helper.service.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "InvalidControl",
+                "coveragePercent": 33,
+                "coverageCount": "1/3",
+                "status": "medium"
+            },
+            {
+                "filePath": "src/app/shared/services/form-helper.service.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "InvalidControlErrors",
+                "coveragePercent": 50,
+                "coverageCount": "1/2",
+                "status": "medium"
+            },
+            {
+                "filePath": "src/app/shared/services/form-helper.service.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "ValidatorConfig",
+                "coveragePercent": 33,
+                "coverageCount": "1/3",
+                "status": "medium"
             },
             {
                 "filePath": "src/app/shared/shared.module.ts",

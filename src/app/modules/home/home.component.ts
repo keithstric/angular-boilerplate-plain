@@ -2,6 +2,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormGroup, Validators} from '@angular/forms';
 import {ApiMethod} from '@core/interfaces/api.interface';
 import {HttpService} from '@core/services/http/http.service';
+import {LocalStorageTypes} from '@core/services/local-storage/local-storage.interface';
+import {LocalStorageService} from '@core/services/local-storage/local-storage.service';
 import {Logger} from '@core/services/logger/logger';
 import {NotificationService} from '@core/services/notification/notification.service';
 import {LayoutService} from '@layout/services/layout/layout.service';
@@ -59,15 +61,19 @@ export class HomeComponent implements OnInit, OnDestroy {
 	getRandomData() {
 		this._http.doRequest('https://pokeapi.co/api/v2/pokemon', ApiMethod.GET)
 			.subscribe((response) => {
-				Logger.info('response from https://pokeapi.co/api/v2/pokemon', response);
+				Logger.debug('[button click handler] response from request to https://pokeapi.co/api/v2/pokemon', response);
 			});
 	}
 
 	getSingleData() {
 		this._http.doRequest('https://pokeapi.co/api/v2/pokemon/1/', ApiMethod.GET)
 			.subscribe((response) => {
-				Logger.info('response from https://pokeapi.co/api/v2/pokemon/1', response);
+				Logger.debug('[button click handler] response from request to https://pokeapi.co/api/v2/pokemon/1', response);
 			});
+	}
+
+	clearSessionStorage() {
+		LocalStorageService.removeItem(LocalStorageTypes.SESSION, 'https://pokeapi.co/api/v2/pokemon/1/');
 	}
 
 	onToggleHeaderClick() {

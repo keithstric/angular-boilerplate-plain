@@ -36,12 +36,15 @@ export class HttpRequestInterceptor implements HttpRequestInterceptor {
 		if (request.method === 'GET') {
 			cachedResponse = this._cache.get(request);
 			if (cachedResponse) {
-				Logger.debug(`Response from cache for ${request.urlWithParams}`, cachedResponse);
+				Logger.debug(`[HttpRequestInterceptor.intercept] Response from cache for ${request.urlWithParams}`, cachedResponse);
+				this._loading.setLoading(false, request);
+				// Just return cached response and DO NOT make a network request
+				return of<HttpEvent<any>>(cachedResponse);
 			}
 		}else if (request.method === 'POST' || request.method === 'PUT' || request.method === 'PATCH' || request.method === 'DELETE') {
 			const removedFromCache = this._cache.delete(request);
 			if (removedFromCache) {
-				Logger.debug(`Cleared ${request.urlWithParams} from the cache`);
+				Logger.debug(`[HttpRequestInterceptor.intercept] Cleared ${request.urlWithParams} from the cache`);
 			}
 		}
 		return next.handle(request)

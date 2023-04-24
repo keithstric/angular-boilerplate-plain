@@ -20,7 +20,7 @@ export class HttpCacheService implements HttpCache {
 	cachableRoutes = CachableRoutePatterns;
 
 	constructor() {
-		Logger.debug(`HttpCacheService constructed for ${Object.keys(this.cachableRoutes).join(',\n')}`);
+		Logger.debug(`HttpCacheService constructed for:\n ${Object.keys(this.cachableRoutes).join(',\n')}`);
 	}
 
 	/**
@@ -28,12 +28,9 @@ export class HttpCacheService implements HttpCache {
 	 * @param req
 	 */
 	get(req: HttpRequest<any>): HttpResponse<any> {
-		const cachedItem = this.shouldCacheToSessionStorage(req.urlWithParams)
+		return this.shouldCacheToSessionStorage(req.urlWithParams)
 			? LocalStorageService.getItem(LocalStorageTypes.SESSION, req.urlWithParams)
 			: this.cache[req.urlWithParams];
-		if (cachedItem) {
-			return cachedItem;
-		}
 	}
 
 	/**

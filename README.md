@@ -127,17 +127,30 @@ To change the displayed header/footer/sidebar include the `LayoutService` in you
 
 ### Caveat:
 
-Since the `LayoutService` is a singleton, changing these layout areas does persist between route changes. So you will need to reset the header in `ngOnDestroy` or in the `ngOnInit` of the target page.
+Since the `LayoutService` is a singleton, changing these layout areas does persist between route changes. So you will need to reset the layout area in `ngOnDestroy` or in the `ngOnInit` of the target page.
 
 Example:
 
 ```typescript
+origHeader: any;
+origFooter: any;
+origSidebar: any;
+
 constructor(private _layout: LayoutService) {}
 
 ngOnInit() {
+	this.origHeader = this._layout.headerSource.value;
+	this.origFooter = this._layout.footerSource.value;
+	this.origSidebar = this._layout.sidebarSource.value;
 	this._layout.setHeader(CustomHeaderComponent);
 	this._layout.setFooter(CustomFooterComponent);
 	this._layout.setSidebar(CustomSidebarComponent);
+}
+
+ngOnDestroy() {
+	this._layout.setHeader(this.origHeader);
+	this._layout.setFooter(this.origFooter);
+	this._layout.setSidebar(this.origSidebar);
 }
 ```
 

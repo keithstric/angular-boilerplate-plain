@@ -1,25 +1,30 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormGroup, Validators} from '@angular/forms';
 import {ApiMethod} from '@core/interfaces/api.interface';
 import {HttpService} from '@core/services/http/http.service';
 import {Logger} from '@core/services/logger/logger';
 import {NotificationService} from '@core/services/notification/notification.service';
+import {LayoutService} from '@layout/services/layout/layout.service';
+import {HomeHeaderComponent} from '@modules/home/components/home-header/home-header.component';
 import {SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.interface';
 import {FormHelperService} from '@shared/services/form-helper/form-helper.service';
-
 
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 	charCounterForm: FormGroup;
+	origHeaderComponent: any;
+
 	constructor(
-		private _http: HttpService
+		private _http: HttpService,
+		private _layout: LayoutService
 	) {}
 
 	ngOnInit(): void {
+		this.origHeaderComponent = this._layout.headerSource.value;
 		this.charCounterForm = FormHelperService.convertObjToFormGroup({
 			up: '',
 			down: ''
@@ -38,6 +43,10 @@ export class HomeComponent implements OnInit {
 			messageType: SnackbarMessageTypes.SUCCESS
 		});
 		Logger.info(`Welcome to angular-boilerplate-plain logger`, 'string param', {foo: 'bar', baz: 'boo'}, ['foo', 'bar']);
+	}
+
+	ngOnDestroy() {
+		this._layout.setHeader(this.origHeaderComponent);
 	}
 
 	showSnackbar() {
@@ -61,4 +70,11 @@ export class HomeComponent implements OnInit {
 			});
 	}
 
+	onToggleHeaderClick() {
+		if (this._layout.headerSource.value.name === 'SiteHeaderComponent') {
+			this._layout.setHeader(HomeHeaderComponent);
+		}else{
+			this._layout.setHeader(this.origHeaderComponent);
+		}
+	}
 }

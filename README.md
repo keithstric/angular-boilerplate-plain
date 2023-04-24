@@ -35,7 +35,6 @@ The folder structure of this project was inspired by [this video](https://www.yo
 * Lazy loading of feature modules
 * HTTP Route cache
 * [compodoc](https://compodoc.app/) implementation
-* [Storybook 6.1.10](https://storybook.js.org) already setup and working
 
 ## Getting Started
 
@@ -62,7 +61,6 @@ Be sure to remove the .git directory and add it to your source control.
 * `npm run lint` - Execute lint testing
 * `npm run compodoc` - Generate [compodoc documentation](https://compodoc.app/)
 * `npm run start-dist-server` - Run `build` then start an [http-server](https://www.npmjs.com/package/http-server) pointed to the `dist` directory
-* `npm run storybook` - Start the [storybook](https://storybook.js.org) application
 
 ## Configure for _your_ use case
 
@@ -119,6 +117,28 @@ const layoutComponents = [SiteHeaderComponent];
 	delarations: [...layoutComponents],
 	exports: [...layoutComponents]
 })
+```
+
+## Using Dynamic Header/Footer/Sidebar
+
+You may need to display different header, footer and/or sidebar as a user navigates your application. This can be accomplished via the `LayoutService` which provides helper methods to set the layout area appropriately.
+
+To change the displayed header/footer/sidebar include the `LayoutService` in your component as an injected dependency. This functionality can be included in a route listener, button click or wherever you like as the change is immediate.
+
+### Caveat:
+
+Since the `LayoutService` is a singleton, changing these layout areas does persist between route changes. So you will need to reset the header in `ngOnDestroy` or in the `ngOnInit` of the target page.
+
+Example:
+
+```typescript
+constructor(private _layout: LayoutService) {}
+
+ngOnInit() {
+	this._layout.setHeader(CustomHeaderComponent);
+	this._layout.setFooter(CustomFooterComponent);
+	this._layout.setSidebar(CustomSidebarComponent);
+}
 ```
 
 ## Naming Conventions

@@ -52,7 +52,7 @@ export class RouterStateService {
 	}
 
 	/**
-	 * Clean up the history items. We want want to only keep what is necessary.
+	 * Clean up the history items. We want to only keep what is necessary.
 	 * Once we get 27 items in any of the history arrays we want to remove the first
 	 * 25 items leaving the current and previous history items
 	 */

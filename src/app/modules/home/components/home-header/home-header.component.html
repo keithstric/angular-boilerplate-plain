@@ -1,0 +1,22 @@
+<div class="site-header-container flex-row">
+	<a routerLink="/" class="title">Custom Home Page Header</a>
+	<span class="spacer"></span>
+	<a
+		routerLink="/about"
+		class="header-link"
+		[class.active]="active === 'about'">
+		About
+	</a>
+	<a
+		routerLink="/features"
+		class="header-link"
+		[class.active]="active === 'features'">
+		Features
+	</a>
+	<a class="header-link" href="https://github.com/keithstric/angular-boilerplate-plain" target="_blank">
+		Repository
+	</a>
+	<a class="userIcon" [routerLink]="user ? '/auth/user' : '/auth/login'">
+		<app-user-avatar class="small"></app-user-avatar>
+	</a>
+</div>

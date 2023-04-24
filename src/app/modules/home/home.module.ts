@@ -4,13 +4,15 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {SharedModule} from '@shared/shared.module';
 import {HomeComponent} from './home.component';
+import { HomeHeaderComponent } from './components/home-header/home-header.component';
 
 /**
  * The HomeModule
  */
 @NgModule({
 	declarations: [
-		HomeComponent
+		HomeComponent,
+  HomeHeaderComponent
 	],
 	imports: [
 		CommonModule,

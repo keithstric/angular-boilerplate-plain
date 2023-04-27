@@ -9,7 +9,11 @@ import {NotificationService} from '@core/services/notification/notification.serv
 import {LayoutService} from '@layout/services/layout/layout.service';
 import {HomeHeaderComponent} from '@modules/home/components/home-header/home-header.component';
 import {SnackbarMessageTypes} from '@shared/components/snack-bar/snack-bar.interface';
-import {FormHelperService} from '@shared/services/form-helper/form-helper.service';
+import {
+	FormGroupDefinition,
+	FormGroupObjectConfig,
+	FormHelperService
+} from '@shared/services/form-helper/form-helper.service';
 
 @Component({
 	selector: 'app-home',
@@ -23,6 +27,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 		firstName: 'Keith',
 		lastName: 'Strickland',
 		email: 'keithstric@gmail.com',
+		gender: 'male',
 		address: {
 			address1: '123 abc way',
 			city: 'Douglasville',
@@ -31,6 +36,13 @@ export class HomeComponent implements OnInit, OnDestroy {
 		},
 		aliases: ['Strick', 'keithstric', 'Thompson', 'Some Other Guy']
 	};
+	userFormGroupConfig: FormGroupObjectConfig = {
+		gender: {
+			fieldType: 'select',
+			options: ['male', 'female', 'other']
+		}
+	};
+	formGroupDef: FormGroupDefinition = {formGroupObject: this.user, formGroupConfig: this.userFormGroupConfig};
 
 	constructor(
 		private _http: HttpService,

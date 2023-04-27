@@ -1,1 +1,18 @@
-<p>dynamic-form works!</p>
+<div class="form-container" [formGroup]="formGroup">
+	<ng-container [ngTemplateOutlet]="formGroupTemp" [ngTemplateOutletContext]="{$implicit: formGroup}"></ng-container>
+</div>
+
+<ng-template #formGroupTemp let-fg>
+	<div class="form-field" *ngFor="let ctrl of getControlsArray(fg)">
+		<label>{{getFieldLabel(ctrl) | titlecase}}</label>
+		<div [ngSwitch]="getFieldType(ctrl)">
+			<input *ngSwitchCase="'text'" type="text" class="form-control" [formControl]="ctrl" />
+			<input *ngSwitchCase="'number'" type="number" class="form-control" [formControl]="ctrl" />
+			<textarea *ngSwitchCase="'textarea'" class="form-control" [formControl]="ctrl"></textarea>
+			<select *ngSwitchCase="'select'" class="form-control" [formControl]="ctrl">
+				<option *ngFor="let option of getSelectOptions(ctrl)">{{option}}</option>
+			</select>
+			<ng-container [ngTemplateOutlet]="formGroupTemp" [ngTemplateOutletContext]="{$implicit: ctrl}"></ng-container>
+		</div>
+	</div>
+</ng-template>

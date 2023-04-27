@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
 import {Logger} from '@core/services/logger/logger';
 import {
 	FormGroupDefinition,
@@ -41,6 +41,37 @@ export class DynamicFormComponent implements OnInit {
 			this.formGroupDefinition.formGroupObject,
 			this.formGroupDefinition.formGroupConfig
 		);
+	}
+
+	getFieldName(control: AbstractControl) {
+		return FormHelperService.getControlName(control);
+	}
+
+	getFieldLabel(control: AbstractControl) {
+		const fieldName = FormHelperService.getControlName(control);
+		const fieldLabel = this.formGroupDefinition?.formGroupConfig[fieldName]?.fieldLabel;
+		return fieldLabel ? fieldLabel : fieldName;
+	}
+
+	getFieldType(control: AbstractControl) {
+		const fieldName = FormHelperService.getControlName(control);
+		let fieldType: 'number' | 'text' | 'select' | 'textarea' | 'object' | 'array' = this.formGroupDefinition?.formGroupConfig[fieldName]?.fieldType;
+		if (control instanceof FormGroup) {
+			fieldType = 'object';
+		}else if (control instanceof FormArray) {
+			fieldType = 'array';
+		}
+		return fieldType || 'text';
+	}
+
+	getSelectOptions(control: AbstractControl) {
+		const fieldName = FormHelperService.getControlName(control);
+		const options = this.formGroupDefinition?.formGroupConfig[fieldName]?.options;
+		return options || [];
+	}
+
+	getControlsArray(formGroup: FormGroup) {
+		return FormHelperService.formGroupControlsToArray(formGroup);
 	}
 
 }

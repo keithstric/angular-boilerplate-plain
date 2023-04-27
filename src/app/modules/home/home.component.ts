@@ -19,6 +19,18 @@ import {FormHelperService} from '@shared/services/form-helper/form-helper.servic
 export class HomeComponent implements OnInit, OnDestroy {
 	charCounterForm: FormGroup;
 	origHeaderComponent: any;
+	user = {
+		firstName: 'Keith',
+		lastName: 'Strickland',
+		email: 'keithstric@gmail.com',
+		address: {
+			address1: '123 abc way',
+			city: 'Douglasville',
+			state: 'GA',
+			zip: '30134'
+		},
+		aliases: ['Strick', 'keithstric', 'Thompson', 'Some Other Guy']
+	};
 
 	constructor(
 		private _http: HttpService,

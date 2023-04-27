@@ -29,6 +29,8 @@ export interface ValidatorConfig {
 
 export type FormGroupConfig = AbstractControlOptions | FormGroupObjectConfig;
 export type FormGroupObject = {[key: string]: any};
+export type FormGroupDefinition = {formGroupObject: FormGroupObject, formGroupConfig: FormGroupObjectConfig};
+
 /**
  * Key must exist in FormGroupObject. The value of that key will be
  * an AbstractControlOptions object which will be applied to a FormControl

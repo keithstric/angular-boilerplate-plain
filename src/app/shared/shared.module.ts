@@ -11,6 +11,7 @@ import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.
 import { SnackBarComponent } from './components/snack-bar/snack-bar.component';
 import { ViewRefDirective } from './directives/view-ref.directive';
 import { CharacterCounterComponent } from './components/character-counter/character-counter.component';
+import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 
 const sharedComponents = [
 	CardComponent,
@@ -34,7 +35,8 @@ const sharedPipes = [
 		...sharedDirectives,
 		...sharedPipes,
 		SafeHtmlPipe,
-		ViewRefDirective
+		ViewRefDirective,
+  DynamicFormComponent
 	],
 	imports: [
 		CommonModule,
@@ -50,7 +52,8 @@ const sharedPipes = [
 		...sharedComponents,
 		...sharedPipes,
 		FormsModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		DynamicFormComponent
 	],
 	entryComponents: [SnackBarComponent]
 })

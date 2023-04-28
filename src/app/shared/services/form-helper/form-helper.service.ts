@@ -36,10 +36,12 @@ export type FormGroupDefinition = {formGroupObject: FormGroupObject, formGroupCo
  * an AbstractControlOptions object which will be applied to a FormControl
  */
 export type FormGroupObjectConfig = {[key in keyof FormGroupObject]: AbstractControlOptions & {
-	fieldType?: 'text' | 'number' | 'select' | 'textarea',
+	fieldType?: FormFieldType,
 	fieldLabel?: string,
-	options?: string[]
+	options?: string[],
+	fieldLabelLocation?: 'start' | 'end'
 }};
+export type FormFieldType = 'text' | 'number' | 'select' | 'textarea' | 'object' | 'array' | 'email' | 'radio' | 'checkbox';
 export type FormControlType = 'FormGroup' | 'FormArray' | 'FormControl';
 export type FormControlStatus = 'VALID' | 'INVALID' | 'DISABLED' | 'PENDING';
 

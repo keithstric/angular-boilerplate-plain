@@ -45,6 +45,17 @@
 		</form>
 	</div>
 	<div class="section">
+		<h2>Dynamic Form</h2>
+		<div class="form-data-container flex-row">
+			<div>
+				<h4>Here is the starting form value</h4>
+				<pre>{{user | json}}</pre>
+			</div>
+			<div>
+				<h4>Here is the form definition</h4>
+				<pre>{{userFormGroupConfig | json}}</pre>
+			</div>
+		</div>
 		<app-dynamic-form [formGroupDefinition]="formGroupDef"></app-dynamic-form>
 	</div>
 	<div class="section">

@@ -24,22 +24,29 @@ export class HomeComponent implements OnInit, OnDestroy {
 	charCounterForm: FormGroup;
 	origHeaderComponent: any;
 	user = {
-		firstName: 'Keith',
-		lastName: 'Strickland',
-		email: 'keithstric@gmail.com',
+		firstName: 'John',
+		lastName: undefined,
+		email: 'john@unknown.com',
 		gender: 'male',
+		age: 35,
+		subscriber: 'Yes',
 		address: {
 			address1: '123 abc way',
-			city: 'Douglasville',
+			city: 'Imaginary',
 			state: 'GA',
 			zip: '30134'
 		},
-		aliases: ['Strick', 'keithstric', 'Thompson', 'Some Other Guy']
+		aliases: ['foo', 'bar', 'baz', {aliasFN: 'boom', aliasLN: 'Jordan'}]
 	};
 	userFormGroupConfig: FormGroupObjectConfig = {
 		gender: {
 			fieldType: 'select',
-			options: ['male', 'female', 'other']
+			options: ['Male|male', 'Female|female', 'Other|other']
+		},
+		subscriber: {
+			fieldType: 'radio',
+			fieldLabelLocation: 'end',
+			options: ['Yes|yes', 'No|no']
 		}
 	};
 	formGroupDef: FormGroupDefinition = {formGroupObject: this.user, formGroupConfig: this.userFormGroupConfig};

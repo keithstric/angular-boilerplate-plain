@@ -1,11 +1,14 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {AbstractControl, FormArray, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
 import {Logger} from '@core/services/logger/logger';
 import {
+	FormFieldType,
 	FormGroupDefinition,
 	FormGroupObject,
 	FormHelperService
 } from '@shared/services/form-helper/form-helper.service';
+
+export type SelectOptions = {value: any, label: string};
 
 @Component({
 	selector: 'app-dynamic-form',
@@ -55,23 +58,36 @@ export class DynamicFormComponent implements OnInit {
 
 	getFieldType(control: AbstractControl) {
 		const fieldName = FormHelperService.getControlName(control);
-		let fieldType: 'number' | 'text' | 'select' | 'textarea' | 'object' | 'array' = this.formGroupDefinition?.formGroupConfig[fieldName]?.fieldType;
+		let fieldType: FormFieldType = this.formGroupDefinition?.formGroupConfig[fieldName]?.fieldType || 'text';
 		if (control instanceof FormGroup) {
 			fieldType = 'object';
 		}else if (control instanceof FormArray) {
 			fieldType = 'array';
+		}else if (control.value && typeof control.value === 'number') {
+			fieldType = 'number';
 		}
-		return fieldType || 'text';
+		return fieldType;
 	}
 
-	getSelectOptions(control: AbstractControl) {
+	getFieldOptions(control: AbstractControl): SelectOptions[] {
 		const fieldName = FormHelperService.getControlName(control);
-		const options = this.formGroupDefinition?.formGroupConfig[fieldName]?.options;
+		const options = this.formGroupDefinition?.formGroupConfig[fieldName]?.options.map((option) => {
+			const selectOption = option.split('|');
+			if (selectOption.length === 2) {
+				return {value: selectOption[0], label: selectOption[1]};
+			}
+			return {value: selectOption[0], label: selectOption[0]};
+		});
 		return options || [];
 	}
 
 	getControlsArray(formGroup: FormGroup) {
 		return FormHelperService.formGroupControlsToArray(formGroup);
+	}
+
+	getFieldLabelLocation(control: AbstractControl) {
+		const fieldName = FormHelperService.getControlName(control);
+		return this.formGroupDefinition?.formGroupConfig[fieldName]?.fieldLabelLocation || 'end';
 	}
 
 }

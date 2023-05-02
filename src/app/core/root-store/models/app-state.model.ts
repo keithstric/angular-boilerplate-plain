@@ -1,5 +1,6 @@
 import {Params} from '@angular/router';
 import {User} from '@core/models/user.model';
+import {IFormsState} from '@core/root-store/forms';
 import {RouterReducerState} from '@ngrx/router-store';
 
 export interface iStateItem {
@@ -23,6 +24,7 @@ export interface AppState {
 	readonly user: iUserState | null;
 	readonly loading: boolean | false;
 	readonly router: RouterReducerState<RouterStateUrl>;
+	readonly forms: IFormsState | null; // for demo purposes only
 }
 
 

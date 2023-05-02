@@ -12,7 +12,7 @@ import { HomeHeaderComponent } from './components/home-header/home-header.compon
 @NgModule({
 	declarations: [
 		HomeComponent,
-  HomeHeaderComponent
+  	HomeHeaderComponent
 	],
 	imports: [
 		CommonModule,

@@ -4,6 +4,7 @@ import {AppState, iUserState, RouterStateUrl} from '@core/root-store/models/app-
 import * as fromRouter from '@ngrx/router-store';
 import * as fromUser from '@core/root-store/user';
 import * as fromLoading from '@core/root-store/loading';
+import * as fromForms from '@core/root-store/forms';
 import {ActionReducerMap, createFeatureSelector, createSelector} from '@ngrx/store';
 
 /**
@@ -12,7 +13,8 @@ import {ActionReducerMap, createFeatureSelector, createSelector} from '@ngrx/sto
 export const reducers: ActionReducerMap<AppState> = {
 	user: fromUser.UserReducer,
 	loading: fromLoading.LoadingReducer,
-	router: fromRouter.routerReducer
+	router: fromRouter.routerReducer,
+	forms: fromForms.formsReducer
 };
 
 // root feature selectors

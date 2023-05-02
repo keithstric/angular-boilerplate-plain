@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
 import {Logger} from '@core/services/logger/logger';
+import {Store} from '@ngrx/store';
 import {
 	FormFieldType,
 	FormGroupDefinition,
@@ -18,9 +19,10 @@ export type SelectOptions = {value: any, label: string};
 export class DynamicFormComponent implements OnInit {
 	@Input() formGroupValue?: FormGroupObject;
 	@Input() formGroupDefinition?: FormGroupDefinition;
+	@Input() formStatePath: string = 'demo';
 	formGroup: FormGroup;
 
-	constructor() {	}
+	constructor(private store: Store) {	}
 
 	ngOnInit(): void {
 		if (!this.formGroupValue && !this.formGroupDefinition) {

@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormBuilder, FormGroupDirective, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SnackBarRef} from '@shared/components/snack-bar/snack-bar.ref';
 import {UserAvatarComponent} from '@shared/components/user-avatar/user-avatar.component';
 import {FileDnDDirective} from '@shared/directives/file-dn-d.directive';
@@ -12,17 +12,21 @@ import { SnackBarComponent } from './components/snack-bar/snack-bar.component';
 import { ViewRefDirective } from './directives/view-ref.directive';
 import { CharacterCounterComponent } from './components/character-counter/character-counter.component';
 import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
+import { ConnectStoreFormDirective } from 'src/app/shared/directives/connect-store-form.directive';
 
 const sharedComponents = [
 	CardComponent,
 	CharacterCounterComponent,
 	ConfirmModalComponent,
+	DynamicFormComponent,
 	SnackBarComponent,
 	UserAvatarComponent,
 ];
 
 const sharedDirectives = [
-	FileDnDDirective
+	ConnectStoreFormDirective,
+	FileDnDDirective,
+	ViewRefDirective
 ];
 
 const sharedPipes = [
@@ -33,10 +37,7 @@ const sharedPipes = [
 	declarations: [
 		...sharedComponents,
 		...sharedDirectives,
-		...sharedPipes,
-		SafeHtmlPipe,
-		ViewRefDirective,
-  DynamicFormComponent
+		...sharedPipes
 	],
 	imports: [
 		CommonModule,
@@ -46,14 +47,14 @@ const sharedPipes = [
 	providers: [
 		SnackBarRef,
 		FormBuilder,
-		FormHelperService
+		FormHelperService,
+		FormGroupDirective
 	],
 	exports: [
 		...sharedComponents,
 		...sharedPipes,
 		FormsModule,
-		ReactiveFormsModule,
-		DynamicFormComponent
+		ReactiveFormsModule
 	],
 	entryComponents: [SnackBarComponent]
 })

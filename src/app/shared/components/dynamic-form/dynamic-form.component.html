@@ -1,5 +1,50 @@
 <div class="form-container">
-	<ng-container [ngTemplateOutlet]="formGroupTemp" [ngTemplateOutletContext]="{$implicit: formGroup}"></ng-container>
+	<!-- TODO: This duplicated code is stupid, but putting it in the template only results in the appConnectForm directive
+	to be initiated for every form control. Need to find a better implementation for this -->
+	<div class="form-group" [formGroup]="formGroup" [appConnectFormToStore]="formStatePath">
+		<div class="form-field" *ngFor="let ctrl of getControlsArray(formGroup)">
+			<label>{{getFieldLabel(ctrl) | titlecase}}</label>
+			<div [ngSwitch]="getFieldType(ctrl)">
+				<input *ngSwitchCase="'text'" type="text" class="form-control" [formControlName]="getFieldName(ctrl)" />
+				<input *ngSwitchCase="'number'" type="number" class="form-control" [formControlName]="getFieldName(ctrl)" />
+				<input *ngSwitchCase="'email'" type="email" class="form-control" [formControlName]="getFieldName(ctrl)" />
+				<textarea *ngSwitchCase="'textarea'" class="form-control" [formControlName]="getFieldName(ctrl)"></textarea>
+				<select *ngSwitchCase="'select'" class="form-control" [formControlName]="getFieldName(ctrl)">
+					<option
+						*ngFor="let option of getFieldOptions(ctrl)"
+						[value]="option.value">
+						{{option.label}}
+					</option>
+				</select>
+				<div *ngSwitchCase="'radio'" class="radio-button-container">
+					<div
+						class="form-check flex-row align-items-center"
+						*ngFor="let option of getFieldOptions(ctrl)">
+						<label
+							*ngIf="getFieldLabelLocation(ctrl) === 'start'"
+							class="form-check-label"
+							[for]="getFieldName(ctrl)">
+							{{option.label}}
+						</label>
+						<input
+							type="radio"
+							class="form-check-input"
+							[id]="getFieldName(ctrl) + '-' + option.value"
+							[value]="option.value"
+							[name]="getFieldName(ctrl)"
+							[formControlName]="getFieldName(ctrl)" />
+						<label
+							*ngIf="getFieldLabelLocation(ctrl) === 'end'"
+							class="form-check-label"
+							[for]="getFieldName(ctrl) + '-' + option.value">
+							{{option.label}}
+						</label>
+					</div>
+				</div>
+				<ng-container [ngTemplateOutlet]="formGroupTemp" [ngTemplateOutletContext]="{$implicit: ctrl}"></ng-container>
+			</div>
+		</div>
+	</div>
 </div>
 
 <ng-template #formGroupTemp let-fg>

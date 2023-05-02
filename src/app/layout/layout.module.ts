@@ -44,5 +44,4 @@ const components = [
 		SiteFooterComponent
 	]
 })
-export class LayoutModule {
-}
+export class LayoutModule { }

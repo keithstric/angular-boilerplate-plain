@@ -35,6 +35,8 @@ The folder structure of this project was inspired by [this video](https://www.yo
 * Lazy loading of feature modules
 * HTTP Route cache
 * [compodoc](https://compodoc.app/) implementation
+* Dynamic Form implementation
+* Handy directives for updating an ngrx-store and maintaining checkbox group values
 
 ## Getting Started
 

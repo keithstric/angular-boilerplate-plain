@@ -1,4 +1,5 @@
 import {FormActionTypes, FormsAction} from '@core/root-store/forms/forms.action';
+import {AppState} from '@core/root-store/models/app-state.model';
 
 export interface IFormsState {
 	[key: string]: any;
@@ -16,4 +17,4 @@ export function formsReducer(state: IFormsState = formsInitialState, action: For
 	return state;
 }
 
-export const getFormsState = (state: IFormsState) => state || {};
+export const getFormsState = (state: AppState): IFormsState => state.forms || {};

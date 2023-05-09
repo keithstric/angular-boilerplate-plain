@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
 import {Logger} from '@core/services/logger/logger';
 import {Store} from '@ngrx/store';
@@ -9,7 +9,16 @@ import {
 	FormHelperService
 } from '@shared/services/form-helper/form-helper.service';
 
+
 export type SelectOptions = {value: any, label: string};
+export interface FormControlsDefinition {
+	ctrl: AbstractControl;
+	label: string;
+	type: string;
+	options: SelectOptions[];
+	labelLocation: string;
+	fieldName: string;
+}
 
 @Component({
 	selector: 'app-dynamic-form',
@@ -28,7 +37,7 @@ export class DynamicFormComponent implements OnInit {
 		if (!this.formGroupValue && !this.formGroupDefinition) {
 			throw new Error(`No formGroupValue or formGroupDefinition provided`);
 		} else if (this.formGroupValue && this.formGroupDefinition) {
-			Logger.warn('No need to provide both formGroupValue and formGroupDefinition');
+			Logger.warn('No need to provide both formGroupValue and formGroupDefinition. Using formGroupDefinition.');
 			this.buildFormFromDefinition();
 		} else	if (this.formGroupValue && !this.formGroupDefinition) {
 			this.buildFormFromValue();
@@ -63,7 +72,7 @@ export class DynamicFormComponent implements OnInit {
 		let fieldType: FormFieldType = this.formGroupDefinition?.formGroupConfig[fieldName]?.fieldType || 'text';
 		if (control instanceof FormGroup) {
 			fieldType = 'object';
-		}else if (control instanceof FormArray) {
+		}else if (control instanceof FormArray && fieldType !== 'checkboxes') {
 			fieldType = 'array';
 		}else if (control.value && typeof control.value === 'number') {
 			fieldType = 'number';
@@ -83,8 +92,19 @@ export class DynamicFormComponent implements OnInit {
 		return options || [];
 	}
 
-	getControlsArray(formGroup: FormGroup) {
-		return FormHelperService.formGroupControlsToArray(formGroup);
+	getControlsArray(formGroup: FormGroup): FormControlsDefinition[] {
+		Logger.silly('[DynamicFormComponent.getControlsArray], formGroup.value=', formGroup.value);
+		return FormHelperService.formGroupControlsToArray(formGroup)
+			.map((ctrl) => {
+				return {
+					ctrl,
+					label: this.getFieldLabel(ctrl),
+					type: this.getFieldType(ctrl),
+					options: this.getFieldOptions(ctrl),
+					labelLocation: this.getFieldLabelLocation(ctrl),
+					fieldName: this.getFieldName(ctrl)
+				};
+			});
 	}
 
 	getFieldLabelLocation(control: AbstractControl) {

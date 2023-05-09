@@ -36,7 +36,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 			state: 'GA',
 			zip: '30134'
 		},
-		aliases: ['foo', 'bar', 'baz', {aliasFN: 'boom', aliasLN: 'Jordan'}]
+		communicationTypes: ['email', 'text', null],
+		aliases: ['foo', 'bar', 'baz', {aliasFN: 'boom', aliasLN: 'Jordan'}],
 	};
 	userFormGroupConfig: FormGroupObjectConfig = {
 		gender: {
@@ -47,6 +48,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 			fieldType: 'radio',
 			fieldLabelLocation: 'end',
 			options: ['Yes|yes', 'No|no']
+		},
+		communicationTypes: {
+			fieldType: 'checkboxes',
+			fieldLabelLocation: 'start',
+			options: ['email', 'text', 'both']
 		}
 	};
 	formGroupDef: FormGroupDefinition = {formGroupObject: this.user, formGroupConfig: this.userFormGroupConfig};

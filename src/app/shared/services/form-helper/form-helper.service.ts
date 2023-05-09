@@ -35,13 +35,13 @@ export type FormGroupDefinition = {formGroupObject: FormGroupObject, formGroupCo
  * Key must exist in FormGroupObject. The value of that key will be
  * an AbstractControlOptions object which will be applied to a FormControl
  */
-export type FormGroupObjectConfig = {[key in keyof FormGroupObject]: AbstractControlOptions & {
+export type FormGroupObjectConfig = {[key in keyof FormGroupObject]: (AbstractControlOptions | FormGroupConfig) & {
 	fieldType?: FormFieldType,
 	fieldLabel?: string,
 	options?: string[],
 	fieldLabelLocation?: 'start' | 'end'
 }};
-export type FormFieldType = 'text' | 'number' | 'select' | 'textarea' | 'object' | 'array' | 'email' | 'radio' | 'checkbox';
+export type FormFieldType = 'text' | 'number' | 'select' | 'textarea' | 'object' | 'array' | 'email' | 'radio' | 'checkbox' | 'checkboxes';
 export type FormControlType = 'FormGroup' | 'FormArray' | 'FormControl';
 export type FormControlStatus = 'VALID' | 'INVALID' | 'DISABLED' | 'PENDING';
 
@@ -102,16 +102,16 @@ export class FormHelperService {
 						const formArr = this.convertArrayToFormArray(keyVal);
 						group.addControl(key, formArr);
 					} else if (keyVal instanceof Date) {
-						const dateCtl = fb.control(keyVal, controlConfig);
+						const dateCtl = fb.control(keyVal, controlConfig as AbstractControlOptions);
 						group.addControl(key, dateCtl);
 					} else if (keyVal !== null && typeof keyVal === 'object') { // typeof null = 'object' so take that into account
 						const childGrp = this.convertObjToFormGroup(keyVal, controlConfig as any);
 						group.addControl(key, childGrp);
 					} else if (typeof keyVal === 'string' || typeof keyVal === 'number' || typeof keyVal === 'boolean') {
-						const ctrl = fb.control(keyVal, controlConfig);
+						const ctrl = fb.control(keyVal, controlConfig as AbstractControlOptions);
 						group.addControl(key, ctrl);
 					} else {
-						const emptyCtl = fb.control(keyVal, controlConfig);
+						const emptyCtl = fb.control(keyVal, controlConfig as AbstractControlOptions);
 						group.addControl(key, emptyCtl);
 					}
 				});

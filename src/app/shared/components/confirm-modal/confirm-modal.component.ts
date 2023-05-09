@@ -1,6 +1,6 @@
 import {Component, ComponentFactoryResolver, Injector, OnInit, TemplateRef, Type, ViewChild} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {ViewRefDirective} from '@shared/directives/view-ref.directive';
+import {ViewRefDirective} from '@shared/directives/view-ref/view-ref.directive';
 
 @Component({
 	selector: 'app-confirm-modal',

@@ -44,6 +44,12 @@ export class CheckboxStringValueDirective implements AfterViewInit, OnDestroy {
 			: this.formControlDirective?.name;
 	}
 
+	get control() {
+		return this.formControlName?.control
+			? this.formControlName.control
+			: this.formControlDirective?.control;
+	}
+
 	private _listenToCheckboxChange() {
 		this.subscriptions.add(
 			fromEvent(this.checkboxElementRef.nativeElement, 'change')
@@ -54,22 +60,17 @@ export class CheckboxStringValueDirective implements AfterViewInit, OnDestroy {
 					Logger.silly(`[_listenToCheckboxChange subscription] ${this.fieldName} ${checked ? 'checked' : 'unchecked'}`);
 					const value = checked ? this.valueWhenChecked : this.valueWhenUnChecked;
 					this._updateFormControlValue(value);
-					this.checkboxValueUpdated.emit(value);
 				})
 		);
 	}
 
 	private _updateFormControlValue(newValue: string) {
-		const formControl = this.formControlName.control || this.formControlDirective.control;
-		const name = this.fieldName !== undefined && this.fieldName !== null
-			? this.formControlName.name
-			: this.formControlDirective.name;
-		if (formControl && name !== undefined && name !== null) {
-			formControl.setValue(newValue);
+		if (this.control && name !== undefined && name !== null) {
+			this.control.setValue(newValue);
 			this.checkboxValueUpdated.emit(newValue);
-			Logger.silly(`[CheckboxStringValueDirective._updateFormControlValue] set the value of ${name} to ${formControl.value}`);
+			Logger.silly(`[CheckboxStringValueDirective._updateFormControlValue] set the value of ${this.fieldName} to ${this.control.value}`);
 		}else{
-			throw new Error(`[CheckboxStringValueDirective._updateFormControlValue] FormControl ${name} not available`);
+			throw new Error(`[CheckboxStringValueDirective._updateFormControlValue] FormControl ${this.fieldName} not available`);
 		}
 	}
 }

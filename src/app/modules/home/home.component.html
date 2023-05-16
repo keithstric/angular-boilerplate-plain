@@ -55,8 +55,12 @@
 				<h4>Here is the form definition</h4>
 				<pre>{{userFormGroupConfig | json}}</pre>
 			</div>
+			<div class="wide-content">
+				<h4>Here is the resulting FormGroup</h4>
+				<pre>{{dynamicFormGroupVals | json}}</pre>
+			</div>
 		</div>
-		<app-dynamic-form [formGroupDefinition]="formGroupDef"></app-dynamic-form>
+		<app-dynamic-form [formGroupDefinition]="formGroupDef" (formGroupInitialized)="this.onDynamicFormInit($event)"></app-dynamic-form>
 	</div>
 	<div class="section">
 		<h2>Change the header</h2>

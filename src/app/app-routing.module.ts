@@ -8,7 +8,6 @@ import {PageNotFoundComponent} from '@layout/components/page-not-found/page-not-
  */
 export const appRoutes: Routes = [
 	{path: '', loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule)},
-	// {path: '', pathMatch: 'full', component: HomeComponent, canActivate: [AuthGuard]},
 	{path: 'auth', loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule)},
 	{path: 'features', loadChildren: () => import('./modules/features/features.module').then(m => m.FeaturesModule)},
 	{path: 'about', loadChildren: () => import('./modules/about/about.module').then(m => m.AboutModule)},

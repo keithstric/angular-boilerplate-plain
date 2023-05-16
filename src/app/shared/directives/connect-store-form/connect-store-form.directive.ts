@@ -26,9 +26,11 @@ export class ConnectStoreFormDirective implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
-		this._setupFormInStore();
-		this._listenToValueChanges();
-		Logger.silly(`[ConnectStoreFormDirective] initialized with formStatePath=${this.formStatePath} and formGroup`, this.formGroupDirective);
+		if (this.formStatePath) {
+			this._setupFormInStore();
+			this._listenToValueChanges();
+			Logger.silly(`[ConnectStoreFormDirective] initialized with formStatePath=${this.formStatePath} and formGroup`, this.formGroupDirective);
+		}
 	}
 
 	ngOnDestroy(): void {

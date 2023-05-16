@@ -32,13 +32,13 @@ export class FeaturesComponent implements OnInit {
 			version: '13.0.2',
 			description: 'Redux for angular',
 			docsUrl: 'https://ngrx.io',
-			docsIcon: 'article'
+			docsIcon: 'account_tree'
 		}, {
 			name: 'RxJS',
 			version: '6.6.3',
 			description: 'Asynchronous and event-based programs',
 			docsUrl: 'https://rxjs-dev.firebaseapp.com/guide/overview',
-			docsIcon: 'article'
+			docsIcon: 'dynamic_form'
 		}, {
 			name: 'Typescript',
 			version: '4.4.4',
@@ -50,13 +50,7 @@ export class FeaturesComponent implements OnInit {
 			version: undefined,
 			description: 'Lazy loaded feature modules',
 			docsUrl: 'https://angular.io/guide/router#lazy-loading-route-configuration',
-			docsIcon: 'article'
-		}, {
-			name: 'Tslint',
-			version: '6.1.0',
-			description: 'Identify problematic patterns in Typescript code',
-			docsUrl: 'https://palantir.github.io/tslint/',
-			docsIcon: 'article'
+			docsIcon: 'dynamic_feed'
 		}, {
 			name: 'Compodoc',
 			version: '1.1.16',
@@ -68,25 +62,31 @@ export class FeaturesComponent implements OnInit {
 			version: '1.0.0',
 			description: 'Library for parsing route patterns',
 			docsUrl: 'https://github.com/rcs/route-parser',
-			docsIcon: 'article'
+			docsIcon: 'alt_route'
 		}, {
 			name: 'Included Logger',
 			version: '1.0.0',
 			description: 'Logging infrastructure already put in place with support for uploading log entries to upstream api',
 			docsUrl: '',
-			docsIcon: 'article'
+			docsIcon: 'web_stories'
 		}, {
 			name: 'Components',
-			description: 'Included components: card, character-counter, user-avatar, snack-bar/toaster',
+			description: 'Included components: card, character-counter, user-avatar, snack-bar/toaster, dynamic form',
 			version: '0.0.0',
 			docsUrl: '',
-			docsIcon: 'article'
+			docsIcon: 'foundation'
 		}, {
 			name: 'Form Utils',
 			description: 'Includes form utilities for converting JavaScript objects to form elements',
 			version: '1.0.0',
 			docsUrl: '',
-			docsIcon: 'article'
+			docsIcon: 'engineering'
+		}, {
+			name: 'Directives',
+			description: 'Directives for storing forms in ngrx-store and managing checkbox group values',
+			version: '1.0.0',
+			docsUrl: '',
+			docsIcon: 'integration_instructions'
 		}];
 
 	constructor() {

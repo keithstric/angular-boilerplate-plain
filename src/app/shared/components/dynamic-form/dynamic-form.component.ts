@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
 import {Logger} from '@core/services/logger/logger';
 import {Store} from '@ngrx/store';
@@ -15,9 +15,11 @@ export interface FormControlsDefinition {
 	ctrl: AbstractControl;
 	label: string;
 	type: string;
-	options: SelectOptions[];
-	labelLocation: string;
+	options?: SelectOptions[];
+	labelLocation?: string;
 	fieldName: string;
+	definitions?: FormControlsDefinition[];
+	checkedValue?: string | number | boolean;
 }
 
 @Component({
@@ -29,7 +31,9 @@ export class DynamicFormComponent implements OnInit {
 	@Input() formGroupValue?: FormGroupObject;
 	@Input() formGroupDefinition?: FormGroupDefinition;
 	@Input() formStatePath: string = 'demo';
+	@Output() formGroupInitialized: EventEmitter<FormGroup> = new EventEmitter<FormGroup>();
 	formGroup: FormGroup;
+	renderedControls: FormControlsDefinition;
 
 	constructor(private store: Store) {	}
 
@@ -38,36 +42,38 @@ export class DynamicFormComponent implements OnInit {
 			throw new Error(`No formGroupValue or formGroupDefinition provided`);
 		} else if (this.formGroupValue && this.formGroupDefinition) {
 			Logger.warn('No need to provide both formGroupValue and formGroupDefinition. Using formGroupDefinition.');
-			this.buildFormFromDefinition();
+			this._buildFormFromDefinition();
 		} else	if (this.formGroupValue && !this.formGroupDefinition) {
-			this.buildFormFromValue();
+			this._buildFormFromValue();
 		} else if (this.formGroupDefinition && !this.formGroupValue) {
-			this.buildFormFromDefinition();
+			this._buildFormFromDefinition();
 		}
+		this.formGroupInitialized.emit(this.formGroup);
+		this.renderedControls = this._getFormDefinitions(this.formGroup);
 	}
 
-	buildFormFromValue() {
+	private _buildFormFromValue() {
 		this.formGroup = FormHelperService.convertObjToFormGroup(this.formGroupValue);
 	}
 
-	buildFormFromDefinition() {
+	private _buildFormFromDefinition() {
 		this.formGroup = FormHelperService.convertObjToFormGroup(
 			this.formGroupDefinition.formGroupObject,
 			this.formGroupDefinition.formGroupConfig
 		);
 	}
 
-	getFieldName(control: AbstractControl) {
+	private _getFieldName(control: AbstractControl) {
 		return FormHelperService.getControlName(control);
 	}
 
-	getFieldLabel(control: AbstractControl) {
+	private _getFieldLabel(control: AbstractControl) {
 		const fieldName = FormHelperService.getControlName(control);
 		const fieldLabel = this.formGroupDefinition?.formGroupConfig[fieldName]?.fieldLabel;
 		return fieldLabel ? fieldLabel : fieldName;
 	}
 
-	getFieldType(control: AbstractControl) {
+	private _getFieldType(control: AbstractControl) {
 		const fieldName = FormHelperService.getControlName(control);
 		let fieldType: FormFieldType = this.formGroupDefinition?.formGroupConfig[fieldName]?.fieldType || 'text';
 		if (control instanceof FormGroup) {
@@ -80,7 +86,7 @@ export class DynamicFormComponent implements OnInit {
 		return fieldType;
 	}
 
-	getFieldOptions(control: AbstractControl): SelectOptions[] {
+	private _getFieldOptions(control: AbstractControl): SelectOptions[] {
 		const fieldName = FormHelperService.getControlName(control);
 		const options = this.formGroupDefinition?.formGroupConfig[fieldName]?.options.map((option) => {
 			const selectOption = option.split('|');
@@ -92,24 +98,70 @@ export class DynamicFormComponent implements OnInit {
 		return options || [];
 	}
 
-	getControlsArray(formGroup: FormGroup): FormControlsDefinition[] {
-		Logger.silly('[DynamicFormComponent.getControlsArray], formGroup.value=', formGroup.value);
-		return FormHelperService.formGroupControlsToArray(formGroup)
+	private _getFieldLabelLocation(control: AbstractControl) {
+		const fieldName = FormHelperService.getControlName(control);
+		return this.formGroupDefinition?.formGroupConfig[fieldName]?.fieldLabelLocation || 'end';
+	}
+
+	private _getControlDefinitions(formCtrl: FormGroup | FormArray): FormControlsDefinition[] {
+		const fgClazz = formCtrl.constructor.name;
+		const ctrls: AbstractControl[] = fgClazz === 'FormGroup'
+			? FormHelperService.formGroupControlsToArray((formCtrl as FormGroup))
+			: (formCtrl as FormArray).controls as AbstractControl[];
+		return ctrls
 			.map((ctrl) => {
-				return {
-					ctrl,
-					label: this.getFieldLabel(ctrl),
-					type: this.getFieldType(ctrl),
-					options: this.getFieldOptions(ctrl),
-					labelLocation: this.getFieldLabelLocation(ctrl),
-					fieldName: this.getFieldName(ctrl)
-				};
+				const clazz = ctrl.constructor.name;
+				switch (clazz) {
+					case 'FormGroup':
+						return {
+							ctrl,
+							label: this._getFieldLabel(ctrl),
+							fieldName: this._getFieldName(ctrl),
+							type: this._getFieldType(ctrl),
+							definitions: this._getControlDefinitions(ctrl as FormGroup),
+						};
+					case 'FormControl':
+						return {
+							ctrl,
+							label: this._getFieldLabel(ctrl),
+							type: this._getFieldType(ctrl),
+							options: this._getFieldOptions(ctrl),
+							labelLocation: this._getFieldLabelLocation(ctrl),
+							fieldName: this._getFieldName(ctrl)
+						};
+					case 'FormArray':
+						const arrCtrlDef: FormControlsDefinition = {
+							ctrl,
+							label: this._getFieldLabel(ctrl),
+							fieldName: this._getFieldName(ctrl),
+							type: this._getFieldType(ctrl),
+							definitions: this._getControlDefinitions(ctrl as FormArray)
+						};
+						if (arrCtrlDef.type === 'checkboxes') {
+							arrCtrlDef.options = this._getFieldOptions(ctrl);
+							arrCtrlDef.labelLocation = this._getFieldLabelLocation(ctrl);
+							arrCtrlDef.definitions = arrCtrlDef.definitions.map((ctrlDef, idx) => {
+								const {options, labelLocation} = arrCtrlDef;
+								return {
+									...ctrlDef,
+									labelLocation,
+									options: [options[idx]],
+								};
+							});
+						}
+						return arrCtrlDef;
+				}
 			});
 	}
 
-	getFieldLabelLocation(control: AbstractControl) {
-		const fieldName = FormHelperService.getControlName(control);
-		return this.formGroupDefinition?.formGroupConfig[fieldName]?.fieldLabelLocation || 'end';
+	private _getFormDefinitions(formGroup: FormGroup): FormControlsDefinition {
+		return {
+			ctrl: formGroup,
+			definitions: this._getControlDefinitions(formGroup),
+			label: '',
+			fieldName: '',
+			type: 'object'
+		};
 	}
 
 }

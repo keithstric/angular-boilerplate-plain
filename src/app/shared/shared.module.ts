@@ -1,6 +1,13 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {FormBuilder, FormControlDirective, FormGroupDirective, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {
+	FormBuilder,
+	FormControlDirective,
+	FormControlName,
+	FormGroupDirective,
+	FormsModule,
+	ReactiveFormsModule
+} from '@angular/forms';
 import {SnackBarRef} from '@shared/components/snack-bar/snack-bar.ref';
 import {UserAvatarComponent} from '@shared/components/user-avatar/user-avatar.component';
 import {FileDnDDirective} from '@shared/directives/file-dn-d/file-dn-d.directive';
@@ -51,7 +58,8 @@ const sharedPipes = [
 		FormBuilder,
 		FormHelperService,
 		FormGroupDirective,
-		FormControlDirective
+		FormControlDirective,
+		FormControlName
 	],
 	exports: [
 		...sharedComponents,

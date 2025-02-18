@@ -3,7 +3,7 @@
  * the same styles.
  */
 
-@import 'src/scss/variables';
+@use 'src/scss/variables';
 
 .page-container {
 
@@ -21,7 +21,7 @@
 
 				.card-subtitle {
 					opacity: 0.7;
-					color: $warn;
+					color: variables.$warn;
 				}
 			}
 

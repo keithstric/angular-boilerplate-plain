@@ -12,7 +12,8 @@ import {catchError, debounceTime, take} from 'rxjs/operators';
  * in the store
  */
 @Directive({
-	selector: '[appConnectFormToStore]'
+    selector: '[appConnectFormToStore]',
+    standalone: false
 })
 export class ConnectStoreFormDirective implements OnInit, OnDestroy {
 	@Input('appConnectFormToStore') formStatePath: string;

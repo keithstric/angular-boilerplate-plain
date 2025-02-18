@@ -1,4 +1,4 @@
-import {HttpErrorResponse} from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {SnackbarConfig} from '@shared/components/snack-bar/snack-bar.interface';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {ApiEndpoints, ApiMethod} from '@core/interfaces/api.interface';

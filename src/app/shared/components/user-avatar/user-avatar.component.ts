@@ -4,7 +4,7 @@ import {iUserState} from '@core/root-store/models/app-state.model';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {AuthService} from '@core/services/auth/auth.service';
-import * as tinycolor from 'tinycolor2';
+import tinycolor from 'tinycolor2';
 
 /**
  * A user avatar component. Use the following classes to control the size in pixels:
@@ -18,7 +18,8 @@ import * as tinycolor from 'tinycolor2';
 @Component({
 	selector: 'app-user-avatar',
 	templateUrl: './user-avatar.component.html',
-	styleUrls: ['./user-avatar.component.scss']
+	styleUrls: ['./user-avatar.component.scss'],
+	standalone: false
 })
 export class UserAvatarComponent implements OnInit, OnDestroy {
 	user: User;

@@ -1,5 +1,5 @@
 import {TemplateRef, Type} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 
 export interface ConfirmModalConfig {
 	/**
@@ -65,7 +65,7 @@ export interface ConfirmModalConfig {
 	/**
 	 * Provide a FormGroup to provide ability to disable the confirm button
 	 */
-	formGroup?: FormGroup;
+	formGroup?: UntypedFormGroup;
 	/**
 	 * true to close after confirm handler has been run. Default true
 	 */

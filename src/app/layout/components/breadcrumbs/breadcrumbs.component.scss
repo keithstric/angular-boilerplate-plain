@@ -1,12 +1,12 @@
-@import 'src/scss/variables';
-@import 'src/scss/mixins';
+@use 'src/scss/variables';
+@use 'src/scss/mixins';
 
 :host {
   width: 50%;
 }
 
 ul.breadcrumbs-list {
-  @include font-size(18px);
+  @include mixins.font-size(18px);
   list-style-type: none;
   overflow: hidden;
   padding: 0;

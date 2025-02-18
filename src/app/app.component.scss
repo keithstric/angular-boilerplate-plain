@@ -1,5 +1,5 @@
-@import 'src/scss/variables';
-@import 'src/scss/mixins';
+@use 'src/scss/variables';
+@use 'src/scss/mixins';
 
 .loading-container {
   position: fixed;
@@ -53,7 +53,7 @@
 }
 
 .site-container {
-  @include font-size(12px);
+  @include mixins.font-size(12px);
   font-family: Roboto, "Helvetica Neue", sans-serif;
   height: 100vh;
   background: #f1f1f1;
@@ -61,7 +61,7 @@
 
 	.site-sidebar {
 		width: 64px;
-		border-right: 2px solid $primary;
+		border-right: 2px solid variables.$primary;
 	}
 
 	.site-right-content {

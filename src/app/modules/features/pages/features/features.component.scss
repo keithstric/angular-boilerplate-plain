@@ -1,5 +1,5 @@
-@import 'src/scss/variables';
-@import 'src/scss/mixins';
+@use 'src/scss/variables';
+@use 'src/scss/mixins';
 
 .features-card-list {
 	flex-wrap: wrap;
@@ -15,9 +15,9 @@
 		justify-content: space-between;
 
 		.version {
-			background-color: $primary;
+			background-color: variables.$primary;
 			color: white;
-			@include border-radius(10px);
+			@include mixins.border-radius(10px);
 			padding: 4px;
 		}
 	}

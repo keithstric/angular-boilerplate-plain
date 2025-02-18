@@ -6,7 +6,7 @@
 <ng-template #formGroupTemp let-fgConfig let-useStore="useStore">
 	<div class="form-group" [formGroup]="fgConfig.ctrl" [appConnectFormToStore]="useStore ? formStatePath : null">
 		<div *ngFor="let ctrlConfig of fgConfig.definitions">
-			<div [ngSwitch]="ctrlConfig.type">
+			<div [ngSwitch]="ctrlConfig?.type">
 				<ng-container *ngSwitchCase="'object'" [ngTemplateOutlet]="formGroupTemp" [ngTemplateOutletContext]="{$implicit: ctrlConfig, useStore: false}"></ng-container>
 				<ng-container *ngSwitchCase="'array'" [ngTemplateOutlet]="formGroupTemp" [ngTemplateOutletContext]="{$implicit: ctrlConfig, useStore: false}"></ng-container>
 				<ng-container *ngSwitchDefault [ngTemplateOutlet]="formCtrlTemp" [ngTemplateOutletContext]="{$implicit: ctrlConfig}"></ng-container>
@@ -17,23 +17,23 @@
 
 <!-- #formCtrlTemp - Template for individual form controls (FormControl) -->
 <ng-template #formCtrlTemp let-ctrlConfig>
-	<div class="form-field" [ngSwitch]="ctrlConfig.type">
-		<label *ngIf="ctrlConfig.type !== 'checkbox'">{{ctrlConfig.label | titlecase}}</label>
-		<input *ngSwitchCase="'text'" type="text" class="form-control text" [formControl]="ctrlConfig.ctrl" />
-		<input *ngSwitchCase="'number'" type="number" class="form-control number" [formControl]="ctrlConfig.ctrl" />
-		<input *ngSwitchCase="'email'" type="email" class="form-control email" [formControl]="ctrlConfig.ctrl" />
+	<div class="form-field" [ngSwitch]="ctrlConfig?.type">
+		<label *ngIf="ctrlConfig?.type !== 'checkbox'">{{ctrlConfig?.label | titlecase}}</label>
+		<input *ngSwitchCase="'text'" type="text" class="form-control text" [formControl]="ctrlConfig?.ctrl" />
+		<input *ngSwitchCase="'number'" type="number" class="form-control number" [formControl]="ctrlConfig?.ctrl" />
+		<input *ngSwitchCase="'email'" type="email" class="form-control email" [formControl]="ctrlConfig?.ctrl" />
 		<div *ngSwitchCase="'checkbox'" class="form-check flex-row align-items-center checkbox">
 			<input
-				[id]="ctrlConfig.fieldName + '-checkbox'"
+				[id]="ctrlConfig?.fieldName + '-checkbox'"
 				type="checkbox"
 				class="form-check-input"
-				[formControl]="ctrlConfig.ctrl" />
-			<label class="form-check-label" [for]="ctrlConfig.fieldName + '-checkbox'">{{ctrlConfig.label | titlecase}}</label>
+				[formControl]="ctrlConfig?.ctrl" />
+			<label class="form-check-label" [for]="ctrlConfig?.fieldName + '-checkbox'">{{ctrlConfig?.label | titlecase}}</label>
 		</div>
-		<textarea *ngSwitchCase="'textarea'" class="form-control textarea" [formControl]="ctrlConfig.ctrl"></textarea>
-		<select *ngSwitchCase="'select'" class="form-control select" [formControl]="ctrlConfig.ctrl">
+		<textarea *ngSwitchCase="'textarea'" class="form-control textarea" [formControl]="ctrlConfig?.ctrl"></textarea>
+		<select *ngSwitchCase="'select'" class="form-control select" [formControl]="ctrlConfig?.ctrl">
 			<option
-				*ngFor="let option of ctrlConfig.options"
+				*ngFor="let option of ctrlConfig?.options"
 				[value]="option.value">
 				{{option.label}}
 			</option>
@@ -41,24 +41,24 @@
 		<div *ngSwitchCase="'radio'" class="radio-button-container">
 			<div
 				class="form-check flex-row align-items-center radio"
-				*ngFor="let option of ctrlConfig.options">
+				*ngFor="let option of ctrlConfig?.options">
 				<label
-					*ngIf="ctrlConfig.labelLocation === 'start'"
+					*ngIf="ctrlConfig?.labelLocation === 'start'"
 					class="form-check-label"
-					[for]="ctrlConfig.fieldName + '-' + option.value">
+					[for]="ctrlConfig?.fieldName + '-' + option.value">
 					{{option.label}}
 				</label>
 				<input
 					type="radio"
 					class="form-check-input"
-					[id]="ctrlConfig.fieldName + '-' + option.value"
+					[id]="ctrlConfig?.fieldName + '-' + option.value"
 					[value]="option.value"
-					[name]="ctrlConfig.fieldName"
-					[formControl]="ctrlConfig.ctrl" />
+					[name]="ctrlConfig?.fieldName"
+					[formControl]="ctrlConfig?.ctrl" />
 				<label
-					*ngIf="ctrlConfig.labelLocation === 'end'"
+					*ngIf="ctrlConfig?.labelLocation === 'end'"
 					class="form-check-label"
-					[for]="ctrlConfig.fieldName + '-' + option.value">
+					[for]="ctrlConfig?.fieldName + '-' + option.value">
 					{{option.label}}
 				</label>
 			</div>
@@ -66,24 +66,24 @@
 		<div *ngSwitchCase="'checkboxes'" class="checkbox-container">
 			<div
 				class="form-check flex-row align-items-center checkbox"
-				*ngFor="let chkBoxConfig of ctrlConfig.definitions; let idx=index">
+				*ngFor="let chkBoxConfig of ctrlConfig?.definitions; let idx=index">
 				<label
 					*ngIf="chkBoxConfig.labelLocation === 'start'"
 					class="form-check-label"
-					[for]="ctrlConfig.fieldName + '-' + chkBoxConfig.options[0].value">
+					[for]="ctrlConfig?.fieldName + '-' + chkBoxConfig.options[0].value">
 					{{chkBoxConfig.options[0].label}}
 				</label>
 				<input
 					type="checkbox"
 					class="form-check-input"
-					[id]="ctrlConfig.fieldName + '-' + chkBoxConfig.options[0].value"
+					[id]="ctrlConfig?.fieldName + '-' + chkBoxConfig.options[0].value"
 					[name]="idx"
 					[formControl]="chkBoxConfig.ctrl"
 					[appCheckboxStringValue]="chkBoxConfig.options[0].value" />
 				<label
 					*ngIf="chkBoxConfig.labelLocation === 'end'"
 					class="form-check-label"
-					[for]="ctrlConfig.fieldName + '-' + chkBoxConfig.options[0].value">
+					[for]="ctrlConfig?.fieldName + '-' + chkBoxConfig.options[0].value">
 					{{chkBoxConfig.options[0].label}}
 				</label>
 			</div>

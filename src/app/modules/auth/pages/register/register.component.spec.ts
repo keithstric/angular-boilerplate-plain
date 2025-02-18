@@ -1,4 +1,4 @@
-import {HttpClientTestingModule} from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -10,6 +10,7 @@ import {provideMockStore} from '@ngrx/store/testing';
 import {MockErrorService, MockHttpService, MockLocalStorageService} from 'src/app/testing/mock-services';
 
 import {RegisterComponent} from './register.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('RegisterComponent', () => {
 	let component: RegisterComponent;
@@ -32,21 +33,20 @@ describe('RegisterComponent', () => {
 
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
-			imports: [
-				FormsModule,
-				ReactiveFormsModule,
-				HttpClientTestingModule,
-				RouterTestingModule
-			],
-			declarations: [RegisterComponent],
-			providers: [
-				{provide: AppErrorHandler, useClass: MockErrorService},
-				{provide: LocalStorageService, useClass: MockLocalStorageService},
-				{provide: HttpService, useClass: MockHttpService},
-				provideMockStore({initialState})
-			],
-			schemas: [CUSTOM_ELEMENTS_SCHEMA]
-		})
+    declarations: [RegisterComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [FormsModule,
+        ReactiveFormsModule,
+        RouterTestingModule],
+    providers: [
+        { provide: AppErrorHandler, useClass: MockErrorService },
+        { provide: LocalStorageService, useClass: MockLocalStorageService },
+        { provide: HttpService, useClass: MockHttpService },
+        provideMockStore({ initialState }),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+})
 			.compileComponents();
 	}));
 

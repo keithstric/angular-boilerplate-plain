@@ -1,13 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
-@import 'variables';
+@use 'variables';
 
 /* Any UI framework imports go here */
 
-@import 'mixins';
+@use 'mixins';
 
 /* misc/app-global should be last in order to override any other styles */
-@import 'misc/flexbox';
-@import 'misc/app-global';
+@use 'misc/flexbox';
+@use 'misc/app-global';
 
 body {
 	font-family: Roboto, "Helvetica Neue", sans-serif;

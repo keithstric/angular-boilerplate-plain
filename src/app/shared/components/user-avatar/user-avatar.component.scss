@@ -1,5 +1,5 @@
-@import '../../../../scss/variables';
-@import '../../../../scss/mixins';
+@use 'src/scss/variables';
+@use 'src/scss/mixins';
 
 :host {
   padding: 0;
@@ -84,7 +84,7 @@
     padding: 0;
     height: 100%;
     width: 100%;
-    @include border-radius(50%);
+    @include mixins.border-radius(50%);
   }
 
 	.initials {

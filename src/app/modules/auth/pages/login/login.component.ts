@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {iUserState} from '@core/root-store/models/app-state.model';
 import {LoginUserAction} from '@core/root-store/user/user.action';
@@ -10,20 +10,21 @@ import {NotificationService} from '@core/services/notification/notification.serv
 import {PROJECT_NAME} from 'src/environments/environment';
 
 @Component({
-	selector: 'app-login',
-	templateUrl: './login.component.html',
-	styleUrls: ['../auth-shared-styles.scss']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['../auth-shared-styles.scss'],
+    standalone: false
 })
 export class LoginComponent implements OnInit, OnDestroy {
-	loginData: FormGroup;
-	email: FormControl = new FormControl('', [Validators.required, Validators.email]);
-	password: FormControl = new FormControl('', [Validators.required]);
+	loginData: UntypedFormGroup;
+	email: UntypedFormControl = new UntypedFormControl('', [Validators.required, Validators.email]);
+	password: UntypedFormControl = new UntypedFormControl('', [Validators.required]);
 	errorMsg: string;
 	projectName: string = PROJECT_NAME;
 	subscriptions: Subscription = new Subscription();
 
 	constructor(
-		private _formBuilder: FormBuilder,
+		private _formBuilder: UntypedFormBuilder,
 		private _error: AppErrorHandler,
 		private _router: Router,
 		private _notify: NotificationService,

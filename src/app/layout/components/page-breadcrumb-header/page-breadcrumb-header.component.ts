@@ -1,9 +1,10 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
-	selector: 'app-page-breadcrumb-header',
-	templateUrl: './page-breadcrumb-header.component.html',
-	styleUrls: ['./page-breadcrumb-header.component.scss']
+    selector: 'app-page-breadcrumb-header',
+    templateUrl: './page-breadcrumb-header.component.html',
+    styleUrls: ['./page-breadcrumb-header.component.scss'],
+    standalone: false
 })
 export class PageBreadcrumbHeaderComponent implements OnInit {
 	@Input() showAddButton: boolean = false;

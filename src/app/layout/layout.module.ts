@@ -23,25 +23,21 @@ const components = [
  * The LayoutModule
  */
 @NgModule({
-	imports: [
-		CommonModule,
-		RouterModule,
-		SharedModule
-	],
-	declarations: [
-		...components
-	],
-	exports: [
-		...components
-	],
-	providers: [
-		BreadcrumbService,
-		LayoutService,
-		LoadingService
-	],
-	entryComponents: [
-		SiteHeaderComponent,
-		SiteFooterComponent
-	]
+    imports: [
+        CommonModule,
+        RouterModule,
+        SharedModule
+    ],
+    declarations: [
+        ...components
+    ],
+    exports: [
+        ...components
+    ],
+    providers: [
+        BreadcrumbService,
+        LayoutService,
+        LoadingService
+    ]
 })
 export class LayoutModule { }

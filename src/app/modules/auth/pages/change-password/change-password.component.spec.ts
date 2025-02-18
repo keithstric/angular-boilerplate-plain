@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {RouterTestingModule} from '@angular/router/testing';
 import {AuthService} from '@core/services/auth/auth.service';
 import {NotificationService} from '@core/services/notification/notification.service';
@@ -34,7 +34,7 @@ describe('ChangePasswordComponent', () => {
 			],
 			declarations: [ChangePasswordComponent],
 			providers: [
-				FormBuilder,
+				UntypedFormBuilder,
 				{provide: AuthService, useClass: MockAuthService},
 				{provide: NotificationService, useClass: MockUiService},
 				provideMockStore({initialState})

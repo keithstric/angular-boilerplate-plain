@@ -1,8 +1,9 @@
-@import 'src/scss/variables';
-@import 'src/scss/mixins';
+@use 'src/scss/theme';
+@use 'src/scss/variables';
+@use 'src/scss/mixins';
 
 .site-header-container {
-	background-color: $primary;
+	background-color: variables.$primary;
 	color: white;
 	align-items: center;
 	height: 64px;
@@ -24,20 +25,20 @@
 		margin-right: 15px;
 		padding: 4px;
 		border-radius: 4px;
-		background-color: $primary;
+		background-color: variables.$primary;
 		color: white;
 
 		&.active {
-			background-color: $app-info;
+			background-color: theme.$app-info;
 			color: black;
-			@include elevation(2);
+			@include mixins.elevation(2);
 			text-decoration: none;
 		}
 
 		&:hover {
-			background-color: $app-info;
+			background-color: theme.$app-info;
 			color: black;
-			@include elevation(2);
+			@include mixins.elevation(2);
 			text-decoration: none;
 		}
 	}
@@ -46,7 +47,7 @@
 		text-decoration: none;
 
 		&:hover {
-			color: $accent;
+			color: variables.$accent;
 			cursor: pointer;
 			text-decoration: none;
 		}

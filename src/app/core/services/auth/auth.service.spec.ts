@@ -1,4 +1,4 @@
-import {HttpClientTestingModule} from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import {TestBed} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {AppErrorHandler} from '@core/services/error-handler/error-handler.service';
@@ -9,24 +9,24 @@ import {SnackBarRef} from '@shared/components/snack-bar/snack-bar.ref';
 import {MockErrorService, MockHttpService, MockLocalStorageService} from 'src/app/testing/mock-services';
 
 import {AuthService} from '@core/services/auth/auth.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('AuthService', () => {
 	let service: AuthService;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [
-				HttpClientTestingModule,
-				RouterTestingModule
-			],
-			providers: [
-				{provide: HttpService, useClass: MockHttpService},
-				{provide: LocalStorageService, useClass: MockLocalStorageService},
-				{provide: AppErrorHandler, useClass: MockErrorService},
-				NotificationService,
-				SnackBarRef
-			]
-		});
+    imports: [RouterTestingModule],
+    providers: [
+        { provide: HttpService, useClass: MockHttpService },
+        { provide: LocalStorageService, useClass: MockLocalStorageService },
+        { provide: AppErrorHandler, useClass: MockErrorService },
+        NotificationService,
+        SnackBarRef,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+});
 		service = TestBed.inject(AuthService);
 	});
 

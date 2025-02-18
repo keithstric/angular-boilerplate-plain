@@ -1,5 +1,5 @@
 import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {iUserState} from '@core/root-store/models/app-state.model';
 import {Store} from '@ngrx/store';
@@ -9,24 +9,25 @@ import {AuthService} from '@core/services/auth/auth.service';
 import {PROJECT_NAME} from 'src/environments/environment';
 
 @Component({
-	selector: 'app-user',
-	templateUrl: './user.component.html',
-	styleUrls: ['../auth-shared-styles.scss']
+    selector: 'app-user',
+    templateUrl: './user.component.html',
+    styleUrls: ['../auth-shared-styles.scss'],
+    standalone: false
 })
 export class UserComponent implements OnInit, OnChanges {
-	userData: FormGroup;
-	email: FormControl = new FormControl('', [Validators.required, Validators.email]);
-	password: FormControl = new FormControl('');
-	verify_password: FormControl = new FormControl('');
-	last_name: FormControl = new FormControl('', [Validators.required]);
-	first_name: FormControl = new FormControl('', [Validators.required]);
+	userData: UntypedFormGroup;
+	email: UntypedFormControl = new UntypedFormControl('', [Validators.required, Validators.email]);
+	password: UntypedFormControl = new UntypedFormControl('');
+	verify_password: UntypedFormControl = new UntypedFormControl('');
+	last_name: UntypedFormControl = new UntypedFormControl('', [Validators.required]);
+	first_name: UntypedFormControl = new UntypedFormControl('', [Validators.required]);
 	errorMsg: string;
 	updateIsDisabled: boolean = true;
 	projectName: string = PROJECT_NAME;
 	subscriptions: Subscription = new Subscription();
 
 	constructor(
-		private _formBuilder: FormBuilder,
+		private _formBuilder: UntypedFormBuilder,
 		private _error: AppErrorHandler,
 		private _router: Router,
 		private store: Store<{user: iUserState}>

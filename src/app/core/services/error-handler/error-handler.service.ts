@@ -1,4 +1,4 @@
-import {HttpErrorResponse} from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {ErrorHandler, Injectable} from '@angular/core';
 import {Logger} from '@core/services/logger/logger';
 import {NotificationService} from '@core/services/notification/notification.service';

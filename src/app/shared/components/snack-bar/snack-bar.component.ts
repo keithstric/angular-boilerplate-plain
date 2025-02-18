@@ -32,10 +32,11 @@ import {SnackbarAction, SnackbarMessageTypes} from '@shared/components/snack-bar
  * ```
  */
 @Component({
-	selector: 'app-snack-bar',
-	templateUrl: './snack-bar.component.html',
-	styleUrls: ['./snack-bar.component.scss'],
-	encapsulation: ViewEncapsulation.None
+    selector: 'app-snack-bar',
+    templateUrl: './snack-bar.component.html',
+    styleUrls: ['./snack-bar.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class SnackBarComponent implements OnInit {
 	@Input() messageType: SnackbarMessageTypes = SnackbarMessageTypes.INFO;

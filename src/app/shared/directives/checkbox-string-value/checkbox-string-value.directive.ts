@@ -12,7 +12,8 @@ import {map} from 'rxjs/operators';
  * set the value to the valueWhenUnChecked property value.
  */
 @Directive({
-	selector: '[appCheckboxStringValue]'
+    selector: '[appCheckboxStringValue]',
+    standalone: false
 })
 export class CheckboxStringValueDirective implements AfterViewInit, OnDestroy {
 	@Input('appCheckboxStringValue') valueWhenChecked: string;

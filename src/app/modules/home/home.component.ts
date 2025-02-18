@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormArray, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {ApiMethod} from '@core/interfaces/api.interface';
 import {HttpService} from '@core/services/http/http.service';
 import {LocalStorageTypes} from '@core/services/local-storage/local-storage.interface';
@@ -23,12 +23,13 @@ import {delay, take} from 'rxjs/operators';
  * component with your own
  */
 @Component({
-	selector: 'app-home',
-	templateUrl: './home.component.html',
-	styleUrls: ['./home.component.scss']
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss'],
+    standalone: false
 })
 export class HomeComponent implements OnInit, OnDestroy {
-	charCounterForm: FormGroup;
+	charCounterForm: UntypedFormGroup;
 	origHeaderComponent: any;
 
 	/**
@@ -144,13 +145,13 @@ export class HomeComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	onDynamicFormInit(formGroup: FormGroup) {
+	onDynamicFormInit(formGroup: UntypedFormGroup) {
 		this._listenToDynamicForm();
 		this.dynamicFormSubj.next(formGroup);
 	}
 
 	private _listenToDynamicForm() {
-		const getFormGroupVals = (formGroup: FormGroup, placeHolder: any) => {
+		const getFormGroupVals = (formGroup: UntypedFormGroup, placeHolder: any) => {
 			if (formGroup?.controls) {
 				Object.keys(formGroup.controls).forEach((fieldName) => {
 					const ctrl = formGroup.get(fieldName);
@@ -161,10 +162,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 							placeHolder[`${clazz}_${fieldName}`] = `${ctrlValue}`;
 							break;
 						case 'FormGroup':
-							placeHolder[`${clazz}_${fieldName}`] = getFormGroupVals(ctrl as FormGroup, {});
+							placeHolder[`${clazz}_${fieldName}`] = getFormGroupVals(ctrl as UntypedFormGroup, {});
 							break;
 						case 'FormArray':
-							placeHolder[`${clazz}_${fieldName}`] = getFormArrayVals(ctrl as FormArray, []);
+							placeHolder[`${clazz}_${fieldName}`] = getFormArrayVals(ctrl as UntypedFormArray, []);
 							break;
 					}
 				});
@@ -172,7 +173,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 			}
 			return {};
 		};
-		const getFormArrayVals = (formArray: FormArray, placeHolder: any) => {
+		const getFormArrayVals = (formArray: UntypedFormArray, placeHolder: any) => {
 			if (formArray?.controls) {
 				formArray.controls.forEach((ctrl, idx) => {
 					const clazz = ctrl.constructor.name;
@@ -182,10 +183,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 							placeHolder.push(`${clazz}_${idx} = ${ctrlValue}`);
 							break;
 						case 'FormGroup':
-							placeHolder.push(`${clazz}_${idx} = ${JSON.stringify(getFormGroupVals(ctrl as FormGroup, {}), null, 2)}`);
+							placeHolder.push(`${clazz}_${idx} = ${JSON.stringify(getFormGroupVals(ctrl as UntypedFormGroup, {}), null, 2)}`);
 							break;
 						case 'FormArray':
-							placeHolder.push(`${clazz}_${idx} = ${getFormArrayVals(ctrl as FormArray, placeHolder)}`);
+							placeHolder.push(`${clazz}_${idx} = ${getFormArrayVals(ctrl as UntypedFormArray, placeHolder)}`);
 					}
 				});
 				return placeHolder;

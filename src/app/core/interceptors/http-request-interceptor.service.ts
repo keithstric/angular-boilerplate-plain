@@ -1,10 +1,5 @@
 import {Injectable} from '@angular/core';
-import {
-	HttpRequest,
-	HttpHandler,
-	HttpEvent,
-	HttpResponse, HttpErrorResponse
-} from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import {HttpCacheService} from '@core/services/http-cache/http-cache.service';
 import {Logger} from '@core/services/logger/logger';
 import {Observable, of} from 'rxjs';

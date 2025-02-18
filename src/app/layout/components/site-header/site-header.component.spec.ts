@@ -1,4 +1,4 @@
-import {HttpClientTestingModule} from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
@@ -12,6 +12,7 @@ import {
 	MockHttpService,
 	MockLocalStorageService
 } from 'src/app/testing/mock-services';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('SiteHeaderComponent', () => {
 	let component: SiteHeaderComponent;
@@ -34,21 +35,20 @@ describe('SiteHeaderComponent', () => {
 
 	beforeEach(waitForAsync(() => {
 		TestBed.configureTestingModule({
-			imports: [
-				RouterTestingModule,
-				HttpClientTestingModule
-			],
-			declarations: [
-				SiteHeaderComponent
-			],
-			providers: [
-				{provide: LocalStorageService, useClass: MockLocalStorageService},
-				{provide: HttpService, useClass: MockHttpService},
-				{provide: AuthService, useClass: MockAuthService},
-				provideMockStore({initialState})
-			],
-			schemas: [CUSTOM_ELEMENTS_SCHEMA]
-		})
+    declarations: [
+        SiteHeaderComponent
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [RouterTestingModule],
+    providers: [
+        { provide: LocalStorageService, useClass: MockLocalStorageService },
+        { provide: HttpService, useClass: MockHttpService },
+        { provide: AuthService, useClass: MockAuthService },
+        provideMockStore({ initialState }),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+})
 			.compileComponents();
 	}));
 

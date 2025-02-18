@@ -1,15 +1,15 @@
-@import 'theme';
+@use 'theme';
 
 /* Variables for the theme colors */
-$primary: $app-primary;
-$accent: $app-accent;
-$warn: $app-warn;
-$warn-color: $app-warn-color;
-$info: $app-info;
-$info-color: $app-info-color;
-$success: $app-success;
-$success-color: $app-success-color;
-$danger: $app-danger;
-$danger-color: $app-danger-color;
-$error: $app-error;
-$error-color: $app-error-color;
+$primary: theme.$app-primary;
+$accent: theme.$app-accent;
+$warn: theme.$app-warn;
+$warn-color: theme.$app-warn-color;
+$info: theme.$app-info;
+$info-color: theme.$app-info-color;
+$success: theme.$app-success;
+$success-color: theme.$app-success-color;
+$danger: theme.$app-danger;
+$danger-color: theme.$app-danger-color;
+$error: theme.$app-error;
+$error-color: theme.$app-error-color;

@@ -4,9 +4,10 @@ import {Breadcrumb} from '@layout/interfaces/breadcrumb.interface';
 import {BreadcrumbService} from '@layout/services/breadcrumb/breadcrumb.service';
 
 @Component({
-	selector: 'app-breadcrumbs',
-	templateUrl: './breadcrumbs.component.html',
-	styleUrls: ['./breadcrumbs.component.scss']
+    selector: 'app-breadcrumbs',
+    templateUrl: './breadcrumbs.component.html',
+    styleUrls: ['./breadcrumbs.component.scss'],
+    standalone: false
 })
 export class BreadcrumbsComponent implements OnInit {
 	breadcrumbs: Breadcrumb[] = [];

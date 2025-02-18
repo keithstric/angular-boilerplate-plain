@@ -1,4 +1,4 @@
-import {HttpRequest} from '@angular/common/http';
+import { HttpRequest } from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {SetLoadingAction} from '@core/root-store/loading/loading.action';
 import {Store} from '@ngrx/store';

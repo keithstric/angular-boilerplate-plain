@@ -1,5 +1,5 @@
-import {HttpRequest, HttpResponse} from '@angular/common/http';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import { HttpRequest, HttpResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import {TestBed} from '@angular/core/testing';
 import {LocalStorageTypes} from '@core/services/local-storage/local-storage.interface';
 import {HttpCacheService} from '@core/services/http-cache/http-cache.service';
@@ -16,9 +16,9 @@ describe('HttpCacheService', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			imports: [HttpClientTestingModule],
-			providers: [HttpCacheService]
-		});
+    imports: [],
+    providers: [HttpCacheService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 		httpTestingController = TestBed.get(HttpTestingController);
 		service = TestBed.inject(HttpCacheService);
 	});

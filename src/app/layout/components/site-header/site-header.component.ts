@@ -23,9 +23,10 @@ import {PROJECT_NAME} from 'src/environments/environment';
  * ```
  */
 @Component({
-	selector: 'app-header',
-	templateUrl: './site-header.component.html',
-	styleUrls: ['./site-header.component.scss']
+    selector: 'app-header',
+    templateUrl: './site-header.component.html',
+    styleUrls: ['./site-header.component.scss'],
+    standalone: false
 })
 export class SiteHeaderComponent implements OnInit, OnDestroy {
 	title: string = PROJECT_NAME;

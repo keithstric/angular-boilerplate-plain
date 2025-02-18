@@ -6,8 +6,9 @@ import {PageBreadcrumbHeaderComponent} from '@layout/components/page-breadcrumb-
 import {BreadcrumbService} from '@layout/services/breadcrumb/breadcrumb.service';
 
 @Component({
-	selector: 'app-card',
-	template: '<p>Mock app-card</p>'
+    selector: 'app-card',
+    template: '<p>Mock app-card</p>',
+    standalone: false
 })
 export class MockCardComponent {
 	@Input() withBorder = true;
@@ -15,8 +16,9 @@ export class MockCardComponent {
 }
 
 @Component({
-	selector: 'app-page-breadcrumb-header',
-	template: '<p>Mock page-breadcrumb-header</p>'
+    selector: 'app-page-breadcrumb-header',
+    template: '<p>Mock page-breadcrumb-header</p>',
+    standalone: false
 })
 export class MockPageBreadcrumbHeaderComponent {
 	@Input() showAddButton: boolean = false;
@@ -24,28 +26,31 @@ export class MockPageBreadcrumbHeaderComponent {
 }
 
 @Component({
-	selector: 'app-header',
-	template: '<p>Mock site-header</p>'
+    selector: 'app-header',
+    template: '<p>Mock site-header</p>',
+    standalone: false
 })
 export class MockSiteHeaderComponent {
 }
 
 @Component({
-	selector: 'app-not-found',
-	template: '<p>Mock page not found</p>'
+    selector: 'app-not-found',
+    template: '<p>Mock page not found</p>',
+    standalone: false
 })
 export class MockPageNotFoundComponent {
 }
 
 @Component({
-	selector: 'app-page-breadcrumb-header',
-		template: `<div class="flex-row page-header">
+    selector: 'app-page-breadcrumb-header',
+    template: `<div class="flex-row page-header">
 			<app-breadcrumbs></app-breadcrumbs>
 			<span class="spacer"></span>
 			<button *ngIf="showAddButton" (click)="clickAddButton()" type="button">
 				<!--<mat-icon>add</mat-icon>-->
 			</button>
-		</div>`
+		</div>`,
+    standalone: false
 })
 export class MockStorybookPageBreadcrumbHeaderComponent extends PageBreadcrumbHeaderComponent implements OnInit{
 
@@ -101,8 +106,9 @@ export class MockStorybookOpenDialogComponent implements OnInit {
  * a component as the message content
  */
 @Component({
-	selector: 'app-mock-dialog-content',
-	template: `<p>This is a component (MockStorybookDialogContentComponent) {{text}}</p>`
+    selector: 'app-mock-dialog-content',
+    template: `<p>This is a component (MockStorybookDialogContentComponent) {{text}}</p>`,
+    standalone: false
 })
 export class MockStorybookDialogContentComponent {
 	text: string = 'with some dynamic text from the "text" property';
@@ -113,12 +119,13 @@ export class MockStorybookDialogContentComponent {
  * user-avatar.stories.ts storybook story
  */
 @Component({
-	selector: 'app-mock-avatar',
-	template: `
+    selector: 'app-mock-avatar',
+    template: `
 		<p>Click the avatar and see the console for the click message</p>
 		<div style="height: 48px; width: 48px;">
 			<app-user-avatar class="small" (avatarClicked)="onAvatarClicked($event)"></app-user-avatar>
-		</div>`
+		</div>`,
+    standalone: false
 })
 export class MockStorybookUserAvatarComponent {
 
@@ -128,14 +135,15 @@ export class MockStorybookUserAvatarComponent {
 }
 
 @Component({
-	selector: 'app-mock-no-user-avatar',
-	template: `
+    selector: 'app-mock-no-user-avatar',
+    template: `
 		<div style="height: 48px; width: 48px;">
 			<app-user-avatar class="small" (avatarClicked)="onAvatarClicked($event)"></app-user-avatar>
 			<app-user-avatar class="medium" (avatarClicked)="onAvatarClicked($event)"></app-user-avatar>
 			<app-user-avatar class="large" (avatarClicked)="onAvatarClicked($event)"></app-user-avatar>
 			<app-user-avatar class="huge" (avatarClicked)="onAvatarClicked($event)"></app-user-avatar>
-		</div>`
+		</div>`,
+    standalone: false
 })
 export class MockStorybookNoUserAvatarComponent implements OnInit {
 

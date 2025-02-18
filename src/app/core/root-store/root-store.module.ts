@@ -16,7 +16,7 @@ export const metaReducers: MetaReducer[] = [UserFromStorageMetaReducer];
 		StoreModule.forRoot(reducers, {runtimeChecks: {strictStateImmutability: false, strictActionImmutability: false},	metaReducers}),
 		StoreRouterConnectingModule.forRoot({serializer: CustomSerializer}),
 		EffectsModule.forRoot([UserEffects]),
-		StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production, name: PROJECT_NAME})
+		StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production, name: PROJECT_NAME, connectInZone: true})
 	],
 	declarations: []
 })

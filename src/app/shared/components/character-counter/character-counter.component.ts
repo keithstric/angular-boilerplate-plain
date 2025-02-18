@@ -8,9 +8,10 @@ export interface iCharacterCounterEvent {
 }
 
 @Component({
-	selector: 'app-character-counter',
-	templateUrl: './character-counter.component.html',
-	styleUrls: ['./character-counter.component.scss']
+    selector: 'app-character-counter',
+    templateUrl: './character-counter.component.html',
+    styleUrls: ['./character-counter.component.scss'],
+    standalone: false
 })
 export class CharacterCounterComponent implements OnInit, OnDestroy {
 	/**

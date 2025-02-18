@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {iUserState} from '@core/root-store/models/app-state.model';
 import {RegisterUserAction} from '@core/root-store/user/user.action';
@@ -9,23 +9,24 @@ import {AppErrorHandler} from '@core/services/error-handler/error-handler.servic
 import {PROJECT_NAME} from 'src/environments/environment';
 
 @Component({
-	selector: 'app-register',
-	templateUrl: './register.component.html',
-	styleUrls: ['../auth-shared-styles.scss']
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['../auth-shared-styles.scss'],
+    standalone: false
 })
 export class RegisterComponent implements OnInit, OnDestroy {
-	registrationData: FormGroup;
-	email: FormControl = new FormControl('', [Validators.required, Validators.email]);
-	password: FormControl = new FormControl('', [Validators.required]);
-	verify_password: FormControl = new FormControl('', [Validators.required]);
-	last_name: FormControl = new FormControl('', [Validators.required]);
-	first_name: FormControl = new FormControl('', [Validators.required]);
+	registrationData: UntypedFormGroup;
+	email: UntypedFormControl = new UntypedFormControl('', [Validators.required, Validators.email]);
+	password: UntypedFormControl = new UntypedFormControl('', [Validators.required]);
+	verify_password: UntypedFormControl = new UntypedFormControl('', [Validators.required]);
+	last_name: UntypedFormControl = new UntypedFormControl('', [Validators.required]);
+	first_name: UntypedFormControl = new UntypedFormControl('', [Validators.required]);
 	errorMsg: string;
 	projectName: string = PROJECT_NAME;
 	subscriptions: Subscription = new Subscription();
 
 	constructor(
-		private _formBuilder: FormBuilder,
+		private _formBuilder: UntypedFormBuilder,
 		private _error: AppErrorHandler,
 		private _router: Router,
 		private store: Store<{user: iUserState}>

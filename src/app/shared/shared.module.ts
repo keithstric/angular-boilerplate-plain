@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {
-	FormBuilder,
+	UntypedFormBuilder,
 	FormControlDirective,
 	FormControlName,
 	FormGroupDirective,
@@ -42,32 +42,31 @@ const sharedPipes = [
 ];
 
 @NgModule({
-	declarations: [
-		...sharedComponents,
-		...sharedDirectives,
-		...sharedPipes,
-  CheckboxStringValueDirective
-	],
-	imports: [
-		CommonModule,
-		FormsModule,
-		ReactiveFormsModule
-	],
-	providers: [
-		SnackBarRef,
-		FormBuilder,
-		FormHelperService,
-		FormGroupDirective,
-		FormControlDirective,
-		FormControlName
-	],
-	exports: [
-		...sharedComponents,
-		...sharedPipes,
-		FormsModule,
-		ReactiveFormsModule
-	],
-	entryComponents: [SnackBarComponent]
+    declarations: [
+        ...sharedComponents,
+        ...sharedDirectives,
+        ...sharedPipes,
+        CheckboxStringValueDirective
+    ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule
+    ],
+    providers: [
+        SnackBarRef,
+        UntypedFormBuilder,
+        FormHelperService,
+        FormGroupDirective,
+        FormControlDirective,
+        FormControlName
+    ],
+    exports: [
+        ...sharedComponents,
+        ...sharedPipes,
+        FormsModule,
+        ReactiveFormsModule
+    ]
 })
 
 export class SharedModule { }

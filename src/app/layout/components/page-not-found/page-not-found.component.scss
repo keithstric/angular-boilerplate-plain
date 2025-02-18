@@ -1,4 +1,4 @@
-@import '../../../../scss/mixins';
+@use '../../../../scss/mixins';
 
 .page-container {
 	height: calc(100vh - 65px);
@@ -12,9 +12,9 @@ h1, h2 {
 }
 
 h1 {
-  @include font-size(150px);
+  @include mixins.font-size(150px);
 }
 
 h2 {
-  @include font-size(90px);
+  @include mixins.font-size(90px);
 }

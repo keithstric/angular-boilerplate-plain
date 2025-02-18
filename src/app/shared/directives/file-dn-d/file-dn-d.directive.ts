@@ -9,7 +9,8 @@ import {Directive, HostListener, EventEmitter, Output} from '@angular/core';
  * </div>
  */
 @Directive({
-	selector: '[appFileDnD]'
+    selector: '[appFileDnD]',
+    standalone: false
 })
 export class FileDnDDirective {
 	@Output() fileDropped: EventEmitter<any> = new EventEmitter<any>();

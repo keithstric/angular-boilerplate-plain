@@ -6,7 +6,8 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
  * and style tags. USE WITH CAUTION
  */
 @Pipe({
-	name: 'safeHtml'
+    name: 'safeHtml',
+    standalone: false
 })
 export class SafeHtmlPipe implements PipeTransform {
 

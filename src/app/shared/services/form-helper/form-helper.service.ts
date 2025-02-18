@@ -2,10 +2,10 @@ import {Injectable} from '@angular/core';
 import {
 	AbstractControl,
 	AbstractControlOptions,
-	FormArray,
-	FormBuilder,
-	FormControl,
-	FormGroup,
+	UntypedFormArray,
+	UntypedFormBuilder,
+	UntypedFormControl,
+	UntypedFormGroup,
 	ValidationErrors,
 	ValidatorFn
 } from '@angular/forms';
@@ -87,11 +87,11 @@ export class FormHelperService {
 	 *   boo: FormGroup (controls: {abc: 123 (FormControl)})
 	 * }
 	 */
-	static convertObjToFormGroup(obj: FormGroupObject, objConfig?: FormGroupObjectConfig): FormGroup {
+	static convertObjToFormGroup(obj: FormGroupObject, objConfig?: FormGroupObjectConfig): UntypedFormGroup {
 		if (obj !== null && obj !== undefined && typeof obj !== 'boolean') {
-			let fb = ServiceLocator.injector?.get(FormBuilder);
+			let fb = ServiceLocator.injector?.get(UntypedFormBuilder);
 			if (!fb) {
-				fb = new FormBuilder();
+				fb = new UntypedFormBuilder();
 			}
 			if (fb) {
 				const group = fb.group({});
@@ -128,23 +128,23 @@ export class FormHelperService {
 	 * @param arr
 	 * @param forCheckboxes
 	 */
-	static convertArrayToFormArray(arr: any[], forCheckboxes: boolean = false): FormArray {
-		let fb = ServiceLocator.injector?.get(FormBuilder);
+	static convertArrayToFormArray(arr: any[], forCheckboxes: boolean = false): UntypedFormArray {
+		let fb = ServiceLocator.injector?.get(UntypedFormBuilder);
 		if (!fb) {
-			fb = new FormBuilder();
+			fb = new UntypedFormBuilder();
 		}
 		if (fb && !forCheckboxes) {
 			let valArr = [];
 			if (arr?.length) {
 				valArr = arr.map((obj) => {
 					if (typeof obj === 'boolean' || typeof obj === 'string' || typeof obj === 'number' || obj instanceof Date) {
-						return new FormControl(obj);
+						return new UntypedFormControl(obj);
 					} else if (obj !== null && typeof obj === 'object') {
 						return FormHelperService.convertObjToFormGroup(obj);
 					} else if (Array.isArray(obj)) {
 						return FormHelperService.convertArrayToFormArray(obj);
 					} else {
-						return new FormControl(obj);
+						return new UntypedFormControl(obj);
 					}
 				});
 			}
@@ -159,7 +159,7 @@ export class FormHelperService {
 	 * and do something to the individual controls. FormGroup.controls normally returns an object.
 	 * @param formGroup
 	 */
-	static formGroupControlsToArray(formGroup: FormGroup): AbstractControl[] {
+	static formGroupControlsToArray(formGroup: UntypedFormGroup): AbstractControl[] {
 		const returnVal = [];
 		if (formGroup?.controls) {
 			Object.keys(formGroup.controls).forEach((key) => {
@@ -174,7 +174,7 @@ export class FormHelperService {
 	 * the FormGroup/FormArray and NOT it's invalid FormControls
 	 * @param formGroup
 	 */
-	static getInvalidFormGroupControls(formGroup: FormGroup): InvalidControl[] {
+	static getInvalidFormGroupControls(formGroup: UntypedFormGroup): InvalidControl[] {
 		const returnVal = [];
 		if (formGroup?.controls) {
 			Object.keys(formGroup.controls).forEach((key) => {
@@ -205,7 +205,7 @@ export class FormHelperService {
 	 * ];
 	 * FormBuilderService.setFormGroupValidators(validators, fg);
 	 */
-	static setFormGroupValidators(validatorConfigs: ValidatorConfig[], formGroup: FormGroup) {
+	static setFormGroupValidators(validatorConfigs: ValidatorConfig[], formGroup: UntypedFormGroup) {
 		const formGroupKeys = Object.keys(formGroup?.controls || {});
 		if (validatorConfigs && formGroupKeys.length) {
 			formGroupKeys.forEach((ctrlFieldName) => {
@@ -241,7 +241,7 @@ export class FormHelperService {
 		// console.log(`getInvalidControls, ${FormBuilderService.getControlName(formControl)} - ${FormBuilderService.getControlType(formControl)}`);
 		let invalidControls: InvalidControlErrors[] = [];
 		if (formControl) {
-			if ((formControl instanceof FormGroup || formControl instanceof FormArray) && formControl.invalid) {
+			if ((formControl instanceof UntypedFormGroup || formControl instanceof UntypedFormArray) && formControl.invalid) {
 				Object.keys(formControl.controls).forEach((key) => {
 					const childCtrl = formControl.get(key);
 					const grpInvalidControls = FormHelperService.getInvalidControls(childCtrl);
@@ -303,9 +303,9 @@ export class FormHelperService {
 	 * @param control
 	 */
 	static getControlType(control: AbstractControl): FormControlType {
-		if (control instanceof FormGroup) {
+		if (control instanceof UntypedFormGroup) {
 			return 'FormGroup';
-		} else if (control instanceof FormArray) {
+		} else if (control instanceof UntypedFormArray) {
 			return 'FormArray';
 		} else {
 			return 'FormControl';
@@ -319,19 +319,19 @@ export class FormHelperService {
 	 */
 	static cloneAbstractControl<T extends AbstractControl>(control: T): T {
 		let newControl: T;
-		if (control instanceof FormGroup) {
-			const formGroup = new FormGroup({}, control.validator, control.asyncValidator);
+		if (control instanceof UntypedFormGroup) {
+			const formGroup = new UntypedFormGroup({}, control.validator, control.asyncValidator);
 			const controls = control.controls;
 			Object.keys(controls).forEach(key => {
 				formGroup.addControl(key, FormHelperService.cloneAbstractControl(controls[key]));
 			});
 			newControl = formGroup as any;
-		} else if (control instanceof FormArray) {
-			const formArray = new FormArray([], control.validator, control.asyncValidator);
+		} else if (control instanceof UntypedFormArray) {
+			const formArray = new UntypedFormArray([], control.validator, control.asyncValidator);
 			control.controls.forEach(formControl => formArray.push(FormHelperService.cloneAbstractControl(formControl)));
 			newControl = formArray as any;
-		} else if (control instanceof FormControl) {
-			newControl = new FormControl(control.value, control.validator, control.asyncValidator) as any;
+		} else if (control instanceof UntypedFormControl) {
+			newControl = new UntypedFormControl(control.value, control.validator, control.asyncValidator) as any;
 		} else {
 			throw new Error('Error: unexpected control type');
 		}

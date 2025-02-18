@@ -1,10 +1,14 @@
+@use "../mixins";
+@use "../theme";
+@use "../variables";
+
 a {
-	color: $primary;
+	color: variables.$primary;
 	text-decoration: none;
 
 	&:hover {
 		cursor: pointer;
-		color: $accent;
+		color: variables.$accent;
 		text-decoration: underline;
 	}
 }
@@ -38,8 +42,8 @@ a {
 		font-size: inherit;
 
 		&.error {
-			border-color: $error;
-			background-color: rgba($error, 0.1);
+			border-color: variables.$error;
+			background-color: rgba(variables.$error, 0.1);
 		}
 	}
 }
@@ -49,12 +53,12 @@ button {
 	font-size: inherit;
 	background: white;
 	border: 1px solid #afafaf;
-	@include border-radius(4px);
+	@include mixins.border-radius(4px);
 
 	&:hover {
 		cursor: pointer;
-		background-color: $app-primary;
+		background-color: theme.$app-primary;
 		color: white;
-		@include elevation(3);
+		@include mixins.elevation(3);
 	}
 }

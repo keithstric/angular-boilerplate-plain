@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormGroup} from '@angular/forms';
 import {Logger} from '@core/services/logger/logger';
 import {Store} from '@ngrx/store';
 import {
@@ -25,14 +25,15 @@ export interface FormControlsDefinition {
 @Component({
 	selector: 'app-dynamic-form',
 	templateUrl: './dynamic-form.component.html',
-	styleUrls: ['./dynamic-form.component.scss']
+	styleUrls: ['./dynamic-form.component.scss'],
+	standalone: false
 })
 export class DynamicFormComponent implements OnInit {
 	@Input() formGroupValue?: FormGroupObject;
 	@Input() formGroupDefinition?: FormGroupDefinition;
 	@Input() formStatePath: string = 'demo';
-	@Output() formGroupInitialized: EventEmitter<FormGroup> = new EventEmitter<FormGroup>();
-	formGroup: FormGroup;
+	@Output() formGroupInitialized: EventEmitter<UntypedFormGroup> = new EventEmitter<UntypedFormGroup>();
+	formGroup: UntypedFormGroup;
 	renderedControls: FormControlsDefinition;
 
 	constructor(private store: Store) {	}
@@ -76,9 +77,9 @@ export class DynamicFormComponent implements OnInit {
 	private _getFieldType(control: AbstractControl) {
 		const fieldName = FormHelperService.getControlName(control);
 		let fieldType: FormFieldType = this.formGroupDefinition?.formGroupConfig[fieldName]?.fieldType || 'text';
-		if (control instanceof FormGroup) {
+		if (control instanceof UntypedFormGroup) {
 			fieldType = 'object';
-		}else if (control instanceof FormArray && fieldType !== 'checkboxes') {
+		}else if (control instanceof UntypedFormArray && fieldType !== 'checkboxes') {
 			fieldType = 'array';
 		}else if (control.value && typeof control.value === 'number') {
 			fieldType = 'number';
@@ -103,11 +104,11 @@ export class DynamicFormComponent implements OnInit {
 		return this.formGroupDefinition?.formGroupConfig[fieldName]?.fieldLabelLocation || 'end';
 	}
 
-	private _getControlDefinitions(formCtrl: FormGroup | FormArray): FormControlsDefinition[] {
+	private _getControlDefinitions(formCtrl: UntypedFormGroup | UntypedFormArray): FormControlsDefinition[] {
 		const fgClazz = formCtrl.constructor.name;
 		const ctrls: AbstractControl[] = fgClazz === 'FormGroup'
-			? FormHelperService.formGroupControlsToArray((formCtrl as FormGroup))
-			: (formCtrl as FormArray).controls as AbstractControl[];
+			? FormHelperService.formGroupControlsToArray((formCtrl as UntypedFormGroup))
+			: (formCtrl as UntypedFormArray).controls as AbstractControl[];
 		return ctrls
 			.map((ctrl) => {
 				const clazz = ctrl.constructor.name;
@@ -118,9 +119,18 @@ export class DynamicFormComponent implements OnInit {
 							label: this._getFieldLabel(ctrl),
 							fieldName: this._getFieldName(ctrl),
 							type: this._getFieldType(ctrl),
-							definitions: this._getControlDefinitions(ctrl as FormGroup),
+							definitions: this._getControlDefinitions(ctrl as UntypedFormGroup),
 						};
 					case 'FormControl':
+						return {
+							ctrl,
+							label: this._getFieldLabel(ctrl),
+							type: this._getFieldType(ctrl),
+							options: this._getFieldOptions(ctrl),
+							labelLocation: this._getFieldLabelLocation(ctrl),
+							fieldName: this._getFieldName(ctrl)
+						};
+					case 'FormControl2':
 						return {
 							ctrl,
 							label: this._getFieldLabel(ctrl),
@@ -135,7 +145,7 @@ export class DynamicFormComponent implements OnInit {
 							label: this._getFieldLabel(ctrl),
 							fieldName: this._getFieldName(ctrl),
 							type: this._getFieldType(ctrl),
-							definitions: this._getControlDefinitions(ctrl as FormArray)
+							definitions: this._getControlDefinitions(ctrl as UntypedFormArray)
 						};
 						if (arrCtrlDef.type === 'checkboxes') {
 							arrCtrlDef.options = this._getFieldOptions(ctrl);
@@ -154,7 +164,7 @@ export class DynamicFormComponent implements OnInit {
 			});
 	}
 
-	private _getFormDefinitions(formGroup: FormGroup): FormControlsDefinition {
+	private _getFormDefinitions(formGroup: UntypedFormGroup): FormControlsDefinition {
 		return {
 			ctrl: formGroup,
 			definitions: this._getControlDefinitions(formGroup),

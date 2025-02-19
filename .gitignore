@@ -4,7 +4,7 @@
 /dist
 /tmp
 /out-tsc
-/.angular
+.angular
 # Only exists if Bazel was run
 /bazel-out
 
@@ -49,4 +49,3 @@ debug.log
 # System Files
 .DS_Store
 Thumbs.db
-.angular/cache

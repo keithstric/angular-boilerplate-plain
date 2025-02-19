@@ -1,1 +1,0 @@
-{"ast":null,"code":"/**\n * @module Passage\n */\n'use strict';\n\nvar Route = require('./lib/route');\n\nmodule.exports = Route;","map":null,"metadata":{},"sourceType":"script"}

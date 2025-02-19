@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { LoadingActionTypes } from '@core/root-store/loading/loading.action';\nexport function LoadingReducer(state = false, action) {\n  switch (action.type) {\n    case LoadingActionTypes.SET_LOADING:\n      return action.payload;\n  }\n\n  return state;\n}\nexport const getLoading = state => state;","map":null,"metadata":{},"sourceType":"module"}
